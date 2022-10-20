@@ -1,1 +1,100 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
+.product-image {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    border: 1px solid #eee;
+}
+.p-inputtext {
+    font-size: 12px;
+}
+.p-checkbox .p-checkbox-box {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+}
+
+.p-inputtext:enabled:focus {
+    border-radius: 3px;
+    box-shadow: 0 0 0 2px #ccd7ee;
+}
+
+.p-dropdown:not(.p-disabled):hover {
+    border-radius: 3px;
+    box-shadow: 0 0 0 2px #ccd7ee;
+}
+.p-dropdown:not(.p-disabled).p-focus {
+    border-radius: 3px;
+    box-shadow: 0 0 0 2px #ccd7ee;
+}
+
+.manage-list::-webkit-scrollbar {
+    width: 14px;
+}
+.manage-list::-webkit-scrollbar-thumb {
+    background-color: #0d3157;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    height: 1vh;
+}
+.manage-list::-webkit-scrollbar-track {
+    border-radius: 10px;
+    box-shadow: inset 0px 0px 5px white;
+    background-color: #ececec;
+}
+
+.p-dialog {
+    max-height: 98vh;
+}
+.p-datatable .p-datatable-tbody > tr > td {
+    padding: 0px;
+}
+
+.btn {
+    color: black;
+    font-weight: bold;
+    font-size: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    min-width: 90px;
+    height: 32px;
+    padding: 6px;
+    justify-content: center;
+}
+.default-btn {
+    background: white;
+}
+.primary-btn {
+    background: #e4f1ff;
+}
+.page-header .p-inputtext {
+    font-size: 12px;
+    padding: 8px;
+    height: 30px;
+    box-sizing: border-box;
+    border-radius: 3px;
+}
+.page-header .p-dropdown {
+    height: 30px;
+    border-radius: 3px;
+}
+.page-header .p-dropdown .pi {
+    font-size: 12px;
+}
+
+.p-datatable-table td + td,
+.p-datatable-table th + th {
+    border-left: 1px solid #eee !important;
+}
+
+.p-datatable-resizable .p-datatable-tbody > tr > td {
+    white-space: pre-wrap;
+}
+
+.p-checkbox .p-checkbox-box {
+    border: 1px solid #ced4da;
+}
