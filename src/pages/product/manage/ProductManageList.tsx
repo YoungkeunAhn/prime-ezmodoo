@@ -5,6 +5,7 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { Tooltip } from 'primereact/tooltip'
 import React, { useState } from 'react'
+import { urlBodyTemplate } from '../../../hooks/data-table-hooks/HeaderHooks'
 import ProductDetailModal from './detail-modal/ProductDetailModal'
 
 type DialogId = 'DETAIL'
@@ -136,14 +137,6 @@ function ProductManageList() {
 
     const imageBodyTemplate = (rowData: any, option?: any) => {
         return <img src={rowData.image} alt={rowData.image} className="w-[50px] h-[50px] m-auto" />
-    }
-
-    const urlBodyTemplate = (rowData: any, option?: any) => {
-        return (
-            <a href={rowData.url} target="blank" className="text-[#39cc2f] hover:text-[#146bce] transition">
-                <i className="fa-solid fa-link text-[12px]"></i>
-            </a>
-        )
     }
 
     const ecommerceBodyTemplate = (rowData: any) => {

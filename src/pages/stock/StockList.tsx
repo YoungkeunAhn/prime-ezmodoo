@@ -3,6 +3,7 @@ import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
+import { imageBodyTemplate, wrapColumnHeader } from '../../hooks/data-table-hooks/HeaderHooks'
 import LogViewModal from './LogViewModal'
 
 function StockList() {
@@ -32,18 +33,7 @@ function StockList() {
             ],
         },
     ]
-    const wrapColumnHeader = (text: string) => {
-        return (
-            <div className="flex flex-col justify-center">
-                {text.split(' ').map((word, idx) => (
-                    <span key={idx}>{word}</span>
-                ))}
-            </div>
-        )
-    }
-    const imageBodyTemplate = (rowData: any, option?: any) => {
-        return <img src={rowData.image} alt={rowData.image} className="w-[65px] h-[65px] m-auto" />
-    }
+
     const locationBodyTemplate = (rowData: any) => {
         return (
             <div className={`${rowData.palette.length > 1 && 'grid grid-cols-2'}>`}>
