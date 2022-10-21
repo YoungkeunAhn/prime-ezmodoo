@@ -28,8 +28,9 @@ import PanelDemo from './components/PanelDemo'
 import TableDemo from './components/TableDemo'
 import TreeDemo from './components/TreeDemo'
 
-import Crud from './pages/Crud'
+import StockList from './pages/stock/StockList'
 import ProductManageList from './pages/product/manage/ProductManageList'
+import TimelineDemo from './pages/TimelineDemo'
 
 import PrimeReact from 'primereact/api'
 import { Tooltip } from 'primereact/tooltip'
@@ -42,7 +43,7 @@ import './App.scss'
 import './assets/demo/Demos.scss'
 import './assets/demo/flags/flags.css'
 import './assets/layout/layout.scss'
-import StockList from './pages/stock/StockList'
+import OrderList from './pages/order/OrderList'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -200,9 +201,9 @@ const App = () => {
             label: '상품',
             icon: 'pi pi-fw pi-clone',
             items: [
-                // { label: 'Crud', icon: 'pi pi-fw pi-user-edit', to: '/crud' },
-                { label: '재고관리', icon: 'pi pi-fw pi-calendar', to: '/stock' },
+                { label: '재고관리', icon: 'pi pi-fw pi-user-edit', to: '/stock' },
                 { label: '상품관리', icon: 'pi pi-fw pi-circle-off', to: '/product/manage' },
+                { label: '발주관리', icon: 'pi pi-fw pi-calendar', to: '/order' },
             ],
         },
         // {
@@ -330,8 +331,8 @@ const App = () => {
                     <Route path="/file" component={FileDemo} />
                     <Route path="/chart" render={() => <ChartDemo colorMode={layoutColorMode} location={location} />} />
                     <Route path="/misc" component={MiscDemo} />
-                    <Route path="/timeline" component={StockList} />
-                    <Route path="/crud" component={Crud} />
+                    <Route path="/order" component={OrderList} />
+                    <Route path="/stock" component={StockList} />
                     <Route path="/product/manage" component={ProductManageList} />
                     <Route path="/documentation" component={Documentation} />
                 </div>
