@@ -98,3 +98,13 @@
 .p-checkbox .p-checkbox-box {
     border: 1px solid #ced4da;
 }
+
+.custom-tooltip:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    border-radius: 4px;
+    padding: 4px;
+    border: 1px solid #eee;
+    background: #fff;
+    transform: translate(25px, -5px);
+}

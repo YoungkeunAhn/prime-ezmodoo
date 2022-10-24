@@ -3,6 +3,7 @@ import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
 import React, { useState } from 'react'
+import { sellShopSelectTemplate } from '../../../../hooks/dropdown/ValueTemplate'
 import { ecommerceList } from '../ProductManageList'
 import CommonInfoTable from './CommonInfoTable'
 import ContentHeader from './ContentHeader'
@@ -138,10 +139,6 @@ function ProductDetailModal(props: Props) {
         return <Dropdown className="w-full border-none mt-1" value={rowData.sellShop} options={ecommerceList} valueTemplate={sellShopSelectTemplate(rowData.sellShop)} itemTemplate={sellShopSelectTemplate} />
     }
 
-    const sellShopSelectTemplate = (option: any) => {
-        return <img src={`./assets/sell-shop/${option}.jpg`} alt={option} className="max-h-[15px] object-contain m-auto" />
-    }
-
     return (
         <Dialog header={ModalHeader} visible={open} onHide={onClose} className="max-w-[1500px] w-full min-w-[500px]" closable={false}>
             <div>
@@ -191,8 +188,12 @@ function ProductDetailModal(props: Props) {
                             <ManageListItem />
                         </ul>
                         <div className="ml-2 h-auto flex flex-col justify-between">
-                            <CommonInfoTable title="공급사정보" content={fakeSupplierInfo} />
-                            <CommonInfoTable title="상품물류 정보" content={fakeDistributionInfo} />
+                            <div className="w-[400px]">
+                                <CommonInfoTable title="공급사정보" content={fakeSupplierInfo} />
+                            </div>
+                            <div className="w-[400px]">
+                                <CommonInfoTable title="상품물류 정보" content={fakeDistributionInfo} />
+                            </div>
                         </div>
                     </div>
                 )}
@@ -203,15 +204,15 @@ function ProductDetailModal(props: Props) {
                             <Column align="center" selectionMode="multiple" selectionAriaLabel="id" headerStyle={{ width: '10px' }} field="id"></Column>
                             <Column align="center" className="text-[12px]" field="seller" header="판매사" />
                             <Column align="center" className="text-[12px]" field="sellShop" header="판매처" headerStyle={{ width: '130px' }} body={sellShopBodyTemplate} />
-                            <Column align="center" className="text-[12px]" field="productCode" header="판매사" />
-                            <Column align="center" className="text-[12px]" field="optionId" header="옵션ID" />
-                            <Column align="center" className="text-[12px]" field="options.0" header="옵션1" />
-                            <Column align="center" className="text-[12px]" field="options.1" header="옵션2" />
-                            <Column align="center" className="text-[12px]" field="stock" header="창고재고량" />
-                            <Column align="center" className="text-[12px]" field="usableStock" header="가용재고량" />
-                            <Column align="center" className="text-[12px]" field="coopangStock" header="쿠팡창고재고량" />
-                            <Column align="center" className="text-[12px]" field="zetRequestStock" header="제트배송-입고요청수량" />
-                            <Column align="center" className="text-[12px]" field="purchaseStock" header="발주(매입)수량" />
+                            <Column align="center" className="text-[12px]" field="productCode" header="판매사" editor />
+                            <Column align="center" className="text-[12px]" field="optionId" header="옵션ID" editor />
+                            <Column align="center" className="text-[12px]" field="options.0" header="옵션1" editor />
+                            <Column align="center" className="text-[12px]" field="options.1" header="옵션2" editor />
+                            <Column align="center" className="text-[12px]" field="stock" header="창고재고량" editor />
+                            <Column align="center" className="text-[12px]" field="usableStock" header="가용재고량" editor />
+                            <Column align="center" className="text-[12px]" field="coopangStock" header="쿠팡창고재고량" editor />
+                            <Column align="center" className="text-[12px]" field="zetRequestStock" header="제트배송-입고요청수량" editor />
+                            <Column align="center" className="text-[12px]" field="purchaseStock" header="발주(매입)수량" editor />
                         </DataTable>
 
                         <ExpandViewSupplierInfo />

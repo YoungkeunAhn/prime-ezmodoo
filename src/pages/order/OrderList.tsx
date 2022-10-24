@@ -2,8 +2,10 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
-import React from 'react'
+import { Tooltip } from 'primereact/tooltip'
+import React, { useState, useEffect } from 'react'
 import { imageBodyTemplate, printBodyTemplate, urlBodyTemplate } from '../../hooks/data-table-hooks/HeaderHooks'
+import OrderDetailModal from './detail-modal/OrderDetailModal'
 
 const fakeData = [
     {
@@ -71,7 +73,23 @@ const fakeData = [
     },
 ]
 
+type DialogId = 'DETAIL'
+
 function OrderList() {
+    const [paymentOpen, setPaymentOpen] = useState<boolean>(true)
+    const [dialogId, setDialogId] = useState<DialogId>()
+
+    const openDetailDialog = () => {
+        setDialogId('DETAIL')
+    }
+
+    const closeModal = () => {
+        setDialogId(undefined)
+    }
+
+    const onTogglePayment = () => {
+        setPaymentOpen(!paymentOpen)
+    }
     const productNameBodyTemplate = (rowData: any) => {
         return <span className="w-[300px]">{rowData.productName}</span>
     }
@@ -79,12 +97,43 @@ function OrderList() {
         <div>
             <div className="page-header border rounded-lg flex bg-white mb-5">
                 <div>
-                    <div className="flex items-center px-4 pt-4 border-b h-[66px] box-border">
-                        <div className="flex flex-col justify-center ">
-                            <span className="font-bold text-lg relative">상품관리</span>
+                    <div className="flex items-center px-4 border-b h-[66px] box-border">
+                        <div className="flex flex-col justify-center pt-4">
+                            <span className="font-bold text-lg relative">발주리스트</span>
                             <div className="border-2 w-full border-blue-500 relative -bottom-[14px]"></div>
                         </div>
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : 3862</span>
+                        <div className="flex ml-10 h-full text-sm space-x-5">
+                            <div className="rounded-b-full pt-1 bg-[#7E00B2] text-center text-white h-[35px] cursor-pointer w-[75px]" onClick={onTogglePayment}>
+                                결제금액
+                            </div>
+                            <div className={`flex space-x-2 h-[50px] overflow-hidden ${paymentOpen ? 'w-fit' : 'w-0'}`}>
+                                <table className="text-sm border text-center">
+                                    <tr>
+                                        <th className="border bg-[#F7E2FF] px-2 border-b">결제 예정 금액</th>
+                                        <td className="border w-[140px]">￥ 828,419.24</td>
+                                        <td className="border w-[140px]">￦ 167,340,687</td>
+                                    </tr>
+                                    <tr>
+                                        <th className="border bg-[#F7E2FF] px-2">결제 완료 금액</th>
+                                        <td className="border w-[140px]">￥ 0.00</td>
+                                        <td className="border w-[140px]">￦ 0</td>
+                                    </tr>
+                                </table>
+                                <table className="text-center border">
+                                    <tr>
+                                        <td className="border w-[140px] custom-tooltip" data-tooltip="긴급,미결제건">
+                                            ￦ 75,285,339
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td className="border w-[140px] custom-tooltip" data-tooltip="긴급,결제건">
+                                            ￦ 1,783,256
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                     <div className="flex space-x-4 p-4">
                         <div className="flex items-center space-x-2">
@@ -111,7 +160,17 @@ function OrderList() {
                 </div>
             </div>
             <div className="card">
-                <DataTable value={fakeData} responsiveLayout="scroll" onRowClick={() => {}} className="max-h-[99vh] text-sm">
+                <div className="flex items-center space-x-2 mb-2 text-sm">
+                    <Dropdown value="배송정보" className="h-[32px]" />
+                    <button className="btn primary-btn">선택수정</button>
+                    <button className="btn primary-btn">선택삭제</button>
+                    <button className="btn primary-btn">물류보내기</button>
+                    <button className="border border-[#098000] rounded bg-white flex items-center space-x-2 p-1 px-2 h-[30px]">
+                        <img src="./assets/icons/excel.png" alt="excel" width={28} className="object-contain" />
+                        <span className="font-bold text-black text-sm">엑셀 다운로드</span>
+                    </button>
+                </div>
+                <DataTable value={fakeData} responsiveLayout="scroll" resizableColumns onRowClick={openDetailDialog} className="text-sm" columnResizeMode="expand">
                     <Column align="center" selectionMode="multiple" selectionAriaLabel="id" headerStyle={{ width: '3em' }} field="id"></Column>
                     <Column align="center" field="seq" header="NO" />
                     <Column align="center" field="id" header="발주번호" />
@@ -120,7 +179,7 @@ function OrderList() {
                     <Column align="center" field="manager" header="담당자" />
                     <Column align="center" field="image" header="이미지" body={imageBodyTemplate} />
                     <Column align="center" field="url" header="url" body={urlBodyTemplate} />
-                    <Column align="center" field="productName" header="상품명" body={productNameBodyTemplate} bodyStyle={{ width: 500 }} />
+                    <Column align="center" field="productName" header="상품명" body={productNameBodyTemplate} headerStyle={{ minWidth: '200px' }} />
                     <Column align="center" field="orderNum" header="주문번호" />
                     <Column align="center" field="orderQty" header="발주수량" />
                     <Column align="center" field="cost" header="구매단가" />
@@ -138,7 +197,7 @@ function OrderList() {
                     <Column align="center" field="print" header="인쇄" body={printBodyTemplate} />
                 </DataTable>
             </div>
-            {/* <ProductDetailModal open={dialogId === 'DETAIL'} onClose={onCloseModal} data={fakeInfoData} /> */}
+            <OrderDetailModal open={dialogId === 'DETAIL'} onClose={closeModal} data={fakeData} />
         </div>
     )
 }
