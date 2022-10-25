@@ -44,6 +44,7 @@ import './assets/demo/Demos.scss'
 import './assets/demo/flags/flags.css'
 import './assets/layout/layout.scss'
 import OrderList from './pages/order/OrderList'
+import DesignManageList from './pages/design-manage/DesignManageList'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -204,6 +205,7 @@ const App = () => {
                 { label: '재고관리', icon: 'pi pi-fw pi-user-edit', to: '/stock' },
                 { label: '상품관리', icon: 'pi pi-fw pi-circle-off', to: '/product/manage' },
                 { label: '발주관리', icon: 'pi pi-fw pi-calendar', to: '/order' },
+                { label: '디자인관리', icon: 'pi pi-fw pi-prime', to: '/design/manage' },
             ],
         },
         // {
@@ -327,7 +329,7 @@ const App = () => {
                     <Route path="/menu" component={MenuDemo} />
                     <Route path="/messages" component={MessagesDemo} />
                     <Route path="/blocks" component={BlocksDemo} />
-                    <Route path="/icons" component={IconsDemo} />
+                    <Route path="/design/manage" component={DesignManageList} />
                     <Route path="/file" component={FileDemo} />
                     <Route path="/chart" render={() => <ChartDemo colorMode={layoutColorMode} location={location} />} />
                     <Route path="/misc" component={MiscDemo} />

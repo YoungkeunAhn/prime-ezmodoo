@@ -178,7 +178,7 @@ function OrderList() {
                     <Column align="center" field="orderDate" header="발주일자" />
                     <Column align="center" field="manager" header="담당자" />
                     <Column align="center" field="image" header="이미지" body={imageBodyTemplate} />
-                    <Column align="center" field="url" header="url" body={urlBodyTemplate} />
+                    <Column align="center" field="ur;" header="URL" body={urlBodyTemplate} />
                     <Column align="center" field="productName" header="상품명" body={productNameBodyTemplate} headerStyle={{ minWidth: '200px' }} />
                     <Column align="center" field="orderNum" header="주문번호" />
                     <Column align="center" field="orderQty" header="발주수량" />

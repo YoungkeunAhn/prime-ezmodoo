@@ -222,7 +222,7 @@ function ProductManageList() {
                     <Column align="center" className="text-[12px]" field="createdAt" header="등록일" />
                     <Column align="center" className="text-[12px]" field="seller" header="판매사" />
                     <Column align="center" className="text-[12px]" field="image" header="이미지" body={imageBodyTemplate} />
-                    <Column align="center" className="text-[12px]" field="url" header="url" body={urlBodyTemplate} />
+                    <Column align="center" className="text-[12px]" field="url" header="URL" body={urlBodyTemplate} />
                     <Column align="center" className="text-[12px]" field="ecommerce" header="판매처" body={ecommerceBodyTemplate} />
                     <Column alignHeader="center" align="left" className="text-[12px]" field="productGroupName" header="상품명" body={productGroupNameTemplate} />
                     <Column alignHeader="center" align="left" className="text-[12px]" field="options.0" header="옵션1" body={option1BodyTemplate} />
