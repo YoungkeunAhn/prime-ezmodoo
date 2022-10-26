@@ -1,8 +1,9 @@
+import axios from 'axios'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import { imageBodyTemplate, urlBodyTemplate } from '../../hooks/data-table-hooks/HeaderHooks'
 import DegsignManageDetailModal from './detail-modal/DegsignManageDetailModal'
 
@@ -52,9 +53,17 @@ function DesignManageList() {
         setDialogId(undefined)
     }
 
+    const onClickConfirmBtn = useCallback(async (id: string, name: string) => {
+        try {
+            // await axios.post(BASE_URL + 'design/confirm', { id, name })
+        } catch (err) {
+            console.error(err)
+        }
+    }, [])
+
     const confirmStatusBodyTemplate = (rowData: any) => {
         return (
-            <div className="flex flex-col space-y-1">
+            <div className="flex flex-col space-y-1 p-1">
                 <button className={`w-full rounded p-2 font-bold text-black border ${rowData.confirmStatus.includes('디자인') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'}`}>디자인</button>
                 <button className={`w-full rounded p-2 font-bold text-black border ${rowData.confirmStatus.includes('MD') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'}`}>MD</button>
 

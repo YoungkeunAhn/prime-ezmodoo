@@ -2,6 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+    font-size: 14px !important;
+}
 .product-image {
     width: 100px;
     height: 100px;
@@ -107,4 +110,26 @@
     border: 1px solid #eee;
     background: #fff;
     transform: translate(25px, -5px);
+}
+
+/*
+*Sidebar
+*/
+.custom-sidebar {
+    position: fixed;
+    width: 200px;
+    height: 100vh;
+    z-index: 999;
+    overflow-y: auto;
+    -webkit-user-select: none;
+    user-select: none;
+    top: 7rem;
+    left: 2rem;
+    transition: left 0.2s, -webkit-transform 0.2s;
+    transition: transform 0.2s, left 0.2s;
+    transition: transform 0.2s, left 0.2s, -webkit-transform 0.2s;
+    background-color: var(--surface-overlay);
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0px 3px 5px rgb(0 0 0 / 2%), 0px 0px 2px rgb(0 0 0 / 5%), 0px 1px 4px rgb(0 0 0 / 8%);
 }

@@ -5,7 +5,6 @@ import { CSSTransition } from 'react-transition-group'
 
 import { AppConfig } from './AppConfig'
 import { AppMenu } from './AppMenu'
-import { AppTopbar } from './AppTopbar'
 
 import BlocksDemo from './components/BlocksDemo'
 import ButtonDemo from './components/ButtonDemo'
@@ -15,7 +14,6 @@ import Documentation from './components/Documentation'
 import FileDemo from './components/FileDemo'
 import FloatLabelDemo from './components/FloatLabelDemo'
 import FormLayoutDemo from './components/FormLayoutDemo'
-import IconsDemo from './components/IconsDemo'
 import InputDemo from './components/InputDemo'
 import InvalidStateDemo from './components/InvalidStateDemo'
 import ListDemo from './components/ListDemo'
@@ -28,9 +26,8 @@ import PanelDemo from './components/PanelDemo'
 import TableDemo from './components/TableDemo'
 import TreeDemo from './components/TreeDemo'
 
-import StockList from './pages/stock/StockList'
 import ProductManageList from './pages/product/manage/ProductManageList'
-import TimelineDemo from './pages/TimelineDemo'
+import StockList from './pages/stock/StockList'
 
 import PrimeReact from 'primereact/api'
 import { Tooltip } from 'primereact/tooltip'
@@ -43,8 +40,9 @@ import './App.scss'
 import './assets/demo/Demos.scss'
 import './assets/demo/flags/flags.css'
 import './assets/layout/layout.scss'
-import OrderList from './pages/order/OrderList'
 import DesignManageList from './pages/design-manage/DesignManageList'
+import OrderList from './pages/order/OrderList'
+import { AppTopbar } from './AppTopbar'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -304,11 +302,11 @@ const App = () => {
 
     return (
         <div className={wrapperClass} onClick={onWrapperClick}>
-            <Tooltip ref={copyTooltipRef} target=".block-action-copy" position="bottom" content="Copied to clipboard" event="focus" />
+            {/* <Tooltip ref={copyTooltipRef} target=".block-action-copy" position="bottom" content="Copied to clipboard" event="focus" /> */}
 
             <AppTopbar onToggleMenuClick={onToggleMenuClick} layoutColorMode={layoutColorMode} mobileTopbarMenuActive={mobileTopbarMenuActive} onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick} />
 
-            <div className="layout-sidebar" onClick={onSidebarClick}>
+            <div className="layout-sidebar" onClick={onSidebarClick} style={{ width: '200px', height: 'calc(100vh - 9rem)', top: '7rem', left: 0 }}>
                 <AppMenu model={menu} onMenuItemClick={onMenuItemClick} layoutColorMode={layoutColorMode} />
             </div>
 
@@ -342,11 +340,11 @@ const App = () => {
                 {/* <AppFooter layoutColorMode={layoutColorMode} /> */}
             </div>
 
-            <AppConfig rippleEffect={ripple} onRippleEffect={onRipple} inputStyle={inputStyle} onInputStyleChange={onInputStyleChange} layoutMode={layoutMode} onLayoutModeChange={onLayoutModeChange} layoutColorMode={layoutColorMode} onColorModeChange={onColorModeChange} />
+            {/* <AppConfig rippleEffect={ripple} onRippleEffect={onRipple} inputStyle={inputStyle} onInputStyleChange={onInputStyleChange} layoutMode={layoutMode} onLayoutModeChange={onLayoutModeChange} layoutColorMode={layoutColorMode} onColorModeChange={onColorModeChange} /> */}
 
-            <CSSTransition classNames="layout-mask" timeout={{ enter: 200, exit: 200 }} in={mobileMenuActive} unmountOnExit>
+            {/* <CSSTransition classNames="layout-mask" timeout={{ enter: 200, exit: 200 }} in={mobileMenuActive} unmountOnExit>
                 <div className="layout-mask p-component-overlay"></div>
-            </CSSTransition>
+            </CSSTransition> */}
         </div>
     )
 }
