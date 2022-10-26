@@ -1,5 +1,6 @@
 import { InputTextarea } from 'primereact/inputtextarea'
 import React, { useRef, useState } from 'react'
+import { limitImageLengthMsg } from '../../common/message/image-msg'
 import ChatRow from './ChatRow'
 
 const fakeData: IChat[] = [
@@ -49,8 +50,6 @@ const initInputsChat: InputsChat = {
     content: '',
     images: [],
 }
-
-const limitImageLengthMsg = '이미지 최대 갯수는 4개입니다.'
 
 function Chatting(props: Props) {
     const { title, chatData } = props
@@ -159,7 +158,6 @@ function Chatting(props: Props) {
 
     const deleteChatRow = async (id: string) => {
         try {
-            console.log(id)
             if (window.confirm('삭제하시겠습니까?')) {
                 setChatList((prev) => prev.filter((it) => it.id !== id))
             }
@@ -200,7 +198,7 @@ function Chatting(props: Props) {
                         </div>
                         <div>
                             <input ref={inputRef} type="file" hidden onChange={onChangeFileInput} multiple accept="image/*" />
-                            <i className="fa-solid fa-paperclip border px-2 h-[32px] flex items-center cursor-pointer" onClick={onClickClip}></i>
+                            <i className="fa-solid fa-paperclip border-y px-2 h-[32px] flex items-center cursor-pointer" onClick={onClickClip}></i>
                         </div>
                         <div>
                             <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={saveChat}>

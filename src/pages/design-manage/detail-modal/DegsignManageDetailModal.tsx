@@ -1,9 +1,10 @@
 import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
-import { Image } from 'primereact/image'
 import { InputText } from 'primereact/inputtext'
-import React, { useState, useRef } from 'react'
+import React, { useRef, useState } from 'react'
+import { limitImageLengthMsg } from '../../../common/message/image-msg'
 import Chatting from '../../../components/chatting/Chatting'
+import ImageBox from '../../../components/image-box/ImageBox'
 
 type Props = {
     open: boolean
@@ -13,7 +14,7 @@ type Props = {
 function DegsignManageDetailModal(props: Props) {
     const { open, onClose } = props
     const inputRef = useRef<HTMLInputElement>(null)
-    const [previewImages, setPreviewImages] = useState<string[]>([])
+    const [imageList, setImageList] = useState<string[]>([])
 
     const ModalHeader = () => {
         return (
@@ -30,6 +31,56 @@ function DegsignManageDetailModal(props: Props) {
         if (inputRef.current) {
             inputRef.current.click()
         }
+    }
+
+    const onChangeFileInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files
+
+        if (files) {
+            imageTransPreview(files)
+        }
+    }
+
+    const imageTransPreview = (files: FileList) => {
+        if (imageList.length > 4) {
+            alert(limitImageLengthMsg)
+            return false
+        }
+
+        if (files) {
+            if (files.length + imageList.length > 4) {
+                alert(limitImageLengthMsg)
+                return false
+            }
+
+            for (let i = 0; i < files.length; i++) {
+                console.log(files[i].type)
+                if (files[i].type.includes('image')) {
+                    const image = URL.createObjectURL(files[i])
+                    setImageList((prev) => prev.concat(image))
+                } else {
+                    alert('이미지 파일만 올려주세요.')
+                }
+            }
+        }
+    }
+
+    const onDeleteImage = async (image: string) => {
+        try {
+            setImageList((prev) => prev.filter((it) => it !== image))
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    const onDropImage = (event: React.DragEvent<HTMLDivElement>) => {
+        const files = event.dataTransfer.files
+
+        if (files) {
+            imageTransPreview(files)
+        }
+
+        event.preventDefault()
     }
 
     return (
@@ -111,32 +162,20 @@ function DegsignManageDetailModal(props: Props) {
                         </div>
                         <div className="font-bold bg-[#F8F9FB] flex items-center border-b border-r pl-4 h-[32px]">참고이미지</div>
                         <div className="col-span-2 border-b">
-                            <input ref={inputRef} type="file" name="" className="hidden" />
+                            <input ref={inputRef} type="file" name="" className="hidden" onChange={onChangeFileInput} multiple accept="image/*" />
                             <button className="rounded w-full flex items-center justify-center bg-gray-300 text-white font-bold h-full space-x-3 hover:bg-gray-400 transition" onClick={onClickImageAddBtn}>
                                 <i className="fa-solid fa-plus"></i>
                                 <span>이미지 파일추가</span>
                             </button>
                         </div>
-                        <div className="col-span-3">
+                        <div className="col-span-3" onDrop={onDropImage}>
                             <div className="grid grid-cols-4 gap-1 max-w-[400px] max-h-[200px] m-auto p-1">
-                                <div className="relative">
-                                    <Image src="./assets/images/no_image.jpg" alt="" className="object-contain cursor-pointer" preview />
-                                    <button className="text-[10px] w-[20px] h-[20px] flex items-center justify-center rounded-full absolute top-0 right-0 text-red-500 hover:bg-gray-400 hover:text-white transition-3 z-10">
-                                        <i className="fa-solid fa-x"></i>
-                                    </button>
-                                </div>
-                                <div className="relative">
-                                    <Image src="./assets/images/no_image.jpg" alt="" className="object-contain cursor-pointer" preview />
-                                    <button className="text-[10px] w-[20px] h-[20px] flex items-center justify-center rounded-full absolute top-0 right-0 text-red-500 hover:bg-gray-400 hover:text-white transition-3 z-10">
-                                        <i className="fa-solid fa-x"></i>
-                                    </button>
-                                </div>
-                                <div className="relative">
-                                    <Image src="./assets/images/no_image.jpg" alt="" className="object-contain cursor-pointer" preview />
-                                    <button className="text-[10px] w-[20px] h-[20px] flex items-center justify-center rounded-full absolute top-0 right-0 text-red-500 hover:bg-gray-400 hover:text-white transition-3 z-10">
-                                        <i className="fa-solid fa-x"></i>
-                                    </button>
-                                </div>
+                                {imageList.map((image, idx) => (
+                                    <ImageBox key={idx} url={image} onDelete={onDeleteImage} />
+                                ))}
+                                {new Array(4 - imageList.length).fill(0).map((idx) => (
+                                    <ImageBox key={idx} url="" />
+                                ))}
                             </div>
                         </div>
                     </div>

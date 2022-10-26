@@ -18,8 +18,9 @@ const fakeData = [
         designer: '안영근',
         arrivalDate: '2022-10-24',
         finishDate: '2022-10-24',
-        confirmState: ['design'],
-        workState: 1,
+        confirmStatus: ['디자인'],
+        workStatus: '대기중', //대기중, 작업중, 완료, 보류, 수정, 리뉴얼
+        Instruction: '테스트중...',
     },
     {
         id: 2,
@@ -32,8 +33,9 @@ const fakeData = [
         designer: '안영근',
         arrivalDate: '2022-10-24',
         finishDate: '2022-10-24',
-        confirmState: ['design', 'md', 'manager'],
-        workState: 2,
+        confirmStatus: ['디자인', 'MD', '보류'],
+        workStatus: '작업중',
+        Instruction: '테스트중....1.',
     },
 ]
 
@@ -48,6 +50,21 @@ function DesignManageList() {
 
     const closeModal = () => {
         setDialogId(undefined)
+    }
+
+    const confirmStatusBodyTemplate = (rowData: any) => {
+        return (
+            <div className="flex flex-col space-y-1">
+                <button className={`w-full rounded p-2 font-bold text-black border ${rowData.confirmStatus.includes('디자인') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'}`}>디자인</button>
+                <button className={`w-full rounded p-2 font-bold text-black border ${rowData.confirmStatus.includes('MD') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'}`}>MD</button>
+
+                {rowData.confirmStatus.includes('보류') ? (
+                    <button className="w-full rounded p-2 font-bold text-black border bg-[#FE7979]">보류</button>
+                ) : (
+                    <button className={`w-full rounded p-2 font-bold text-black border ${rowData.confirmStatus.includes('최종') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'}`}>최종</button>
+                )}
+            </div>
+        )
     }
     return (
         <div>
@@ -104,15 +121,15 @@ function DesignManageList() {
                     <Column align="center" field="image" header="이미지" body={imageBodyTemplate} />
                     <Column align="center" field="url" header="URL" body={urlBodyTemplate} />
                     <Column align="center" field="productName" header="상품명" />
-                    <Column align="center" field="chatting.0" header="전달내용" />
+                    <Column align="center" field="Instruction" header="전달내용" />
                     <Column align="center" field="designer" header="디자인 담당자" />
                     <Column align="center" field="arrivalDate" header="입고예정일" />
                     <Column align="center" field="finishDate" header="디자인완료일" />
-                    <Column align="center" field="confirmState" header="디자인확인" />
-                    <Column align="center" field="workState " header="작업상태" />
+                    <Column align="center" field="confirmStatus" header="디자인확인" body={confirmStatusBodyTemplate} />
+                    <Column align="center" field="workStatus" header="작업상태" />
                 </DataTable>
             </div>
-            {<DegsignManageDetailModal open={true} onClose={closeModal} />}
+            {<DegsignManageDetailModal open={dialogId === 'DETAIL'} onClose={closeModal} />}
         </div>
     )
 }
