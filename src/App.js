@@ -1,48 +1,29 @@
 import classNames from 'classnames'
 import React, { useEffect, useRef, useState } from 'react'
 import { Route, useLocation } from 'react-router-dom'
-import { CSSTransition } from 'react-transition-group'
 
-import { AppConfig } from './AppConfig'
 import { AppMenu } from './AppMenu'
 
-import BlocksDemo from './components/BlocksDemo'
-import ButtonDemo from './components/ButtonDemo'
-import ChartDemo from './components/ChartDemo'
 import Dashboard from './components/Dashboard'
 import Documentation from './components/Documentation'
-import FileDemo from './components/FileDemo'
-import FloatLabelDemo from './components/FloatLabelDemo'
-import FormLayoutDemo from './components/FormLayoutDemo'
-import InputDemo from './components/InputDemo'
-import InvalidStateDemo from './components/InvalidStateDemo'
-import ListDemo from './components/ListDemo'
-import MediaDemo from './components/MediaDemo'
-import MenuDemo from './components/MenuDemo'
-import MessagesDemo from './components/MessagesDemo'
-import MiscDemo from './components/MiscDemo'
-import OverlayDemo from './components/OverlayDemo'
-import PanelDemo from './components/PanelDemo'
-import TableDemo from './components/TableDemo'
-import TreeDemo from './components/TreeDemo'
 
 import ProductManageList from './pages/product/manage/ProductManageList'
 import StockList from './pages/stock/StockList'
 
 import PrimeReact from 'primereact/api'
-import { Tooltip } from 'primereact/tooltip'
 
 // import 'primeflex/primeflex.css'
 import 'primeicons/primeicons.css'
 import 'primereact/resources/primereact.css'
 import 'prismjs/themes/prism-coy.css'
 import './App.scss'
+import { AppTopbar } from './AppTopbar'
 import './assets/demo/Demos.scss'
 import './assets/demo/flags/flags.css'
 import './assets/layout/layout.scss'
 import DesignManageList from './pages/design-manage/DesignManageList'
-import OrderList from './pages/order/OrderList'
-import { AppTopbar } from './AppTopbar'
+import OrderManage from './pages/order/manage/OrderManage'
+import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -73,22 +54,22 @@ const App = () => {
         copyTooltipRef && copyTooltipRef.current && copyTooltipRef.current.updateTargetEvents()
     }, [location])
 
-    const onInputStyleChange = (inputStyle) => {
-        setInputStyle(inputStyle)
-    }
+    // const onInputStyleChange = (inputStyle) => {
+    //     setInputStyle(inputStyle)
+    // }
 
-    const onRipple = (e) => {
-        PrimeReact.ripple = e.value
-        setRipple(e.value)
-    }
+    // const onRipple = (e) => {
+    //     PrimeReact.ripple = e.value
+    //     setRipple(e.value)
+    // }
 
-    const onLayoutModeChange = (mode) => {
-        setLayoutMode(mode)
-    }
+    // const onLayoutModeChange = (mode) => {
+    //     setLayoutMode(mode)
+    // }
 
-    const onColorModeChange = (mode) => {
-        setLayoutColorMode(mode)
-    }
+    // const onColorModeChange = (mode) => {
+    //     setLayoutColorMode(mode)
+    // }
 
     const onWrapperClick = (event) => {
         if (!menuClick) {
@@ -202,62 +183,69 @@ const App = () => {
             items: [
                 { label: '재고관리', icon: 'pi pi-fw pi-user-edit', to: '/stock' },
                 { label: '상품관리', icon: 'pi pi-fw pi-circle-off', to: '/product/manage' },
-                { label: '발주관리', icon: 'pi pi-fw pi-calendar', to: '/order' },
                 { label: '디자인관리', icon: 'pi pi-fw pi-prime', to: '/design/manage' },
             ],
         },
-        // {
-        //     label: 'Menu Hierarchy',
-        //     icon: 'pi pi-fw pi-search',
-        //     items: [
-        //         {
-        //             label: 'Submenu 1',
-        //             icon: 'pi pi-fw pi-bookmark',
-        //             items: [
-        //                 {
-        //                     label: 'Submenu 1.1',
-        //                     icon: 'pi pi-fw pi-bookmark',
-        //                     items: [
-        //                         { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-        //                         { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-        //                         { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' },
-        //                     ],
-        //                 },
-        //                 {
-        //                     label: 'Submenu 1.2',
-        //                     icon: 'pi pi-fw pi-bookmark',
-        //                     items: [
-        //                         { label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' },
-        //                         { label: 'Submenu 1.2.2', icon: 'pi pi-fw pi-bookmark' },
-        //                     ],
-        //                 },
-        //             ],
-        //         },
-        //         {
-        //             label: 'Submenu 2',
-        //             icon: 'pi pi-fw pi-bookmark',
-        //             items: [
-        //                 {
-        //                     label: 'Submenu 2.1',
-        //                     icon: 'pi pi-fw pi-bookmark',
-        //                     items: [
-        //                         { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-        //                         { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' },
-        //                         { label: 'Submenu 2.1.3', icon: 'pi pi-fw pi-bookmark' },
-        //                     ],
-        //                 },
-        //                 {
-        //                     label: 'Submenu 2.2',
-        //                     icon: 'pi pi-fw pi-bookmark',
-        //                     items: [
-        //                         { label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' },
-        //                         { label: 'Submenu 2.2.2', icon: 'pi pi-fw pi-bookmark' },
-        //                     ],
-        //                 },
-        //             ],
-        //         },
-        //     ],
-        // },
+        {
+            label: '발주',
+            icon: 'pi pi-fw pi-clone',
+            items: [
+                { label: '발주관리', icon: 'pi pi-fw pi-calendar', to: '/order/manage' },
+                { label: '중국의류발주', icon: 'pi pi-fw pi-circle-off', to: '/order/china-wear' },
+            ],
+        },
+        {
+            label: 'Menu Hierarchy',
+            icon: 'pi pi-fw pi-search',
+            items: [
+                {
+                    label: 'Submenu 1',
+                    icon: 'pi pi-fw pi-bookmark',
+                    items: [
+                        {
+                            label: 'Submenu 1.1',
+                            icon: 'pi pi-fw pi-bookmark',
+                            items: [
+                                { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
+                                { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
+                                { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' },
+                            ],
+                        },
+                        {
+                            label: 'Submenu 1.2',
+                            icon: 'pi pi-fw pi-bookmark',
+                            items: [
+                                { label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' },
+                                { label: 'Submenu 1.2.2', icon: 'pi pi-fw pi-bookmark' },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    label: 'Submenu 2',
+                    icon: 'pi pi-fw pi-bookmark',
+                    items: [
+                        {
+                            label: 'Submenu 2.1',
+                            icon: 'pi pi-fw pi-bookmark',
+                            items: [
+                                { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
+                                { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' },
+                                { label: 'Submenu 2.1.3', icon: 'pi pi-fw pi-bookmark' },
+                            ],
+                        },
+                        {
+                            label: 'Submenu 2.2',
+                            icon: 'pi pi-fw pi-bookmark',
+                            items: [
+                                { label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' },
+                                { label: 'Submenu 2.2.2', icon: 'pi pi-fw pi-bookmark' },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
         // {
         //     label: 'Get Started',
         //     items: [
@@ -313,7 +301,7 @@ const App = () => {
             <div className="layout-main-container">
                 <div className="layout-main">
                     <Route path="/" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
-                    <Route path="/formlayout" component={FormLayoutDemo} />
+                    {/* <Route path="/formlayout" component={FormLayoutDemo} />
                     <Route path="/input" component={InputDemo} />
                     <Route path="/floatlabel" component={FloatLabelDemo} />
                     <Route path="/invalidstate" component={InvalidStateDemo} />
@@ -326,12 +314,13 @@ const App = () => {
                     <Route path="/media" component={MediaDemo} />
                     <Route path="/menu" component={MenuDemo} />
                     <Route path="/messages" component={MessagesDemo} />
-                    <Route path="/blocks" component={BlocksDemo} />
-                    <Route path="/design/manage" component={DesignManageList} />
-                    <Route path="/file" component={FileDemo} />
+                    <Route path="/blocks" component={BlocksDemo} /> */}
+                    {/* <Route path="/file" component={FileDemo} />
                     <Route path="/chart" render={() => <ChartDemo colorMode={layoutColorMode} location={location} />} />
-                    <Route path="/misc" component={MiscDemo} />
-                    <Route path="/order" component={OrderList} />
+                    <Route path="/misc" component={MiscDemo} /> */}
+                    <Route path="/design/manage" component={DesignManageList} />
+                    <Route path="/order/manage" component={OrderManage} />
+                    <Route path="/order/china-wear" component={ChinaWearOrder} />
                     <Route path="/stock" component={StockList} />
                     <Route path="/product/manage" component={ProductManageList} />
                     <Route path="/documentation" component={Documentation} />

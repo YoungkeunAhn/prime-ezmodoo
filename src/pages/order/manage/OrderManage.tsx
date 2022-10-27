@@ -2,9 +2,8 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
-import { Tooltip } from 'primereact/tooltip'
-import React, { useState, useEffect } from 'react'
-import { imageBodyTemplate, printBodyTemplate, urlBodyTemplate } from '../../hooks/data-table-hooks/HeaderHooks'
+import React, { useState } from 'react'
+import { imageBodyTemplate, printBodyTemplate, urlBodyTemplate } from '../../../hooks/data-table-hooks/HeaderHooks'
 import OrderDetailModal from './detail-modal/OrderDetailModal'
 
 const fakeData = [
@@ -75,7 +74,7 @@ const fakeData = [
 
 type DialogId = 'DETAIL'
 
-function OrderList() {
+function OrderManage() {
     const [paymentOpen, setPaymentOpen] = useState<boolean>(true)
     const [dialogId, setDialogId] = useState<DialogId>()
 
@@ -92,6 +91,9 @@ function OrderList() {
     }
     const productNameBodyTemplate = (rowData: any) => {
         return <span className="w-[300px]">{rowData.productName}</span>
+    }
+    const longTextBodyTemplate = (rowData: any, option: any) => {
+        return rowData[option.field].length > 100 ? rowData[option.field].slice(0, 100) + '...' : rowData[option.field]
     }
     return (
         <div>
@@ -178,7 +180,7 @@ function OrderList() {
                     <Column align="center" field="orderDate" header="발주일자" />
                     <Column align="center" field="manager" header="담당자" />
                     <Column align="center" field="image" header="이미지" body={imageBodyTemplate} />
-                    <Column align="center" field="ur;" header="URL" body={urlBodyTemplate} />
+                    <Column align="center" field="url" header="URL" body={urlBodyTemplate} />
                     <Column align="center" field="productName" header="상품명" body={productNameBodyTemplate} headerStyle={{ minWidth: '200px' }} />
                     <Column align="center" field="orderNum" header="주문번호" />
                     <Column align="center" field="orderQty" header="발주수량" />
@@ -190,9 +192,9 @@ function OrderList() {
                     <Column align="center" field="factoryReleaseDate" header="공장출고 예정일" />
                     <Column align="center" field="arrivalReleaseDate" header="본사도착 예정일" />
                     <Column align="center" field="chinaTransitInfo" header="중국 운송장정보" />
-                    <Column align="center" field="productDistribution" header="상품물류정보" />
-                    <Column align="center" field="mdMemo" header="MD메모" />
-                    <Column align="center" field="traderMemo" header="무역메모" />
+                    <Column align="center" field="productDistribution" header="상품물류정보" body={longTextBodyTemplate} />
+                    <Column align="center" field="mdMemo" header="MD메모" body={longTextBodyTemplate} headerStyle={{ minWidth: '200px' }} />
+                    <Column align="center" field="traderMemo" header="무역메모" body={longTextBodyTemplate} />
                     <Column align="center" field="packingState" header="패킹상태" />
                     <Column align="center" field="print" header="인쇄" body={printBodyTemplate} />
                 </DataTable>
@@ -202,4 +204,4 @@ function OrderList() {
     )
 }
 
-export default OrderList
+export default OrderManage
