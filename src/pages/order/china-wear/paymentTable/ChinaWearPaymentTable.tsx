@@ -2,10 +2,11 @@ import React from 'react'
 
 type Props = {
     open: boolean
+    openModal: () => void
 }
 
 function ChinaWearPaymentTable(props: Props) {
-    const { open } = props
+    const { open, openModal } = props
 
     return (
         <div className={`flex space-x-2 h-[60px] overflow-hidden ${open ? 'w-fit' : 'w-0'}`}>
@@ -13,7 +14,9 @@ function ChinaWearPaymentTable(props: Props) {
                 <thead className="text-center">
                     <th className="bg-[#FFD9D9] font-bold border w-[150px]">발주금액</th>
                     <th className="bg-[#FFD9D9] font-bold border w-[150px]">도착완료금액</th>
-                    <th className="bg-[#FFD9D9] font-bold border w-[150px]">지급액</th>
+                    <th className="bg-[#FFD9D9] font-bold border w-[150px] cursor-pointer" onClick={openModal}>
+                        지급액
+                    </th>
                     <th className="bg-[#FFD9D9] font-bold border w-[150px]">미지급액</th>
                     <th className="bg-[#FFD9D9] font-bold border w-[150px]">미출고잔액</th>
                 </thead>

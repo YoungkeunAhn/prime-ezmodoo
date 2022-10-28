@@ -3,8 +3,10 @@ import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
-import { imageBodyTemplate, printBodyTemplate, urlBodyTemplate, wrapColumnHeader } from '../../../hooks/data-table-hooks/HeaderHooks'
+import { imageBodyTemplate, printBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
+import { wrapColumnHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import OrderDetailModal from './detail-modal/OrderDetailModal'
+import PaymentLogModal from './payment-log-modal/PaymentLogModal'
 import ChinaWearPaymentTable from './paymentTable/ChinaWearPaymentTable'
 
 const fakeData = [
@@ -62,10 +64,10 @@ const fakeData = [
     },
 ]
 
-type DialogId = 'DETAIL'
+type DialogId = 'DETAIL' | 'PAYMENT'
 
 function ChinaWearOrder() {
-    const [paymentOpen, setPaymentOpen] = useState<boolean>(true)
+    const [paymentOpen, setPaymentOpen] = useState<boolean>(false)
     const [dialogId, setDialogId] = useState<DialogId>()
 
     const openDetailDialog = () => {
@@ -88,21 +90,25 @@ function ChinaWearOrder() {
     const managerBodyTemplate = (rowData: any) => {
         return rowData.manager
     }
+    const openPaymentDialog = () => {
+        setDialogId('PAYMENT')
+    }
+
     return (
         <div>
             <div className="page-header border rounded-lg flex bg-white mb-5">
                 <div>
                     <div className="flex items-center px-4 border-b h-[62px] box-border">
                         <div className="flex flex-col justify-center pt-4">
-                            <span className="font-bold text-lg relative">발주리스트</span>
+                            <span className="font-bold text-lg relative">중국의류발주</span>
                             <div className="border-2 w-full border-blue-500 relative -bottom-[14px]"></div>
                         </div>
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : 3862</span>
                         <div className="flex ml-10 h-full text-sm space-x-5">
-                            <div className="rounded-b-full pt-1 bg-[#7E00B2] text-center text-white h-[35px] cursor-pointer w-[75px]" onClick={onTogglePayment}>
+                            <div className="rounded-b-full pt-1 bg-[#BC0033] text-center text-white h-[35px] cursor-pointer w-[75px]" onClick={onTogglePayment}>
                                 결제금액
                             </div>
-                            <ChinaWearPaymentTable open={paymentOpen} />
+                            <ChinaWearPaymentTable open={paymentOpen} openModal={openPaymentDialog} />
                         </div>
                     </div>
                     <div className="flex space-x-4 p-4">
@@ -172,6 +178,7 @@ function ChinaWearOrder() {
                 </DataTable>
             </div>
             <OrderDetailModal open={dialogId === 'DETAIL'} onClose={closeModal} data={fakeData} />
+            <PaymentLogModal open={dialogId === 'PAYMENT'} onClose={closeModal} />
         </div>
     )
 }
