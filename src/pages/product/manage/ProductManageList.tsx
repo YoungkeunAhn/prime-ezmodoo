@@ -5,8 +5,8 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { Tooltip } from 'primereact/tooltip'
 import React, { useState } from 'react'
-import { urlBodyTemplate } from '../../../hooks/data-table-hooks/HeaderHooks'
-import ProductDetailModal from './detail-modal/ProductDetailModal'
+import { imageBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
+import ProductDialog from './detail-modal/ProductDialog'
 
 type DialogId = 'DETAIL'
 
@@ -92,52 +92,6 @@ function ProductManageList() {
         const seq = idx + 1
         return { ...item, calcPrice, profit, profitRate, seq }
     })
-
-    const fakeInfoData = [
-        {
-            id: '3',
-            seller: '아이마마',
-            sellShop: 'coopang-rocket',
-            productCode: '1000012',
-            optionId: '80315950173',
-            options: ['소형', '핑크'],
-            stock: 1000,
-            usableStock: 1000,
-            coopangStock: 1000,
-            zetRequestStock: 1000,
-            purchaseStock: 1000,
-        },
-        {
-            id: '2',
-            seller: '아이마마',
-            sellShop: 'coopang-zet',
-            productCode: '1000012',
-            optionId: '80315950173',
-            options: ['소형', '핑크'],
-            stock: 1000,
-            usableStock: 1000,
-            coopangStock: 1000,
-            zetRequestStock: 1000,
-            purchaseStock: 1000,
-        },
-        {
-            id: '1',
-            seller: '아이마마',
-            sellShop: 'coopang-zet',
-            productCode: '1000012',
-            optionId: '80315950173',
-            options: ['소형', '핑크'],
-            stock: 1000,
-            usableStock: 1000,
-            coopangStock: 1000,
-            zetRequestStock: 1000,
-            purchaseStock: 1000,
-        },
-    ]
-
-    const imageBodyTemplate = (rowData: any, option?: any) => {
-        return <img src={rowData.image} alt={rowData.image} className="w-[50px] h-[50px] m-auto" />
-    }
 
     const ecommerceBodyTemplate = (rowData: any) => {
         return (
@@ -236,7 +190,7 @@ function ProductManageList() {
                     <Column align="center" className="text-[12px]" field="profitRate" header="판매이익률" sortable body={numberBodyTemplate} />
                 </DataTable>
             </div>
-            <ProductDetailModal open={dialogId === 'DETAIL'} onClose={onCloseModal} data={fakeInfoData} />
+            <ProductDialog open={dialogId === 'DETAIL'} onClose={onCloseModal} />
         </div>
     )
 }
