@@ -4,7 +4,7 @@ import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import React, { useCallback, useState } from 'react'
-import { imageBodyTemplate, urlBodyTemplate } from '../../hooks/data-table-hooks/HeaderHooks'
+import { imageBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import DegsignManageDetailModal from './detail-modal/DegsignManageDetailModal'
 
 const fakeData = [

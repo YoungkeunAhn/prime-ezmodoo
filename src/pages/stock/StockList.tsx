@@ -3,7 +3,8 @@ import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
-import { imageBodyTemplate, wrapColumnHeader } from '../../hooks/data-table-hooks/HeaderHooks'
+import { imageBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
+import { wrapColumnHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import LogViewModal from './LogViewModal'
 
 function StockList() {

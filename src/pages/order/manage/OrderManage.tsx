@@ -3,7 +3,7 @@ import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
-import { imageBodyTemplate, printBodyTemplate, urlBodyTemplate } from '../../../hooks/data-table-hooks/HeaderHooks'
+import { imageBodyTemplate, printBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import OrderDetailModal from './detail-modal/OrderDetailModal'
 
 const fakeData = [
@@ -75,7 +75,7 @@ const fakeData = [
 type DialogId = 'DETAIL'
 
 function OrderManage() {
-    const [paymentOpen, setPaymentOpen] = useState<boolean>(true)
+    const [paymentOpen, setPaymentOpen] = useState<boolean>(false)
     const [dialogId, setDialogId] = useState<DialogId>()
 
     const openDetailDialog = () => {
