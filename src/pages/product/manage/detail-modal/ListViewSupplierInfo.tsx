@@ -1,7 +1,7 @@
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
 
-function ExpandViewSupplierInfo() {
+function ListViewSupplierInfo() {
     const [open, setOpen] = useState<boolean>(true)
 
     const onToogleOpen = () => {
@@ -56,4 +56,4 @@ function ExpandViewSupplierInfo() {
     )
 }
 
-export default ExpandViewSupplierInfo
+export default ListViewSupplierInfo

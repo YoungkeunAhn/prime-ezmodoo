@@ -1,7 +1,7 @@
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
 
-function ExpandViewDistributionInfo() {
+function ListViewDistributionInfo() {
     const [open, setOpen] = useState<boolean>(true)
 
     const onToogleOpen = () => {
@@ -56,4 +56,4 @@ function ExpandViewDistributionInfo() {
     )
 }
 
-export default ExpandViewDistributionInfo
+export default ListViewDistributionInfo
