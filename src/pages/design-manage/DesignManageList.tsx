@@ -112,14 +112,8 @@ function DesignManageList() {
             </div>
             <div className="card">
                 <div className="flex items-center space-x-2 mb-2 text-sm">
-                    <Dropdown value="배송정보" className="h-[32px]" />
                     <button className="btn primary-btn">선택삭제</button>
                     <button className="btn primary-btn">선택복사</button>
-                    <button className="btn primary-btn">물류보내기</button>
-                    <button className="border border-[#098000] rounded bg-white flex items-center space-x-2 p-1 px-2 h-[30px]">
-                        <img src="./assets/icons/excel.png" alt="excel" width={28} className="object-contain" />
-                        <span className="font-bold text-black text-sm">엑셀 다운로드</span>
-                    </button>
                 </div>
                 <DataTable value={fakeData} responsiveLayout="scroll" resizableColumns onRowClick={openDetailModal} className="text-sm" columnResizeMode="expand">
                     <Column align="center" selectionMode="multiple" selectionAriaLabel="id" headerStyle={{ width: '3em' }} field="id"></Column>

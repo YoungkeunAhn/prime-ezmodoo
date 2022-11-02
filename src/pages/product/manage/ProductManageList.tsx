@@ -4,7 +4,9 @@ import { DataTable } from 'primereact/datatable'
 import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { Tooltip } from 'primereact/tooltip'
+import { title } from 'process'
 import React, { useState } from 'react'
+import MenuButton from 'src/components/custom-buttons/MenuButton'
 import { imageBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import ProductDialog from './detail-modal/ProductDialog'
 
@@ -170,6 +172,36 @@ function ProductManageList() {
                 </div>
             </div>
             <div className="card">
+                <div className="flex items-center justify-between space-x-2 mb-2">
+                    <div className="flex items-center space-x-2">
+                        <button className="btn primary-btn">신규등록</button>
+                        <button className="btn primary-btn">선택삭제</button>
+                        <button className="btn primary-btn">선택복사</button>
+                        <button className="btn primary-btn">상품마감</button>
+                        <button className="btn primary-btn">마감해제</button>
+                        {/* <button className="border border-[#146BCE] rounded text-[#146BCE] bg-white flex items-center space-x-2 p-1 px-2 h-[32px] relative">
+                            <span className="font-bold text-sm">전체상품보기</span>
+                            <i className="fa-solid fa-ellipsis-vertical"></i>
+                            <ul className="border bg-white absolute z-10 -right-[160px] -top-[2px] p-2 flex flex-col text-start text-gray-400 text-sm space-y-2 w-[155px] rounded">
+                                <li className="w-full">전체상품 보기</li>
+                                <li className="w-full">전체상품 보기(마감제외)</li>
+                                <li className="w-full">마감상품 보기</li>
+                            </ul>
+                        </button> */}
+                        <MenuButton title="전체상품보기" color="#146BCE" menu={['전체상품 보기', '전체상품 보기(마감제외)', '마감상품 보기']} onClickMenu={(action: string) => alert(action)} />
+                        <button className="btn primary-btn">디자인요청</button>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                        <MenuButton
+                            title="EXCEL"
+                            position="left"
+                            color="#098000"
+                            menu={['전체상품 엑셀 다운로드', '선택상품 엑셀 다운로드', '엑셀 업로드(상품 수정)']}
+                            icon={<img src="./assets/icons/excel.png" alt="excel" width={28} className="object-contain" />}
+                            onClickMenu={(action: string) => alert(action)}
+                        />
+                    </div>
+                </div>
                 <DataTable value={fakeData} responsiveLayout="scroll" sortMode="multiple" removableSort resizableColumns onRowClick={onRowClick} className="max-h-[99vh]" columnResizeMode="expand">
                     <Column align="center" selectionMode="multiple" selectionAriaLabel="id" headerStyle={{ width: '3em' }} field="id"></Column>
                     <Column align="center" className="text-[12px]" field="seq" header="NO" />

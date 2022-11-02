@@ -1,5 +1,6 @@
 import { ColumnProps } from 'primereact/column'
 import { DataTableProps } from 'primereact/datatable'
+import { DialogProps } from 'primereact/dialog'
 
 export interface CustomDialogProps extends DialogProps {
     children?: any

@@ -1,7 +1,7 @@
 import React from 'react'
 
 export const imageBodyTemplate = (rowData: any, option?: any) => {
-    return <img src={rowData.image} alt={rowData.image} className="w-[65px] h-[65px] m-auto" />
+    return <img src={rowData[option.field]} alt={rowData[option.field]} className="w-[65px] h-[65px] m-auto" />
 }
 
 export const urlBodyTemplate = (rowData: any, option?: any) => {
