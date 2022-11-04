@@ -3,7 +3,7 @@ import React from 'react'
 
 type Props = {
     title: string
-    content: ICommonInfo[]
+    content: any[]
 }
 
 function CommonInfoTable(props: Props) {

@@ -25,84 +25,6 @@ function OrderDetailModal(props: Props) {
         title: '로지 토끼 슬리퍼',
     }
 
-    const fakeSupplierInfo: ICommonInfo[] = [
-        {
-            title: '공급사명',
-            info: 'SHENGPENG',
-        },
-        {
-            title: '대표자',
-            info: 'LEEKANGRO',
-        },
-        {
-            title: '사업자등록번호',
-            info: '111-11-111111',
-        },
-        {
-            title: '팩스번호',
-            info: '02-1577-7777',
-        },
-        {
-            title: '대표번호',
-            info: '02-1577-7777',
-        },
-        {
-            title: '대표이메일주소',
-            info: 'SHENGPENG',
-        },
-        {
-            title: '주소',
-            info: 'SHENGPENG',
-        },
-        {
-            title: 'URL1',
-            info: '',
-        },
-        {
-            title: 'URL2',
-            info: '',
-        },
-    ]
-
-    const fakeDistributionInfo: ICommonInfo[] = [
-        {
-            title: '카톤사이즈',
-            info: '50*50*50* cm',
-        },
-        {
-            title: '박스당 CBM',
-            info: '0.125 cbm',
-        },
-        {
-            title: '상품 영문명',
-            info: 'Cable Fill',
-        },
-        {
-            title: '재질 영문명',
-            info: 'plastic',
-        },
-        {
-            title: '발주 후 입고기간',
-            info: '15일',
-        },
-        {
-            title: '박스 입수량',
-            info: '100',
-        },
-        {
-            title: 'Net W/T (개당 상품순중량)',
-            info: '0.4 kg',
-        },
-        {
-            title: '상품 총중량',
-            info: '15 kg',
-        },
-        {
-            title: '관세율',
-            info: '3.40 %',
-        },
-    ]
-
     const ModalHeader = () => {
         return (
             <div className="flex justify-between items-center p-0">
@@ -134,10 +56,10 @@ function OrderDetailModal(props: Props) {
                             </ul>
                             <div className="flex mt-2">
                                 <div>
-                                    <CommonInfoTable title="공급사정보" content={fakeSupplierInfo} />
+                                    <CommonInfoTable title="공급사정보" content={[]} />
                                 </div>
                                 <div>
-                                    <CommonInfoTable title="상품물류 정보" content={fakeDistributionInfo} />
+                                    <CommonInfoTable title="상품물류 정보" content={[]} />
                                 </div>
                             </div>
                         </div>

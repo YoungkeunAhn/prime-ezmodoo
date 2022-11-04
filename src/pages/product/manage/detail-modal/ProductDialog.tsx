@@ -1,73 +1,73 @@
-import { debounce } from 'lodash'
+import axios from 'axios'
+import { cloneDeep, set } from 'lodash'
 import { Column, ColumnEditorOptions } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { Dropdown } from 'primereact/dropdown'
-import { InputNumber } from 'primereact/inputnumber'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import SortableList from 'react-easy-sort'
+import { BASE_URL } from 'src/api/ApiConfig'
 import { numberEditor, textEditor } from 'src/hooks/data-table-hooks/EditorHooks'
+import { Product, StockInfo, TradeInfo } from 'src/types/product-manage'
 import { sellShopSelectTemplate } from '../../../../hooks/dropdown/ValueTemplate'
 import { ecommerceList } from '../ProductManageList'
-import CommonInfoTable from './CommonInfoTable'
 import ContentHeader from './ContentHeader'
-import ListViewDistributionInfo from './ListViewDistributionInfo'
-import ListViewSupplierInfo from './ListViewSupplierInfo'
 import ManageListItem from './ManageListItem'
+import StockInfoTable from './StockInfoTable'
+import TradeInfoTable from './TradeInfoTable'
 
 type TabId = 'EXPAND' | 'LIST'
 
 type Props = {
     open: boolean
+    pk?: string
     onClose: () => void
 }
 
-const fakeInfoData = [
-    {
-        id: '3',
-        index: 0,
-        seller: '아이마마',
-        sellShop: 'coopang-rocket',
-        productCode: '1000012',
-        optionId: '80315950173',
-        options: ['소형', '핑크'],
-        stock: 1000,
-        usableStock: 1000,
-        coupangStock: 1000,
-    },
-    {
-        id: '2',
-        index: 1,
-        seller: '아이마마',
-        sellShop: 'coopang-zet',
-        productCode: '1000012',
-        optionId: '80315950173',
-        options: ['중형', '핑크'],
-        stock: 1000,
-        usableStock: 1000,
-        coupangStock: 1000,
-    },
-    {
-        id: '1',
-        index: 2,
-        seller: '아이마마',
-        sellShop: 'coopang-zet',
-        productCode: '1000012',
-        optionId: '80315950173',
-        options: ['대형', '핑크'],
-        stock: 1000,
-        usableStock: 1000,
-        coupangStock: 1000,
-    },
-]
-
 type JetObjType = Record<string, { productCode: string; qty: number }>
 
+const initTradeInfo: TradeInfo = {
+    company: {
+        address: '',
+        bizId: '',
+        faxNo: '',
+        name: '',
+        telNo: '',
+        stieUrl1: '',
+        stieUrl2: '',
+    },
+    officer: {
+        email: '',
+        name: '',
+    },
+    memo: '',
+}
+
+const initStockInfo: StockInfo = {
+    trade: {
+        lwh: {
+            width: 0,
+            length: 0,
+            height: 0,
+        },
+        cbm: 0,
+        receiptPeriod: 0,
+        gwt: 0,
+        nwt: 0,
+        qtyPerBox: 0,
+        tariffRate: 0,
+    },
+    enSkuMaterial: '',
+    enSkuName: '',
+}
+
 function ProductDialog(props: Props) {
-    const { open, onClose } = props
-    const [tabId, setTabId] = useState<TabId>('LIST')
-    const [productList, setProductList] = useState(fakeInfoData)
-    const [jetObj, setJetObj] = useState<JetObjType>({ '1': { productCode: '', qty: 0 }, '2': { productCode: '', qty: 0 }, '3': { productCode: '', qty: 0 } })
+    const { open, pk, onClose } = props
+    const [tabId, setTabId] = useState<TabId>('EXPAND')
+    const [productList, setProductList] = useState<Product[]>([])
+    const [tradeInfo, setTradeInfo] = useState<TradeInfo>(initTradeInfo)
+    const [stockInfo, setStockInfo] = useState<StockInfo>(initStockInfo)
+    // const [jetObj, setJetObj] = useState<JetObjType>()
 
     const onClickListView = () => {
         setTabId('LIST')
@@ -77,93 +77,38 @@ function ProductDialog(props: Props) {
         setTabId('EXPAND')
     }
 
+    const onChangeTradeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTradeInfo((prev) => set(cloneDeep(prev), event.target.name, event.target.value))
+    }
+
+    const onChangeStockInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setStockInfo((prev) => set(cloneDeep(prev), event.target.name, event.target.value))
+    }
+
     const fakeHeaderInfo = {
         manager: '안영근',
         createAt: '2021-12-06 16:08:50',
         title: '로지 토끼 슬리퍼',
     }
 
-    const fakeSupplierInfo: ICommonInfo[] = [
-        {
-            title: '공급사명',
-            info: 'SHENGPENG',
-        },
-        {
-            title: '대표자',
-            info: 'LEEKANGRO',
-        },
-        {
-            title: '사업자등록번호',
-            info: '111-11-111111',
-        },
-        {
-            title: '팩스번호',
-            info: '02-1577-7777',
-        },
-        {
-            title: '대표번호',
-            info: '02-1577-7777',
-        },
-        {
-            title: '대표이메일주소',
-            info: 'SHENGPENG',
-        },
-        {
-            title: '주소',
-            info: 'SHENGPENG',
-        },
-        {
-            title: 'URL1',
-            info: '',
-        },
-        {
-            title: 'URL2',
-            info: '',
-        },
-    ]
-
-    const fakeDistributionInfo: ICommonInfo[] = [
-        {
-            title: '카톤사이즈',
-            info: '50*50*50* cm',
-        },
-        {
-            title: '박스당 CBM',
-            info: '0.125 cbm',
-        },
-        {
-            title: '상품 영문명',
-            info: 'Cable Fill',
-        },
-        {
-            title: '재질 영문명',
-            info: 'plastic',
-        },
-        {
-            title: '발주 후 입고기간',
-            info: '15일',
-        },
-        {
-            title: '박스 입수량',
-            info: '100',
-        },
-        {
-            title: 'Net W/T (개당 상품순중량)',
-            info: '0.4 kg',
-        },
-        {
-            title: '상품 총중량',
-            info: '15 kg',
-        },
-        {
-            title: '관세율',
-            info: '',
-        },
-        {
-            title: '비고',
-            info: '3.40 %',
-        },
-    ]
+    const onClickAddBtn = () => {
+        setProductList((prev) =>
+            prev.concat([
+                {
+                    pk: '',
+                    productId: '',
+                    productName: '',
+                    sellerPk: '',
+                    sellerName: '',
+                    marketId: '',
+                    marketName: '',
+                    memo: '',
+                    attrs: [],
+                    items: [],
+                },
+            ])
+        )
+    }
 
     const ModalHeader = () => {
         return (
@@ -189,19 +134,22 @@ function ProductDialog(props: Props) {
         setProductList(event.value)
     }
 
-    const jetQtyBodyTemplate = (rowData: any) => {
-        const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-            debounce(() => {
-                setJetObj((prev) => ({ ...prev, [rowData.id]: { productCode: rowData.productCode, qty: 0 } }))
-            })
-        }
+    const loadProduct = useCallback(async () => {
+        try {
+            if (pk !== '') {
+                const { data } = await axios.get(BASE_URL + 'products/' + pk)
+                console.log(data)
+            }
+        } catch (err) {}
+    }, [pk])
 
-        return <InputNumber name={rowData.productCode} value={jetObj[rowData.id].qty} onChange={(e) => onChange} className="border-none" />
-    }
+    useEffect(() => {
+        loadProduct()
+    }, [loadProduct, pk])
 
     return (
-        <Dialog header={ModalHeader} visible={open} onHide={onClose} className="max-w-[1500px] w-full min-w-[500px]" closable={false}>
-            <div>
+        <Dialog header={ModalHeader} visible={open} onHide={onClose} className="max-w-[1500px] w-full min-w-[500px] h-full" closable={false}>
+            <div className="h-full">
                 <ContentHeader manager={fakeHeaderInfo.manager} createdAt={fakeHeaderInfo.createAt} title={fakeHeaderInfo.title} />
                 <div className="flex items-center p-1 space-x-2">
                     <button className="px-1.5 border border-[#707070] rounded text-[#707070]">
@@ -216,7 +164,7 @@ function ProductDialog(props: Props) {
                     <button className="px-1.5 border border-[#707070] rounded text-[#707070]">
                         <i className="pi pi-angle-up text-[10px]" />
                     </button>
-                    <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                    <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]" onClick={onClickAddBtn}>
                         추가
                     </button>
                     <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-[#A10C0C] text-[12px] ">
@@ -225,34 +173,40 @@ function ProductDialog(props: Props) {
                     <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
                         복사
                     </button>
-                    <button onClick={onClickExpandView} style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
-                        펼쳐보기
-                    </button>
-                    <button onClick={onClickListView} style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
-                        리스트형식보기
-                    </button>
-                    <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
-                        <i className="fa-regular fa-eye-slash mr-1"></i>
-                        <span>숨김처리</span>
-                    </button>
-                    <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
-                        <i className="fa-regular fa-eye mr-1"></i>
-                        <span>모든옵션보기</span>
-                    </button>
+                    {pk && (
+                        <>
+                            <button onClick={onClickExpandView} style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                                펼쳐보기
+                            </button>
+                            <button onClick={onClickListView} style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                                리스트형식보기
+                            </button>
+                            <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                                <i className="fa-regular fa-eye-slash mr-1"></i>
+                                <span>숨김처리</span>
+                            </button>
+                            <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                                <i className="fa-regular fa-eye mr-1"></i>
+                                <span>모든옵션보기</span>
+                            </button>
+                        </>
+                    )}
                 </div>
                 {tabId === 'EXPAND' && (
-                    <div className="flex border-t-4 border-[#0D3157]">
-                        <SortableList onSortEnd={() => {}} draggedItemClassName="dragged" className="text-[12px] max-h-[76vh] overflow-y-auto manage-list">
-                            <ManageListItem />
-                            <ManageListItem />
-                            <ManageListItem />
-                        </SortableList>
+                    <div className="flex border-t-4 border-[#0D3157] h-auto">
+                        <div className="min-w-[1050px]">
+                            <SortableList onSortEnd={() => {}} draggedItemClassName="dragged" className="text-[12px] max-h-[76vh] overflow-y-auto manage-list">
+                                {productList.map((product, idx) => (
+                                    <ManageListItem key={idx} />
+                                ))}
+                            </SortableList>
+                        </div>
                         <div className="ml-2 h-auto flex flex-col justify-between">
                             <div className="w-[400px]">
-                                <CommonInfoTable title="공급사정보" content={fakeSupplierInfo} />
+                                <TradeInfoTable info={tradeInfo} onChange={onChangeTradeInfo} />
                             </div>
                             <div className="w-[400px]">
-                                <CommonInfoTable title="상품물류 정보" content={fakeDistributionInfo} />
+                                <StockInfoTable info={stockInfo} onChange={onChangeStockInfo} />
                             </div>
                         </div>
                     </div>
@@ -271,12 +225,12 @@ function ProductDialog(props: Props) {
                             <Column align="center" className="text-[12px]" field="stock" header="창고재고량" editor={(options: ColumnEditorOptions) => numberEditor(options)} />
                             <Column align="center" className="text-[12px]" field="usableStock" header="가용재고량" editor={(options: ColumnEditorOptions) => numberEditor(options)} />
                             <Column align="center" className="text-[12px]" field="coupangStock" header="쿠팡창고재고량" editor={(options: ColumnEditorOptions) => numberEditor(options)} />
-                            <Column align="center" className="text-[12px]" field="zetRequestStock" header="제트배송-입고요청수량" body={jetQtyBodyTemplate} />
+                            {/* <Column align="center" className="text-[12px]" field="zetRequestStock" header="제트배송-입고요청수량" body={jetQtyBodyTemplate} /> */}
                             <Column align="center" className="text-[12px]" field="purchaseStock" header="발주(매입)수량" />
                         </DataTable>
 
-                        <ListViewSupplierInfo />
-                        <ListViewDistributionInfo />
+                        {/* <ListViewSupplierInfo /> */}
+                        {/* <ListViewDistributionInfo /> */}
                     </div>
                 )}
             </div>
