@@ -20,16 +20,12 @@ function StockInfoTable(props: Props) {
                 </th>
             </tr>
 
-            {/* <th className="border-r bg-[#F8F9FB] text-left p-2 pl-3">공급사명</th>
-                <td className="text-[#667084]">
-                    <InputText className="border-none w-full px-2 py-1" name="company.name" value={info.company.name} onChange={onChange} />
-                </td> */}
             <CommonInfoTableRow title="상품 영문명" name="enSkuName" value={info.enSkuName} onChange={onChange} />
             <CommonInfoTableRow title="재질 영문명" name="enSkuMaterial" value={info.enSkuMaterial} onChange={onChange} />
             <tr className="border-b h-[32px]">
                 <th className="border-r bg-[#F8F9FB] text-left p-2 pl-3">카톤사이즈</th>
                 <td className="text-[#667084]">
-                    <div className="p-inputgroup border">
+                    <div className="p-inputgroup border-none">
                         <div className="w-full flex items-center">
                             <InputText className="border-none w-full px-2 py-1 text-center" name="trade.lwh.width" value={info.trade.lwh.width || ''} onChange={onChange} placeholder="가로" />
                             *
@@ -37,7 +33,7 @@ function StockInfoTable(props: Props) {
                             *
                             <InputText className="border-none w-full px-2 py-1 text-center" name="trade.lwh.height" value={info.trade.lwh.height || ''} onChange={onChange} placeholder="높이" />
                         </div>
-                        <span className="p-inputgroup-addon h-[32px]">cm</span>
+                        <span className="p-inputgroup-addon h-[32px] bg-[#F8F9FB] border-none ml-1">cm</span>
                     </div>
                 </td>
             </tr>

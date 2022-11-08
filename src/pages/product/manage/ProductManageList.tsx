@@ -18,7 +18,7 @@ type DetailModalProps = {
     pk: string
 }
 
-export const ecommerceList = ['coopang-rocket', 'coopang-zet', 'coopang-seller', 'auction', 'street11', 'gmarket', 'tmon', 'wemap', 'interpark', 'ably', 'zigzag', 'talkstore', 'funshop', 'smartstore']
+export const ecommerceList = ['coupang_rocket', 'coupang_jet', 'coupang', 'auction', 'street11', 'gmarket', 'tmon', 'wemakeprice', 'interpark', 'ably', 'zigzag', 'talkstore', 'funshop', 'smartstore']
 
 function ProductManageList() {
     const [dialogId, setDialogId] = useState<DialogId>()

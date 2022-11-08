@@ -74,14 +74,17 @@ export declare type ProductItem = {
     pk: string
     itemId: string
     itemName: string
-    itemAttr: { [key: string]: string }
+    itemAttr?: { [key: string]: string }
     itemImageUrls: string[]
+    itemOptions: string[]
     skuId: string
     qrcode: string
     barcode: string
     sellPrice: number
     salePrice: number
     couponPrice: number
+    stockQty: number
+    memo: string
     commissionRate: number
     deliveryCharge: number
     optionalCharge: number
@@ -159,4 +162,34 @@ export declare type StockInfo = {
     }
     enSkuMaterial: string
     enSkuName: string
+}
+
+export declare type HeaderInfo = {
+    managerName: string
+    createdAt: string
+    currencyCost: number
+    applyExchangeRateCost: number
+    productsName: string
+}
+
+export declare interface ContentProductItem extends ProductItem {
+    productPk: string
+    productName: string
+    sellerPk: string
+    sellerName: string
+    marketId: string
+
+    stockUnitId: string
+    totalQty: number //창고재고량
+    availableQty: number //가용재고량
+    disusedQty: number //불량수량
+    reorderPeriod: number
+    purchasePrice: number
+
+    calcPrice: number //정산금액
+    profit: number //판매이익금
+    profitRate: number //판매이익율
+
+    hasBarcode: boolean | null
+    hasCarton: boolean | null
 }
