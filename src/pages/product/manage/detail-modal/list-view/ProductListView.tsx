@@ -1,0 +1,64 @@
+import { Column, ColumnEditorOptions } from 'primereact/column'
+import { DataTable, DataTableRowReorderParams } from 'primereact/datatable'
+import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
+import React from 'react'
+import TradeInfoBox from 'src/components/product-manage/dialog/list-view/TradeInfoBox'
+import VendorInfoBox from 'src/components/product-manage/dialog/list-view/VendorInfoBox'
+import { numberEditor, textEditor } from 'src/hooks/data-table-hooks/EditorHooks'
+import { marketTemplate } from 'src/hooks/dropdown/ValueTemplate'
+import { ContentProductItem, ITrade, IVendor } from 'src/types/product-manage'
+import { ecommerceList } from '../../ProductManageList'
+
+type Props = {
+    productItemList: ContentProductItem[]
+    vendorInfo: IVendor
+    tradeInfo: ITrade
+    rowReorder: (event: DataTableRowReorderParams) => void
+    onChangeDropdown: (event: DropdownChangeParams, index: number) => void
+    onChangeVendor: (event: React.ChangeEvent<HTMLInputElement>) => void
+    onChangeTrade: (event: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+function ProductListView(props: Props) {
+    const { productItemList, tradeInfo, vendorInfo, onChangeVendor, onChangeTrade, rowReorder, onChangeDropdown } = props
+
+    const sellShopBodyTemplate = (rowData: any, option?: any) => {
+        return (
+            <Dropdown
+                className="w-full border-none mt-1"
+                value={rowData[option.field]}
+                options={ecommerceList}
+                valueTemplate={marketTemplate(rowData[option.field])}
+                itemTemplate={marketTemplate}
+                onChange={(event) => {
+                    onChangeDropdown(event, 0)
+                }}
+            />
+        )
+    }
+
+    return (
+        <div className="flex flex-col pb-2">
+            <DataTable value={productItemList} onRowReorder={rowReorder} className="border-t-4 border-t-[#0D3157] border h-[60vh]">
+                <Column align="center" rowReorder headerStyle={{ width: '10px' }} />
+                <Column align="center" selectionMode="multiple" selectionAriaLabel="id" headerStyle={{ width: '10px' }} field="id"></Column>
+                <Column align="center" className="text-[12px]" field="sellerName" header="판매사" />
+                <Column align="center" className="text-[12px]" field="marketId" header="판매처" headerStyle={{ width: '130px' }} body={sellShopBodyTemplate} />
+                <Column align="center" className="text-[12px]" field="stockUnitId" header="재고코드" editor />
+                <Column align="center" className="text-[12px]" field="itemId" header="옵션ID" editor={(options: ColumnEditorOptions) => textEditor(options)} />
+                <Column align="center" className="text-[12px]" field="itemOptions.0" header="옵션1" editor={(options: ColumnEditorOptions) => textEditor(options)} />
+                <Column align="center" className="text-[12px]" field="itemOptions.1" header="옵션2" editor={(options: ColumnEditorOptions) => textEditor(options)} />
+                <Column align="center" className="text-[12px]" field="totalQty" header="창고재고량" editor={(options: ColumnEditorOptions) => numberEditor(options)} />
+                <Column align="center" className="text-[12px]" field="availableQty" header="가용재고량" editor={(options: ColumnEditorOptions) => numberEditor(options)} />
+                <Column align="center" className="text-[12px]" field="stockQty" header="쿠팡창고재고량" editor={(options: ColumnEditorOptions) => numberEditor(options)} />
+                <Column align="center" className="text-[12px]" field="jetRequestStock" header="제트배송-입고요청수량" />
+                <Column align="center" className="text-[12px]" field="purchaseStock" header="발주(매입)수량" />
+            </DataTable>
+
+            <VendorInfoBox vendorInfo={vendorInfo} onChange={onChangeVendor} />
+            <TradeInfoBox tradeInfo={tradeInfo} onChange={onChangeTrade} />
+        </div>
+    )
+}
+
+export default ProductListView

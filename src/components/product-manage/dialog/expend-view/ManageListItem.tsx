@@ -3,7 +3,7 @@ import { Checkbox } from 'primereact/checkbox'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import { InputNumber } from 'primereact/inputnumber'
 import { InputText } from 'primereact/inputtext'
-import React from 'react'
+import React, { useRef, useState, useEffect } from 'react'
 import { SortableItem, SortableKnob } from 'react-easy-sort'
 import { fakeConfig } from 'src/common/fake-data/config'
 import { marketTemplate } from 'src/hooks/dropdown/ValueTemplate'
@@ -12,13 +12,15 @@ import { ContentProductItem } from 'src/types/product-manage'
 type Props = {
     productItem: ContentProductItem
     idx: number
+    checkList: string[]
+    onToogleCheckbox: (pk: string) => void
     onChangeText: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void
     onChangePurchasePrice: (value: number | null, index: number) => void
     onChangeDeliveryCharge: (value: number | null, index: number) => void
     onChangeSalePrice: (value: number | null, index: number) => void
     onChangeCommissionRate: (value: number | null, index: number) => void
     onChangeDropdown: (event: DropdownChangeParams, index: number) => void
-    onChangeImage: (file: File, index: number) => void
+    onChangeImage: (file: File | string, index: number) => void
 }
 
 const hasBarcodeOptions = [
@@ -34,7 +36,7 @@ const hasCartonOptions = [
 ]
 
 function ManageListItem(props: Props) {
-    const { productItem, idx, onChangeText, onChangePurchasePrice, onChangeSalePrice, onChangeDeliveryCharge, onChangeCommissionRate, onChangeDropdown, onChangeImage } = props
+    const { productItem, idx, checkList, onToogleCheckbox, onChangeText, onChangePurchasePrice, onChangeSalePrice, onChangeDeliveryCharge, onChangeCommissionRate, onChangeDropdown, onChangeImage } = props
     const {
         pk,
         itemImageUrls,
@@ -62,9 +64,15 @@ function ManageListItem(props: Props) {
         hasBarcode,
         hasCarton,
     } = productItem
+    const [urlChecked, setUrlChecked] = useState<boolean>(false)
+    const [imageUrl, setImageUrl] = useState<string>('')
 
     const onChangeTextInputs = (event: React.ChangeEvent<HTMLInputElement>) => {
         onChangeText(event, idx)
+    }
+
+    const onClickUrlImage = () => {
+        onChangeImage(imageUrl, idx)
     }
 
     return (
@@ -79,7 +87,13 @@ function ManageListItem(props: Props) {
                                 </SortableKnob>
                             </div>
                             <div className="h-auto flex justify-center items-center border-r w-[40px]">
-                                <Checkbox className="ml-1 mt-1" />
+                                <Checkbox
+                                    className="ml-1 mt-1"
+                                    checked={checkList.includes(pk)}
+                                    onChange={() => {
+                                        onToogleCheckbox(pk)
+                                    }}
+                                />
                             </div>
 
                             <img src={itemImageUrls[0] || './assets/images/no_image.jpg'} alt="test" className="h-[127px] w-[127px] m-auto" />
@@ -95,21 +109,30 @@ function ManageListItem(props: Props) {
                         <div className="flex justify-evenly items-center border-t pt-1 w-full h-[32px]">
                             <InputText className="w-full p-1 border-none h-full pl-3 text-center" placeholder="옵션명" />
                         </div>
-                        <div className="flex justify-evenly items-center border-t w-full pt-1">
+                        {urlChecked ? (
                             <div className="flex items-center">
-                                <Checkbox inputId="url" />
-                                <label htmlFor="url">URL저장</label>
+                                <InputText className="h-[32px] w-full" value={imageUrl} onChange={(event) => setImageUrl(event.target.value)} />
+                                <button className="text-black w-[50px] border rounded h-full ml-1" onClick={onClickUrlImage}>
+                                    적용
+                                </button>
                             </div>
-                            <input
-                                type="file"
-                                accept="image/*"
-                                onChange={(event) => {
-                                    if (event.target.files) {
-                                        onChangeImage(event.target.files[0], idx)
-                                    }
-                                }}
-                            />
-                        </div>
+                        ) : (
+                            <div className="flex justify-evenly items-center border-t w-full pt-1">
+                                <div className="flex items-center">
+                                    <Checkbox inputId="url" checked={urlChecked} onChange={() => setUrlChecked(!urlChecked)} />
+                                    <label htmlFor="url">URL저장</label>
+                                </div>
+                                <input
+                                    type="file"
+                                    accept="image/*"
+                                    onChange={(event) => {
+                                        if (event.target.files) {
+                                            onChangeImage(event.target.files[0], idx)
+                                        }
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                     <div className="col-span-2 p-1 font-bold bg-[#F8F9FB] flex justify-center items-center border-b border-r h-[32px]">
                         <span>상품명</span>

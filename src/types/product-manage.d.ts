@@ -129,39 +129,41 @@ export declare type CommonTableContent = {
     key: string
 }
 
-export declare type TradeInfo = {
+export declare type IVendor = {
     company: {
         name: string
         bizId: string
         faxNo: string
         telNo: string
         address: string
-        stieUrl1: string
-        stieUrl2: string
     }
     officer: {
         name: string
         email: string
     }
-    memo: string
+    memo?: string
+    linkUrls: string[]
 }
 
-export declare type StockInfo = {
-    trade: {
-        lwh: {
-            width: number
-            length: number
-            height: number
-        }
-        cbm: number
-        receiptPeriod: number
-        qtyPerBox: number
-        nwt: number
-        gwt: number
-        tariffRate: number
+export declare type ITrade = {
+    lwh: {
+        width: number
+        length: number
+        height: number
     }
+    cbm: number
+    receiptPeriod: number
+    qtyPerBox: number
+    nwt: number
+    gwt: number
+    tariffRate: number
     enSkuMaterial: string
     enSkuName: string
+}
+
+export declare type ProductsGroupInfo = {
+    vendor: IVendor
+    stock: ITrade
 }
 
 export declare type HeaderInfo = {

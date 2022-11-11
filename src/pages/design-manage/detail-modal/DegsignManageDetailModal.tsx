@@ -125,14 +125,12 @@ function DegsignManageDetailModal(props: Props) {
                             <InputText className="border-none h-[32px] w-full" />
                         </div>
                         <div className="font-bold bg-[#F8F9FB] flex items-center border-b border-r pl-4">
-                            중량 <span className="text-red-500">*</span>
+                            재질 <span className="text-red-500">*</span>
                         </div>
                         <div className="col-span-2 border-b">
                             <InputText className="border-none h-[32px] w-full" />
                         </div>
-                        <div className="font-bold bg-[#F8F9FB] flex items-center border-b border-r pl-4">
-                            재질 <span className="text-red-500">*</span>
-                        </div>
+                        <div className="font-bold bg-[#F8F9FB] flex items-center border-b border-r pl-4">중량</div>
                         <div className="col-span-2 border-b">
                             <InputText className="border-none h-[32px] w-full" />
                         </div>

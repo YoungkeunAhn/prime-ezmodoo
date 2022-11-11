@@ -1,22 +1,15 @@
 import axios from 'axios'
-import _, { cloneDeep, find, findIndex, flatten, map, set } from 'lodash'
-import { Column, ColumnEditorOptions } from 'primereact/column'
-import { DataTable } from 'primereact/datatable'
+import { cloneDeep, findIndex, flatten, map, set } from 'lodash'
+import { DataTableRowReorderParams } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
-import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
+import { DropdownChangeParams } from 'primereact/dropdown'
 import React, { useCallback, useEffect, useState } from 'react'
-import SortableList from 'react-easy-sort'
 import { BASE_URL } from 'src/api/ApiConfig'
-import { numberEditor, textEditor } from 'src/hooks/data-table-hooks/EditorHooks'
-import { ContentProductItem, HeaderInfo, StockInfo, TradeInfo } from 'src/types/product-manage'
-import { marketTemplate } from '../../../../hooks/dropdown/ValueTemplate'
-import { ecommerceList } from '../ProductManageList'
+import { ContentProductItem, HeaderInfo, ITrade, IVendor } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
-import ListViewDistributionInfo from './ListViewDistributionInfo'
-import ListViewSupplierInfo from './ListViewSupplierInfo'
-import ManageListItem from './ManageListItem'
-import StockInfoTable from './StockInfoTable'
-import TradeInfoTable from './TradeInfoTable'
+import ProductExpandView from './expand-view/ProductExpandView'
+
+import ProductListView from './list-view/ProductListView'
 
 type TabId = 'EXPAND' | 'LIST'
 
@@ -26,39 +19,34 @@ type Props = {
     onClose: () => void
 }
 
-type JetObjType = Record<string, { productCode: string; qty: number }>
-
-const initTradeInfo: TradeInfo = {
+const initVendorInfo: IVendor = {
     company: {
         address: '',
         bizId: '',
         faxNo: '',
         name: '',
         telNo: '',
-        stieUrl1: '',
-        stieUrl2: '',
     },
     officer: {
         email: '',
         name: '',
     },
     memo: '',
+    linkUrls: [],
 }
 
-const initStockInfo: StockInfo = {
-    trade: {
-        lwh: {
-            width: 0,
-            length: 0,
-            height: 0,
-        },
-        cbm: 0,
-        receiptPeriod: 0,
-        gwt: 0,
-        nwt: 0,
-        qtyPerBox: 0,
-        tariffRate: 0,
+const initTradeInfo: ITrade = {
+    lwh: {
+        width: 0,
+        length: 0,
+        height: 0,
     },
+    cbm: 0,
+    receiptPeriod: 0,
+    gwt: 0,
+    nwt: 0,
+    qtyPerBox: 0,
+    tariffRate: 0,
     enSkuMaterial: '',
     enSkuName: '',
 }
@@ -76,7 +64,7 @@ const initContentProductItem: ContentProductItem = {
     barcode: '',
     skuId: '',
     itemId: '',
-    itemImageUrls: [],
+    itemImageUrls: [''],
     itemOptions: [],
     itemName: '',
     marketId: '',
@@ -109,21 +97,27 @@ const initContentProductItem: ContentProductItem = {
 
 type Image = {
     index: number
-    file: File
+    file: File | string
 }
 
 function ProductDialog(props: Props) {
     const { open, pk, onClose } = props
     const [tabId, setTabId] = useState<TabId>('EXPAND')
     const [productItemList, setProductItemList] = useState<ContentProductItem[]>([initContentProductItem])
-    const [tradeInfo, setTradeInfo] = useState<TradeInfo>(initTradeInfo)
-    const [stockInfo, setStockInfo] = useState<StockInfo>(initStockInfo)
+    const [vendorInfo, setVendorInfo] = useState<IVendor>(initVendorInfo)
+    const [tradeInfo, setTradeInfo] = useState<ITrade>(initTradeInfo)
     const [headerInfo, setHeaderInfo] = useState<HeaderInfo>(initHeaderInfo)
     const [imageList, setImageList] = useState<Image[]>([])
+    const [checkList, setCheckList] = useState<string[]>([])
 
     const closeModal = () => {
         onClose()
         setHeaderInfo(initHeaderInfo)
+        setProductItemList([initContentProductItem])
+        setVendorInfo(initVendorInfo)
+        setTradeInfo(initTradeInfo)
+        setImageList([])
+        setCheckList([])
     }
 
     const onClickListView = () => {
@@ -134,18 +128,37 @@ function ProductDialog(props: Props) {
         setTabId('EXPAND')
     }
 
-    const onChangeTradeInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setTradeInfo((prev) => set(cloneDeep(prev), event.target.name, event.target.value))
-        console.log(tradeInfo)
+    const onClickAddBtn = () => {
+        setProductItemList((prev) => prev.concat([initContentProductItem]))
     }
 
-    const onChangeStockInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setStockInfo((prev) => set(cloneDeep(prev), event.target.name, event.target.value))
-        console.log(stockInfo)
+    const rowReorder = (event: DataTableRowReorderParams) => {
+        setProductItemList(event.value)
+    }
+
+    const onChangeVendor = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setVendorInfo((prev) => set(cloneDeep(prev), event.target.name, event.target.value))
+    }
+
+    const onChangeTrade = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setTradeInfo((prev) => set(cloneDeep(prev), event.target.name, event.target.value))
     }
 
     const onChangeHeaderInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
         setHeaderInfo((prev) => ({ ...prev, [event.target.name]: event.target.value }))
+    }
+
+    const onChangeDropdown = (event: DropdownChangeParams, index: number) => {
+        setProductItemList(
+            productItemList.map((item, idx) =>
+                idx === index
+                    ? {
+                          ...item,
+                          [event.target.name]: event.target.value,
+                      }
+                    : item
+            )
+        )
     }
 
     const onChangeProductItemText = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
@@ -223,20 +236,7 @@ function ProductDialog(props: Props) {
         }
     }
 
-    const onChangeDropdown = (event: DropdownChangeParams, index: number) => {
-        setProductItemList(
-            productItemList.map((item, idx) =>
-                idx === index
-                    ? {
-                          ...item,
-                          [event.target.name]: event.target.value,
-                      }
-                    : item
-            )
-        )
-    }
-
-    const onChangeImage = (file: File, index: number) => {
+    const onChangeImage = (file: File | string, index: number) => {
         const foundIndex = findIndex(imageList, { index })
         if (foundIndex > -1) {
             setImageList((prev) => prev.map((obj, idx) => (idx === foundIndex ? { ...obj, file } : obj)))
@@ -244,20 +244,29 @@ function ProductDialog(props: Props) {
             setImageList((prev) => prev.concat({ index, file }))
         }
 
-        const imageUrl = URL.createObjectURL(file)
-        setProductItemList((prev) => prev.map((item, idx) => (idx === index ? { ...item, itemImageUrls: [imageUrl] } : item)))
+        if (typeof file !== 'string') {
+            const imageUrl = URL.createObjectURL(file)
+            setProductItemList((prev) => prev.map((item, idx) => (idx === index ? { ...item, itemImageUrls: [imageUrl] } : item)))
+        } else {
+            const image = new Image(100, 100)
+            image.src = file
+            image.onload = function () {
+                if (image.complete) {
+                    setProductItemList((prev) => prev.map((item, idx) => (idx === index ? { ...item, itemImageUrls: [file] } : item)))
+                }
+            }
+            image.onerror = function () {
+                alert('올바르지 않은 URL이거나 올바르지 않은 이미지 입니다.')
+            }
+        }
     }
 
-    const onClickAddBtn = () => {
-        setProductItemList((prev) => prev.concat([initContentProductItem]))
-    }
-
-    const sellShopBodyTemplate = (rowData: any, option?: any) => {
-        return <Dropdown className="w-full border-none mt-1" value={rowData[option.field]} options={ecommerceList} valueTemplate={marketTemplate(rowData[option.field])} itemTemplate={marketTemplate} />
-    }
-
-    const rowReorder = (event: any) => {
-        setProductItemList(event.value)
+    const onToogleCheckbox = (pk: string) => {
+        if (checkList.includes(pk)) {
+            setCheckList((prev) => prev.filter((it) => it !== pk))
+        } else {
+            setCheckList((prev) => prev.concat(pk))
+        }
     }
 
     const saveProductGroup = async () => {
@@ -267,8 +276,8 @@ function ProductDialog(props: Props) {
             const data = {
                 productItemList,
                 headerInfo,
-                tradeInfo,
-                stockInfo,
+                tradeInfo: vendorInfo,
+                stockInfo: tradeInfo,
             }
 
             formData.append('data', JSON.stringify(data))
@@ -306,7 +315,25 @@ function ProductDialog(props: Props) {
                             const profit = Math.floor(calcPrice - purchasePrice)
                             const profitRate = profit / item.salePrice
 
-                            return { ...item, productPk: pk, productName, sellerName, marketId, stockUnitId: skuId, totalQty, availableQty, disusedQty, reorderPeriod, calcPrice, profit, profitRate, purchasePrice, hasBarcode, hasCarton }
+                            return {
+                                ...item,
+                                itemImageUrls: [...item.itemImageUrls, item.itemImageUrls[0]],
+                                productPk: pk,
+                                productName,
+                                sellerName,
+                                marketId,
+                                stockUnitId: skuId,
+                                totalQty,
+                                availableQty,
+                                disusedQty,
+                                reorderPeriod,
+                                calcPrice,
+                                profit,
+                                profitRate,
+                                purchasePrice,
+                                hasBarcode,
+                                hasCarton,
+                            }
                         })
                     })
                 )
@@ -318,7 +345,7 @@ function ProductDialog(props: Props) {
 
     useEffect(() => {
         loadProduct()
-    }, [loadProduct, pk])
+    }, [loadProduct])
 
     const ModalHeader = () => {
         return (
@@ -384,57 +411,24 @@ function ProductDialog(props: Props) {
                     )}
                 </div>
                 {tabId === 'EXPAND' && (
-                    <div className="flex border-t-4 border-[#0D3157] h-auto">
-                        <div className="min-w-[1050px]">
-                            <SortableList onSortEnd={() => {}} draggedItemClassName="dragged" className="text-[12px] max-h-[76vh] overflow-y-auto manage-list">
-                                {productItemList.map((productItem, idx) => (
-                                    <ManageListItem
-                                        key={idx}
-                                        idx={idx}
-                                        productItem={productItem}
-                                        onChangeText={onChangeProductItemText}
-                                        onChangePurchasePrice={onChangePurchasePrice}
-                                        onChangeSalePrice={onChangeSalePrice}
-                                        onChangeDeliveryCharge={onChangeDeliveryCharge}
-                                        onChangeCommissionRate={onChangeCommissionRate}
-                                        onChangeDropdown={onChangeDropdown}
-                                        onChangeImage={onChangeImage}
-                                    />
-                                ))}
-                            </SortableList>
-                        </div>
-                        <div className="ml-2 h-auto flex flex-col justify-between">
-                            <div className="w-[400px]">
-                                <TradeInfoTable info={tradeInfo} onChange={onChangeTradeInfo} />
-                            </div>
-                            <div className="w-[400px]">
-                                <StockInfoTable info={stockInfo} onChange={onChangeStockInfo} />
-                            </div>
-                        </div>
-                    </div>
+                    <ProductExpandView
+                        checkList={checkList}
+                        productItemList={productItemList}
+                        vendorInfo={vendorInfo}
+                        tradeInfo={tradeInfo}
+                        onChangeVendor={onChangeVendor}
+                        onChangeTrade={onChangeTrade}
+                        onChangeCommissionRate={onChangeCommissionRate}
+                        onChangeDeliveryCharge={onChangeDeliveryCharge}
+                        onChangeDropdown={onChangeDropdown}
+                        onChangeImage={onChangeImage}
+                        onChangeProductItemText={onChangeProductItemText}
+                        onChangePurchasePrice={onChangePurchasePrice}
+                        onChangeSalePrice={onChangeSalePrice}
+                        onToogleCheckbox={onToogleCheckbox}
+                    />
                 )}
-                {tabId === 'LIST' && (
-                    <div className="flex flex-col pb-2">
-                        <DataTable value={productItemList} onRowReorder={rowReorder} className="border-t-4 border-t-[#0D3157] border h-[60vh]">
-                            <Column align="center" rowReorder headerStyle={{ width: '10px' }} />
-                            <Column align="center" selectionMode="multiple" selectionAriaLabel="id" headerStyle={{ width: '10px' }} field="id"></Column>
-                            <Column align="center" className="text-[12px]" field="sellerName" header="판매사" />
-                            <Column align="center" className="text-[12px]" field="marketId" header="판매처" headerStyle={{ width: '130px' }} body={sellShopBodyTemplate} />
-                            <Column align="center" className="text-[12px]" field="stockUnitId" header="재고코드" editor />
-                            <Column align="center" className="text-[12px]" field="itemId" header="옵션ID" editor={(options: ColumnEditorOptions) => textEditor(options)} />
-                            <Column align="center" className="text-[12px]" field="itemOptions.0" header="옵션1" editor={(options: ColumnEditorOptions) => textEditor(options)} />
-                            <Column align="center" className="text-[12px]" field="itemOptions.1" header="옵션2" editor={(options: ColumnEditorOptions) => textEditor(options)} />
-                            <Column align="center" className="text-[12px]" field="totalQty" header="창고재고량" editor={(options: ColumnEditorOptions) => numberEditor(options)} />
-                            <Column align="center" className="text-[12px]" field="availableQty" header="가용재고량" editor={(options: ColumnEditorOptions) => numberEditor(options)} />
-                            <Column align="center" className="text-[12px]" field="stockQty" header="쿠팡창고재고량" editor={(options: ColumnEditorOptions) => numberEditor(options)} />
-                            <Column align="center" className="text-[12px]" field="jetRequestStock" header="제트배송-입고요청수량" />
-                            <Column align="center" className="text-[12px]" field="purchaseStock" header="발주(매입)수량" />
-                        </DataTable>
-
-                        <ListViewSupplierInfo />
-                        <ListViewDistributionInfo />
-                    </div>
-                )}
+                {tabId === 'LIST' && <ProductListView productItemList={productItemList} rowReorder={rowReorder} onChangeDropdown={onChangeDropdown} vendorInfo={vendorInfo} tradeInfo={tradeInfo} onChangeVendor={onChangeVendor} onChangeTrade={onChangeTrade} />}
             </div>
         </Dialog>
     )
