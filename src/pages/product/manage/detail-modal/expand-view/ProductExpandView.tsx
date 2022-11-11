@@ -16,7 +16,7 @@ type Props = {
     onChangeProductItemText: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void
     onChangeImage: (file: File | string, index: number) => void
     onChangeDropdown: (event: DropdownChangeParams, index: number) => void
-    onToogleCheckbox: (pk: string) => void
+    onToggleCheckbox: (pk: string) => void
     onChangeSalePrice: (value: number | null, index: number) => void
     onChangePurchasePrice: (value: number | null, index: number) => void
     onChangeDeliveryCharge: (value: number | null, index: number) => void
@@ -24,7 +24,7 @@ type Props = {
 }
 
 function ProductExpandView(props: Props) {
-    const { productItemList, checkList, vendorInfo, tradeInfo, onChangeVendor, onChangeTrade, onChangeProductItemText, onChangeCommissionRate, onChangeDeliveryCharge, onChangeDropdown, onChangeImage, onChangePurchasePrice, onChangeSalePrice, onToogleCheckbox } = props
+    const { productItemList, checkList, vendorInfo, tradeInfo, onChangeVendor, onChangeTrade, onChangeProductItemText, onChangeCommissionRate, onChangeDeliveryCharge, onChangeDropdown, onChangeImage, onChangePurchasePrice, onChangeSalePrice, onToggleCheckbox } = props
 
     return (
         <div className="flex border-t-4 border-[#0D3157] h-auto">
@@ -38,7 +38,7 @@ function ProductExpandView(props: Props) {
                             productItem={productItem}
                             onChangeImage={onChangeImage}
                             onChangeDropdown={onChangeDropdown}
-                            onToogleCheckbox={onToogleCheckbox}
+                            onToggleCheckbox={onToggleCheckbox}
                             onChangeSalePrice={onChangeSalePrice}
                             onChangeText={onChangeProductItemText}
                             onChangePurchasePrice={onChangePurchasePrice}

@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { cloneDeep, findIndex, flatten, map, set } from 'lodash'
+import { cloneDeep, findIndex, flatten, map, set, xor } from 'lodash'
 import { DataTableRowReorderParams } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { DropdownChangeParams } from 'primereact/dropdown'
@@ -261,12 +261,8 @@ function ProductDialog(props: Props) {
         }
     }
 
-    const onToogleCheckbox = (pk: string) => {
-        if (checkList.includes(pk)) {
-            setCheckList((prev) => prev.filter((it) => it !== pk))
-        } else {
-            setCheckList((prev) => prev.concat(pk))
-        }
+    const onToggleCheckbox = (pk: string) => {
+        setCheckList((prev) => xor(prev, [pk]))
     }
 
     const saveProductGroup = async () => {
@@ -425,10 +421,12 @@ function ProductDialog(props: Props) {
                         onChangeProductItemText={onChangeProductItemText}
                         onChangePurchasePrice={onChangePurchasePrice}
                         onChangeSalePrice={onChangeSalePrice}
-                        onToogleCheckbox={onToogleCheckbox}
+                        onToggleCheckbox={onToggleCheckbox}
                     />
                 )}
-                {tabId === 'LIST' && <ProductListView productItemList={productItemList} rowReorder={rowReorder} onChangeDropdown={onChangeDropdown} vendorInfo={vendorInfo} tradeInfo={tradeInfo} onChangeVendor={onChangeVendor} onChangeTrade={onChangeTrade} />}
+                {tabId === 'LIST' && (
+                    <ProductListView productItemList={productItemList} checkList={checkList} rowReorder={rowReorder} onChangeDropdown={onChangeDropdown} vendorInfo={vendorInfo} tradeInfo={tradeInfo} onChangeVendor={onChangeVendor} onChangeTrade={onChangeTrade} onToggleCheckbox={onToggleCheckbox} />
+                )}
             </div>
         </Dialog>
     )

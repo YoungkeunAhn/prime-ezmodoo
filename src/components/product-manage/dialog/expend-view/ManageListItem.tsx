@@ -3,7 +3,7 @@ import { Checkbox } from 'primereact/checkbox'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import { InputNumber } from 'primereact/inputnumber'
 import { InputText } from 'primereact/inputtext'
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { SortableItem, SortableKnob } from 'react-easy-sort'
 import { fakeConfig } from 'src/common/fake-data/config'
 import { marketTemplate } from 'src/hooks/dropdown/ValueTemplate'
@@ -13,7 +13,7 @@ type Props = {
     productItem: ContentProductItem
     idx: number
     checkList: string[]
-    onToogleCheckbox: (pk: string) => void
+    onToggleCheckbox: (pk: string) => void
     onChangeText: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void
     onChangePurchasePrice: (value: number | null, index: number) => void
     onChangeDeliveryCharge: (value: number | null, index: number) => void
@@ -36,7 +36,7 @@ const hasCartonOptions = [
 ]
 
 function ManageListItem(props: Props) {
-    const { productItem, idx, checkList, onToogleCheckbox, onChangeText, onChangePurchasePrice, onChangeSalePrice, onChangeDeliveryCharge, onChangeCommissionRate, onChangeDropdown, onChangeImage } = props
+    const { productItem, idx, checkList, onToggleCheckbox, onChangeText, onChangePurchasePrice, onChangeSalePrice, onChangeDeliveryCharge, onChangeCommissionRate, onChangeDropdown, onChangeImage } = props
     const {
         pk,
         itemImageUrls,
@@ -91,7 +91,7 @@ function ManageListItem(props: Props) {
                                     className="ml-1 mt-1"
                                     checked={checkList.includes(pk)}
                                     onChange={() => {
-                                        onToogleCheckbox(pk)
+                                        onToggleCheckbox(pk)
                                     }}
                                 />
                             </div>
