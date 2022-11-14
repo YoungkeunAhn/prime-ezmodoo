@@ -1,4 +1,5 @@
 import axios from 'axios'
+import dayjs from 'dayjs'
 import { map } from 'lodash'
 import numeral from 'numeral'
 import { Column } from 'primereact/column'
@@ -23,11 +24,23 @@ type DetailModalProps = {
 type SearchOptions = {
     seller: string
     marketId: string
+    searchCate: string
+    searchText: string
+    year: string
+    month: string
+    startDate: string
+    endDate: string
 }
 
 const initSearhOptions: SearchOptions = {
     seller: '',
     marketId: '',
+    searchCate: 'productsName',
+    searchText: '',
+    year: '',
+    month: '',
+    startDate: '',
+    endDate: '',
 }
 
 export const ecommerceList = [
@@ -58,6 +71,18 @@ export const searchCate = [
     { label: '옵션ID', field: 'itemId' },
     { label: 'SKU.No', field: 'marketSkuId' },
 ]
+export const searchYear = [
+    { label: '연도별', value: '' },
+    { label: '2022년', value: '2022' },
+    { label: '2023년', value: '2023' },
+]
+
+export const searchMonth = [
+    {
+        label: '월별',
+        value: '',
+    },
+].concat(new Array(12).fill(0).map((x, idx) => ({ label: idx + 1 + '월', value: idx + 1 + '' })))
 
 function ProductManageList() {
     const [dialogId, setDialogId] = useState<DialogId>()
@@ -156,6 +181,13 @@ function ProductManageList() {
         }))
     }
 
+    const onChangeSearchOptionInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearhOptions((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value,
+        }))
+    }
+
     useEffect(() => {
         loadProductList()
     }, [])
@@ -200,17 +232,42 @@ function ProductManageList() {
                             />
                         </div>
                         <div className="flex space-x-2 items-center">
-                            <Dropdown />
-                            <InputText />
+                            <Dropdown
+                                className="min-w-[100px]"
+                                name="searchCate"
+                                optionLabel="label"
+                                optionValue="field"
+                                options={searchCate}
+                                value={searchOptions.searchCate}
+                                onChange={onChangeSearchOptionDropdown}
+                            />
+
+                            <InputText name="searchText" value={searchOptions.searchText} onChange={onChangeSearchOptionInput} />
                         </div>
                         <div className="flex items-center space-x-2">
                             <span className="font-bold text-[13px]">등록일</span>
                             <button className="border rounded px-4 h-[30px] text-[12px] border-[#ddd] text-black">전체</button>
-                            <Dropdown />
-                            <Dropdown />
-                            <InputText type="date" />
+                            <Dropdown
+                                className="min-w-[100px]"
+                                name="year"
+                                optionLabel="label"
+                                optionValue="value"
+                                options={searchYear}
+                                value={searchOptions.year}
+                                onChange={onChangeSearchOptionDropdown}
+                            />
+                            <Dropdown
+                                className="min-w-[100px]"
+                                name="month"
+                                optionLabel="label"
+                                optionValue="value"
+                                options={searchMonth}
+                                value={searchOptions.month}
+                                onChange={onChangeSearchOptionDropdown}
+                            />
+                            <InputText type="date" name="startDate" value={searchOptions.startDate} onChange={onChangeSearchOptionInput} />
                             <span>~</span>
-                            <InputText type="date" />
+                            <InputText type="date" name="endDate" value={searchOptions.endDate} onChange={onChangeSearchOptionInput} />
                         </div>
                     </div>
                 </div>
