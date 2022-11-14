@@ -172,7 +172,7 @@ function ProductManageList() {
                         />
                     </div>
                 </div>
-                <DataTable value={productList} responsiveLayout="scroll" sortMode="multiple" removableSort resizableColumns className="max-h-[99vh]" columnResizeMode="expand">
+                <DataTable value={productList} responsiveLayout="scroll" sortMode="multiple" removableSort resizableColumns className="max-h-[99vh]" columnResizeMode="expand" onRowClick={(e) => console.log(e)}>
                     <Column align="center" selectionMode="multiple" selectionAriaLabel="productsId" headerStyle={{ width: '3em' }} field="productsId"></Column>
                     <Column align="center" className="text-[12px]" field="seq" header="NO" />
                     <Column align="center" className="text-[12px]" field="createdAt" header="등록일" />

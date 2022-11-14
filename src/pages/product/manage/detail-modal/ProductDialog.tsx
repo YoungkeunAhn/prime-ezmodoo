@@ -102,7 +102,7 @@ type Image = {
 
 function ProductDialog(props: Props) {
     const { open, pk, onClose } = props
-    const [tabId, setTabId] = useState<TabId>('EXPAND')
+    const [tabId, setTabId] = useState<TabId>('LIST')
     const [productItemList, setProductItemList] = useState<ContentProductItem[]>([initContentProductItem])
     const [vendorInfo, setVendorInfo] = useState<IVendor>(initVendorInfo)
     const [tradeInfo, setTradeInfo] = useState<ITrade>(initTradeInfo)

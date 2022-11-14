@@ -1,8 +1,9 @@
 import { difference, filter, flatten, map } from 'lodash'
 import { Column, ColumnEditorOptions } from 'primereact/column'
-import { DataTable, DataTableRowReorderParams } from 'primereact/datatable'
+import { DataTable, DataTableRowClickEventParams, DataTableRowReorderParams } from 'primereact/datatable'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import React, { useState } from 'react'
+import { fakeConfig } from 'src/common/fake-data/config'
 import TradeInfoBox from 'src/components/product-manage/dialog/list-view/TradeInfoBox'
 import VendorInfoBox from 'src/components/product-manage/dialog/list-view/VendorInfoBox'
 import { numberEditor, textEditor } from 'src/hooks/data-table-hooks/EditorHooks'
@@ -35,22 +36,23 @@ function ProductListView(props: Props) {
         )
     )
 
-    const sellShopBodyTemplate = (rowData: any, option?: any) => {
+    const marketIdBodyTemplate = (rowData: any, option: any) => {
         return (
             <Dropdown
                 className="w-full border-none mt-1"
-                value={rowData[option.field]}
-                options={ecommerceList}
+                name="marketId"
+                value={rowData.marketId}
+                options={fakeConfig.markets}
                 valueTemplate={marketTemplate(rowData[option.field])}
                 itemTemplate={marketTemplate}
                 onChange={(event) => {
-                    onChangeDropdown(event, 0)
+                    onChangeDropdown(event, option.rowIndex)
                 }}
             />
         )
     }
 
-    const onChangeSelecttion = (event: any) => {
+    const onChangeSelection = (event: any) => {
         setSelected(event.value)
 
         let diffPk = []
@@ -65,11 +67,11 @@ function ProductListView(props: Props) {
 
     return (
         <div className="flex flex-col pb-2">
-            <DataTable value={productItemList} onRowReorder={rowReorder} className="border-t-4 border-t-[#0D3157] border h-[60vh]" selection={selected} onSelectionChange={onChangeSelecttion}>
+            <DataTable value={productItemList} onRowReorder={rowReorder} className="border-t-4 border-t-[#0D3157] border h-[60vh]" selection={selected} selectionMode="checkbox" onSelectionChange={onChangeSelection}>
                 <Column align="center" rowReorder headerStyle={{ width: '10px' }} />
                 <Column align="center" selectionMode="multiple" selectionAriaLabel="id" headerStyle={{ width: '10px' }} field="id"></Column>
                 <Column align="center" className="text-[12px]" field="sellerName" header="판매사" />
-                <Column align="center" className="text-[12px]" field="marketId" header="판매처" headerStyle={{ width: '130px' }} body={sellShopBodyTemplate} />
+                <Column align="center" className="text-[12px]" field="marketId" header="판매처" headerStyle={{ width: '130px' }} body={marketIdBodyTemplate} />
                 <Column align="center" className="text-[12px]" field="stockUnitId" header="재고코드" editor />
                 <Column align="center" className="text-[12px]" field="itemId" header="옵션ID" editor={(options: ColumnEditorOptions) => textEditor(options)} />
                 <Column align="center" className="text-[12px]" field="itemOptions.0" header="옵션1" editor={(options: ColumnEditorOptions) => textEditor(options)} />

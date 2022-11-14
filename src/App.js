@@ -22,8 +22,9 @@ import './assets/demo/Demos.scss'
 import './assets/demo/flags/flags.css'
 import './assets/layout/layout.scss'
 import DesignManageList from './pages/design-manage/DesignManageList'
-import OrderManage from './pages/order/manage/OrderManage'
 import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
+import OrderManage from './pages/order/manage/OrderManage'
+import TableDemo from './components/TableDemo'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -53,23 +54,6 @@ const App = () => {
     useEffect(() => {
         copyTooltipRef && copyTooltipRef.current && copyTooltipRef.current.updateTargetEvents()
     }, [location])
-
-    // const onInputStyleChange = (inputStyle) => {
-    //     setInputStyle(inputStyle)
-    // }
-
-    // const onRipple = (e) => {
-    //     PrimeReact.ripple = e.value
-    //     setRipple(e.value)
-    // }
-
-    // const onLayoutModeChange = (mode) => {
-    //     setLayoutMode(mode)
-    // }
-
-    // const onColorModeChange = (mode) => {
-    //     setLayoutColorMode(mode)
-    // }
 
     const onWrapperClick = (event) => {
         if (!menuClick) {
@@ -195,6 +179,17 @@ const App = () => {
             ],
         },
         {
+            label: '데모',
+            icon: 'pi pi-fw pi-sitemap',
+            items: [
+                {
+                    label: '테이블',
+                    icon: 'pi pi-fw pi-table',
+                    to: '/table',
+                },
+            ],
+        },
+        {
             label: 'Menu Hierarchy',
             icon: 'pi pi-fw pi-search',
             items: [
@@ -306,7 +301,6 @@ const App = () => {
                     <Route path="/floatlabel" component={FloatLabelDemo} />
                     <Route path="/invalidstate" component={InvalidStateDemo} />
                     <Route path="/button" component={ButtonDemo} />
-                    <Route path="/table" component={TableDemo} />
                     <Route path="/list" component={ListDemo} />
                     <Route path="/tree" component={TreeDemo} />
                     <Route path="/panel" component={PanelDemo} />
@@ -314,10 +308,11 @@ const App = () => {
                     <Route path="/media" component={MediaDemo} />
                     <Route path="/menu" component={MenuDemo} />
                     <Route path="/messages" component={MessagesDemo} />
-                    <Route path="/blocks" component={BlocksDemo} /> */}
+                <Route path="/blocks" component={BlocksDemo} /> */}
                     {/* <Route path="/file" component={FileDemo} />
                     <Route path="/chart" render={() => <ChartDemo colorMode={layoutColorMode} location={location} />} />
-                    <Route path="/misc" component={MiscDemo} /> */}
+                <Route path="/misc" component={MiscDemo} /> */}
+                    <Route path="/table" component={TableDemo} />
                     <Route path="/design/manage" component={DesignManageList} />
                     <Route path="/order/manage" component={OrderManage} />
                     <Route path="/order/china-wear" component={ChinaWearOrder} />
