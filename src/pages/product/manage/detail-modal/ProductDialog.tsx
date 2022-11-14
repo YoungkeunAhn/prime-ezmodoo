@@ -61,8 +61,9 @@ const initHeaderInfo: HeaderInfo = {
 
 const initContentProductItem: ContentProductItem = {
     pk: '',
-    barcode: '',
-    skuId: '',
+    marketBarcode: '',
+    marketSkuId: '',
+    marketQrcode: '',
     itemId: '',
     itemImageUrls: [''],
     itemOptions: [],
@@ -70,7 +71,6 @@ const initContentProductItem: ContentProductItem = {
     marketId: '',
     productName: '',
     productPk: '',
-    qrcode: '',
     sellerPk: '',
     sellerName: '',
     memo: '',
@@ -102,7 +102,7 @@ type Image = {
 
 function ProductDialog(props: Props) {
     const { open, pk, onClose } = props
-    const [tabId, setTabId] = useState<TabId>('LIST')
+    const [tabId, setTabId] = useState<TabId>('EXPAND')
     const [productItemList, setProductItemList] = useState<ContentProductItem[]>([initContentProductItem])
     const [vendorInfo, setVendorInfo] = useState<IVendor>(initVendorInfo)
     const [tradeInfo, setTradeInfo] = useState<ITrade>(initTradeInfo)
@@ -378,10 +378,17 @@ function ProductDialog(props: Props) {
                     <button className="px-1.5 border border-[#707070] rounded text-[#707070]">
                         <i className="pi pi-angle-up text-[10px]" />
                     </button>
-                    <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]" onClick={onClickAddBtn}>
+                    <button
+                        style={{ lineHeight: '1.1rem' }}
+                        className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
+                        onClick={onClickAddBtn}
+                    >
                         추가
                     </button>
-                    <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-[#A10C0C] text-[12px] ">
+                    <button
+                        style={{ lineHeight: '1.1rem' }}
+                        className="p-1.5 min-w-[60px] border border-[#707070] rounded text-[#A10C0C] text-[12px] "
+                    >
                         삭제
                     </button>
                     <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
@@ -389,17 +396,31 @@ function ProductDialog(props: Props) {
                     </button>
                     {pk && (
                         <>
-                            <button onClick={onClickExpandView} style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                            <button
+                                onClick={onClickExpandView}
+                                style={{ lineHeight: '1.1rem' }}
+                                className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
+                            >
                                 펼쳐보기
                             </button>
-                            <button onClick={onClickListView} style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                            <button
+                                onClick={onClickListView}
+                                style={{ lineHeight: '1.1rem' }}
+                                className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
+                            >
                                 리스트형식보기
                             </button>
-                            <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                            <button
+                                style={{ lineHeight: '1.1rem' }}
+                                className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
+                            >
                                 <i className="fa-regular fa-eye-slash mr-1"></i>
                                 <span>숨김처리</span>
                             </button>
-                            <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                            <button
+                                style={{ lineHeight: '1.1rem' }}
+                                className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
+                            >
                                 <i className="fa-regular fa-eye mr-1"></i>
                                 <span>모든옵션보기</span>
                             </button>
@@ -425,7 +446,17 @@ function ProductDialog(props: Props) {
                     />
                 )}
                 {tabId === 'LIST' && (
-                    <ProductListView productItemList={productItemList} checkList={checkList} rowReorder={rowReorder} onChangeDropdown={onChangeDropdown} vendorInfo={vendorInfo} tradeInfo={tradeInfo} onChangeVendor={onChangeVendor} onChangeTrade={onChangeTrade} onToggleCheckbox={onToggleCheckbox} />
+                    <ProductListView
+                        productItemList={productItemList}
+                        checkList={checkList}
+                        rowReorder={rowReorder}
+                        onChangeDropdown={onChangeDropdown}
+                        vendorInfo={vendorInfo}
+                        tradeInfo={tradeInfo}
+                        onChangeVendor={onChangeVendor}
+                        onChangeTrade={onChangeTrade}
+                        onToggleCheckbox={onToggleCheckbox}
+                    />
                 )}
             </div>
         </Dialog>

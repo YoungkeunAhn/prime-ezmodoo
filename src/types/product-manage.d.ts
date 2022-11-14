@@ -77,9 +77,9 @@ export declare type ProductItem = {
     itemAttr?: { [key: string]: string }
     itemImageUrls: string[]
     itemOptions: string[]
-    skuId: string
-    qrcode: string
-    barcode: string
+    marketSkuId: string
+    marketQrcode: string
+    marketBarcode: string
     sellPrice: number
     salePrice: number
     couponPrice: number

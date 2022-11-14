@@ -3,12 +3,14 @@ import { map } from 'lodash'
 import numeral from 'numeral'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { Dropdown } from 'primereact/dropdown'
+import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
+import { fakeConfig } from 'src/common/fake-data/config'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
 import { imageBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
+import { marketTemplate } from 'src/hooks/dropdown/ValueTemplate'
 import { ProductGruop } from 'src/types/product-manage'
 import ProductDialog from './detail-modal/ProductDialog'
 
@@ -18,12 +20,50 @@ type DetailModalProps = {
     pk: string
 }
 
-export const ecommerceList = ['coupang_rocket', 'coupang_jet', 'coupang', 'auction', 'street11', 'gmarket', 'tmon', 'wemakeprice', 'interpark', 'ably', 'zigzag', 'talkstore', 'funshop', 'smartstore']
+type SearchOptions = {
+    seller: string
+    marketId: string
+}
+
+const initSearhOptions: SearchOptions = {
+    seller: '',
+    marketId: '',
+}
+
+export const ecommerceList = [
+    'coupang_rocket',
+    'coupang_jet',
+    'coupang',
+    'auction',
+    'street11',
+    'gmarket',
+    'tmon',
+    'wemakeprice',
+    'interpark',
+    'ably',
+    'zigzag',
+    'talkstore',
+    'funshop',
+    'smartstore',
+]
+
+export const sellerOptions = [{ pk: '', name: '전체' }].concat(fakeConfig.sellers)
+export const marketIdOptions = [{ id: '', name: '전체' }].concat(fakeConfig.markets)
+export const searchCate = [
+    { label: '상품명', field: 'productsName' },
+    { label: '담당자', field: 'managerName' },
+    { label: '상품코드', filed: 'skuId' },
+    { label: '옵션', field: 'itemOptions' },
+    { label: '상품바코드', field: 'barcode' },
+    { label: '옵션ID', field: 'itemId' },
+    { label: 'SKU.No', field: 'marketSkuId' },
+]
 
 function ProductManageList() {
     const [dialogId, setDialogId] = useState<DialogId>()
     const [productList, setProductList] = useState<ProductGruop[]>([])
     const [detailModalProps, setDetailmodalProps] = useState<DetailModalProps>()
+    const [searchOptions, setSearhOptions] = useState<SearchOptions>(initSearhOptions)
 
     const productsNameBodyTemplate = (rowData: any) => {
         return (
@@ -40,7 +80,8 @@ function ProductManageList() {
         if (itemsLength > 1) {
             return (
                 <span>
-                    {option as string} 외({itemsLength - 1})
+                    {option as string} 외(
+                    {itemsLength - 1})
                 </span>
             )
         } else {
@@ -92,12 +133,27 @@ function ProductManageList() {
                     const profit = settlementPrice - purchasePrice
                     const profitRate = profit / salePrice
 
-                    return { ...x, seq: i + 1, settlementPrice, profit, profitRate }
+                    return {
+                        ...x,
+                        seq: i + 1,
+                        settlementPrice,
+                        profit,
+                        profitRate,
+                    }
                 })
             )
         } catch (err) {
             console.error(err)
         }
+    }
+
+    const onChangeSearchOptionDropdown = (event: DropdownChangeParams) => {
+        console.log(event.target.name)
+        console.log(typeof event.value)
+        setSearhOptions((prev) => ({
+            ...prev,
+            [event.target.name]: event.value,
+        }))
     }
 
     useEffect(() => {
@@ -113,17 +169,35 @@ function ProductManageList() {
                             <span className="font-bold text-lg relative">상품관리</span>
                             <div className="border-2 w-full border-blue-500 relative -bottom-[14px]"></div>
                         </div>
-                        <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : 3862</span>
+                        <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : {productList.length}</span>
                     </div>
                     <div className="flex space-x-4 p-4">
                         <div className="flex space-x-2 items-center">
                             <span className="font-bold text-[13px]">판매사</span>
-                            <Dropdown />
+                            <Dropdown
+                                className="min-w-[100px]"
+                                name="seller"
+                                optionLabel="name"
+                                optionValue="pk"
+                                options={sellerOptions}
+                                value={searchOptions.seller}
+                                onChange={onChangeSearchOptionDropdown}
+                            />
                         </div>
 
                         <div className="flex space-x-2 items-center">
-                            <span className="font-bold text-[13px]">공급사</span>
-                            <Dropdown />
+                            <span className="font-bold text-[13px]">판매처</span>
+                            <Dropdown
+                                className="min-w-[100px]"
+                                name="marketId"
+                                optionLabel="name"
+                                optionValue="id"
+                                options={marketIdOptions}
+                                value={searchOptions.marketId}
+                                onChange={onChangeSearchOptionDropdown}
+                                valueTemplate={marketTemplate(searchOptions.marketId)}
+                                itemTemplate={(option) => marketTemplate(option.id)}
+                            />
                         </div>
                         <div className="flex space-x-2 items-center">
                             <Dropdown />
@@ -158,7 +232,12 @@ function ProductManageList() {
                         <button className="btn primary-btn">선택복사</button>
                         <button className="btn primary-btn">상품마감</button>
                         <button className="btn primary-btn">마감해제</button>
-                        <MenuButton title="전체상품보기" color="#146BCE" menu={['전체상품 보기', '전체상품 보기(마감제외)', '마감상품 보기']} onClickMenu={(action: string) => alert(action)} />
+                        <MenuButton
+                            title="전체상품보기"
+                            color="#146BCE"
+                            menu={['전체상품 보기', '전체상품 보기(마감제외)', '마감상품 보기']}
+                            onClickMenu={(action: string) => alert(action)}
+                        />
                         <button className="btn primary-btn">디자인요청</button>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -172,23 +251,110 @@ function ProductManageList() {
                         />
                     </div>
                 </div>
-                <DataTable value={productList} responsiveLayout="scroll" sortMode="multiple" removableSort resizableColumns className="max-h-[99vh]" columnResizeMode="expand" onRowClick={(e) => console.log(e)}>
-                    <Column align="center" selectionMode="multiple" selectionAriaLabel="productsId" headerStyle={{ width: '3em' }} field="productsId"></Column>
+                <DataTable
+                    value={productList}
+                    responsiveLayout="scroll"
+                    sortMode="multiple"
+                    removableSort
+                    resizableColumns
+                    className="max-h-[99vh]"
+                    columnResizeMode="expand"
+                    onValueChange={(value) => console.log(value)}
+                >
+                    <Column
+                        align="center"
+                        selectionMode="multiple"
+                        selectionAriaLabel="productsId"
+                        headerStyle={{
+                            width: '3em',
+                        }}
+                        field="productsId"
+                    ></Column>
                     <Column align="center" className="text-[12px]" field="seq" header="NO" />
                     <Column align="center" className="text-[12px]" field="createdAt" header="등록일" />
                     <Column align="center" className="text-[12px]" field="managerName" header="담당자" />
                     <Column align="center" className="text-[12px]" field="products.0.items.0.units.0.skuId" header="상품코드" />
                     <Column align="center" className="text-[12px]" field="productsImageUrl" header="이미지" body={imageBodyTemplate} />
-                    <Column align="center" className="text-[12px]" field="url" header="URL" body={(rowData: any) => urlBodyTemplate(rowData.productsLinkUrls[0])} />
-                    <Column alignHeader="center" align="left" className="text-[12px]" field="productsName" header="상품명" headerStyle={{ width: '250px' }} body={productsNameBodyTemplate} />
-                    <Column alignHeader="center" align="left" className="text-[12px]" field="" header="옵션1" body={(rowdata) => optionsBodyTemplate(rowdata, 0)} />
-                    <Column alignHeader="center" align="left" className="text-[12px]" field="" header="옵션2" body={(rowdata) => optionsBodyTemplate(rowdata, 1)} />
-                    <Column align="center" className="text-[12px]" field="products.0.items.0.units.0.trade.purchasePrice" header="입고가격" sortable body={(rowData) => numberBodyTemplate(rowData.products[0].items[0].units[0].trade.purchasePrice)} />
-                    <Column align="center" className="text-[12px]" field="products.0.items.0.salePrice" header="판매가격" sortable body={(rowData) => numberBodyTemplate(rowData.products[0].items[0].salePrice)} />
-                    <Column align="center" className="text-[12px]" field="products.0.items.0.couponPrice" header="할인쿠폰금액" body={(rowData) => numberBodyTemplate(rowData.products[0].items[0].couponPrice)} />
-                    <Column align="center" className="text-[12px]" field="products.0.items.0.commissionRate" header="판매수수료" body={commissionRateBodyTemplate} />
-                    <Column align="center" className="text-[12px]" field="settlementPrice" header="정산금액" sortable body={(rowData, option) => numberBodyTemplate(rowData[option.field])} />
-                    <Column align="center" className="text-[12px]" field="profit" header="판매이익" sortable body={(rowData, option) => numberBodyTemplate(rowData[option.field])} />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
+                        field="url"
+                        header="URL"
+                        body={(rowData: any) => urlBodyTemplate(rowData.productsLinkUrls[0])}
+                    />
+                    <Column
+                        alignHeader="center"
+                        align="left"
+                        className="text-[12px]"
+                        field="productsName"
+                        header="상품명"
+                        headerStyle={{
+                            width: '250px',
+                        }}
+                        body={productsNameBodyTemplate}
+                    />
+                    <Column
+                        alignHeader="center"
+                        align="left"
+                        className="text-[12px]"
+                        field=""
+                        header="옵션1"
+                        body={(rowdata) => optionsBodyTemplate(rowdata, 0)}
+                    />
+                    <Column
+                        alignHeader="center"
+                        align="left"
+                        className="text-[12px]"
+                        field=""
+                        header="옵션2"
+                        body={(rowdata) => optionsBodyTemplate(rowdata, 1)}
+                    />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
+                        field="products.0.items.0.units.0.trade.purchasePrice"
+                        header="입고가격"
+                        sortable
+                        body={(rowData) => numberBodyTemplate(rowData.products[0].items[0].units[0].trade.purchasePrice)}
+                    />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
+                        field="products.0.items.0.salePrice"
+                        header="판매가격"
+                        sortable
+                        body={(rowData) => numberBodyTemplate(rowData.products[0].items[0].salePrice)}
+                    />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
+                        field="products.0.items.0.couponPrice"
+                        header="할인쿠폰금액"
+                        body={(rowData) => numberBodyTemplate(rowData.products[0].items[0].couponPrice)}
+                    />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
+                        field="products.0.items.0.commissionRate"
+                        header="판매수수료"
+                        body={commissionRateBodyTemplate}
+                    />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
+                        field="settlementPrice"
+                        header="정산금액"
+                        sortable
+                        body={(rowData, option) => numberBodyTemplate(rowData[option.field])}
+                    />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
+                        field="profit"
+                        header="판매이익"
+                        sortable
+                        body={(rowData, option) => numberBodyTemplate(rowData[option.field])}
+                    />
                     <Column align="center" className="text-[12px]" field="profitRate" header="판매이익률" sortable body={profitRateBodyTemplate} />
                     {/* 
                     <Column align="center" className="text-[12px]" field="seller" header="판매사" />
