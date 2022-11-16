@@ -1,18 +1,19 @@
 import axios from 'axios'
 import * as FileSaver from 'file-saver'
-import { cloneDeep, flattenDeep, map, set } from 'lodash'
+import { flattenDeep, map } from 'lodash'
 import numeral from 'numeral'
 import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
-import { InputText } from 'primereact/inputtext'
+import { DropdownChangeParams } from 'primereact/dropdown'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
-import { fakeConfig } from 'src/common/fake-data/config'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
+import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
+import SearchDateOption from 'src/components/search-box/SearchDateOption'
+import SearchMarketIdOption from 'src/components/search-box/SearchMarketIdOption'
+import SellerOption from 'src/components/search-box/SearchSellerOption'
 import { imageBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
-import { marketTemplate } from 'src/hooks/dropdown/ValueTemplate'
 import { ProductGruop } from 'src/types/product-manage'
 import * as XLSX from 'xlsx'
 import ProductDialog from './detail-modal/ProductDialog'
@@ -26,12 +27,12 @@ type DetailModalProps = {
 type SearchOptions = {
     seller: string
     marketId: string
-    searchCate: 'global' | 'productsName' | 'managerName' | 'products.0.items.0.units.0.skuId' | 'products.0.items.0.units.0.trade.purchasePrice'
-    searchText: string
     year: string
     month: string
     startDate: string
     endDate: string
+    searchText: string
+    searchCate: 'global' | 'productsName' | 'managerName' | 'products.0.items.0.units.0.skuId' | 'products.0.items.0.units.0.trade.purchasePrice'
 }
 
 const initSearhOptions: SearchOptions = {
@@ -62,30 +63,12 @@ export const ecommerceList = [
     'smartstore',
 ]
 
-export const sellerOptions = [{ pk: '', name: '전체' }].concat(fakeConfig.sellers)
-export const marketIdOptions = [{ id: '', name: '전체' }].concat(fakeConfig.markets)
 export const searchCateList = [
     { label: '통합', field: 'global' },
     { label: '상품명', field: 'productsName' },
     { label: '담당자', field: 'managerName' },
     { label: '상품코드', field: 'products.0.items.0.units.0.skuId' },
-    // { label: '옵션', field: 'itemOptions' },
-    // { label: '상품바코드', field: 'barcode' },
-    // { label: '옵션ID', field: 'itemId' },
-    // { label: 'SKU.No', field: 'marketSkuId' },
 ]
-export const searchYear = [
-    { label: '연도별', value: '' },
-    { label: '2022년', value: '2022' },
-    { label: '2023년', value: '2023' },
-]
-
-export const searchMonth = [
-    {
-        label: '월별',
-        value: '',
-    },
-].concat(new Array(12).fill(0).map((x, idx) => ({ label: idx + 1 + '월', value: idx + 1 + '' })))
 
 const initFileter = {
     global: { value: '', matchMode: FilterMatchMode.CONTAINS },
@@ -202,6 +185,14 @@ function ProductManageList() {
         }))
     }
 
+    const onChangeDates = (startDate: string, endDate: string) => {
+        setSearhOptions((prev) => ({
+            ...prev,
+            startDate,
+            endDate,
+        }))
+    }
+
     const onSearch = () => {
         const { searchCate, searchText, marketId, seller } = searchOptions
 
@@ -277,71 +268,24 @@ function ProductManageList() {
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : {productList.length}</span>
                     </div>
                     <div className="flex space-x-4 p-4 min-w-[70vw]">
-                        <div className="flex space-x-2 items-center">
-                            <span className="font-bold text-[13px]">판매사</span>
-                            <Dropdown
-                                className="min-w-[100px]"
-                                name="seller"
-                                optionLabel="name"
-                                optionValue="pk"
-                                options={sellerOptions}
-                                value={searchOptions.seller}
-                                onChange={onChangeSearchOptionDropdown}
-                            />
-                        </div>
+                        <SellerOption value={searchOptions.seller} onChange={onChangeSearchOptionDropdown} />
 
-                        <div className="flex space-x-2 items-center">
-                            <span className="font-bold text-[13px]">판매처</span>
-                            <Dropdown
-                                className="min-w-[100px]"
-                                name="marketId"
-                                optionLabel="name"
-                                optionValue="id"
-                                options={marketIdOptions}
-                                value={searchOptions.marketId}
-                                onChange={onChangeSearchOptionDropdown}
-                                valueTemplate={marketTemplate(searchOptions.marketId)}
-                                itemTemplate={(option) => marketTemplate(option.id)}
-                            />
-                        </div>
-                        <div className="flex space-x-2 items-center">
-                            <Dropdown
-                                className="min-w-[100px]"
-                                name="searchCate"
-                                optionLabel="label"
-                                optionValue="field"
-                                options={searchCateList}
-                                value={searchOptions.searchCate}
-                                onChange={onChangeSearchOptionDropdown}
-                            />
+                        <SearchMarketIdOption value={searchOptions.marketId} onChange={onChangeSearchOptionDropdown} />
 
-                            <InputText name="searchText" value={searchOptions.searchText} onChange={onChangeSearchOptionInput} />
-                        </div>
-                        {/* <div className="flex items-center space-x-2">
-                            <span className="font-bold text-[13px]">등록일</span>
-                            <button className="border rounded px-4 h-[30px] text-[12px] border-[#ddd] text-black">전체</button>
-                            <Dropdown
-                                className="min-w-[100px]"
-                                name="year"
-                                optionLabel="label"
-                                optionValue="value"
-                                options={searchYear}
-                                value={searchOptions.year}
-                                onChange={onChangeSearchOptionDropdown}
-                            />
-                            <Dropdown
-                                className="min-w-[100px]"
-                                name="month"
-                                optionLabel="label"
-                                optionValue="value"
-                                options={searchMonth}
-                                value={searchOptions.month}
-                                onChange={onChangeSearchOptionDropdown}
-                            />
-                            <InputText type="date" name="startDate" value={searchOptions.startDate} onChange={onChangeSearchOptionInput} />
-                            <span>~</span>
-                            <InputText type="date" name="endDate" value={searchOptions.endDate} onChange={onChangeSearchOptionInput} />
-                        </div> */}
+                        <SearchCateTextOption
+                            options={searchCateList}
+                            cate={searchOptions.searchCate}
+                            onChangeDropdown={onChangeSearchOptionDropdown}
+                            text={searchOptions.searchText}
+                            onChangeText={onChangeSearchOptionInput}
+                        />
+
+                        <SearchDateOption
+                            startDate={searchOptions.startDate}
+                            endDate={searchOptions.endDate}
+                            onChangeDates={onChangeDates}
+                            onChangeInput={onChangeSearchOptionInput}
+                        />
                     </div>
                 </div>
                 <div className="border-l flex flex-col">
