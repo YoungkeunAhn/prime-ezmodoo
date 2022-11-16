@@ -111,7 +111,10 @@ export declare type ProductGruop = {
     productsName: string
     productImageUrl: string
     productsLinkUrls: string[]
-    products: ProductItem[]
+    products: Product[]
+
+    sellerList: string
+    marketList: string
 }
 
 export declare type CommonTableContent = {

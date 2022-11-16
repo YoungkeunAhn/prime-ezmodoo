@@ -1,7 +1,8 @@
 import axios from 'axios'
-import dayjs from 'dayjs'
-import { map } from 'lodash'
+import * as FileSaver from 'file-saver'
+import { cloneDeep, flattenDeep, map, set } from 'lodash'
 import numeral from 'numeral'
+import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
@@ -13,6 +14,7 @@ import MenuButton from 'src/components/custom-buttons/MenuButton'
 import { imageBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { marketTemplate } from 'src/hooks/dropdown/ValueTemplate'
 import { ProductGruop } from 'src/types/product-manage'
+import * as XLSX from 'xlsx'
 import ProductDialog from './detail-modal/ProductDialog'
 
 type DialogId = 'CREATE' | 'DETAIL'
@@ -24,7 +26,7 @@ type DetailModalProps = {
 type SearchOptions = {
     seller: string
     marketId: string
-    searchCate: string
+    searchCate: 'global' | 'productsName' | 'managerName' | 'products.0.items.0.units.0.skuId' | 'products.0.items.0.units.0.trade.purchasePrice'
     searchText: string
     year: string
     month: string
@@ -35,7 +37,7 @@ type SearchOptions = {
 const initSearhOptions: SearchOptions = {
     seller: '',
     marketId: '',
-    searchCate: 'productsName',
+    searchCate: 'global',
     searchText: '',
     year: '',
     month: '',
@@ -46,7 +48,7 @@ const initSearhOptions: SearchOptions = {
 export const ecommerceList = [
     'coupang_rocket',
     'coupang_jet',
-    'coupang',
+    'coupang_3p',
     'auction',
     'street11',
     'gmarket',
@@ -62,14 +64,15 @@ export const ecommerceList = [
 
 export const sellerOptions = [{ pk: '', name: '전체' }].concat(fakeConfig.sellers)
 export const marketIdOptions = [{ id: '', name: '전체' }].concat(fakeConfig.markets)
-export const searchCate = [
+export const searchCateList = [
+    { label: '통합', field: 'global' },
     { label: '상품명', field: 'productsName' },
     { label: '담당자', field: 'managerName' },
-    { label: '상품코드', filed: 'skuId' },
-    { label: '옵션', field: 'itemOptions' },
-    { label: '상품바코드', field: 'barcode' },
-    { label: '옵션ID', field: 'itemId' },
-    { label: 'SKU.No', field: 'marketSkuId' },
+    { label: '상품코드', field: 'products.0.items.0.units.0.skuId' },
+    // { label: '옵션', field: 'itemOptions' },
+    // { label: '상품바코드', field: 'barcode' },
+    // { label: '옵션ID', field: 'itemId' },
+    // { label: 'SKU.No', field: 'marketSkuId' },
 ]
 export const searchYear = [
     { label: '연도별', value: '' },
@@ -84,11 +87,21 @@ export const searchMonth = [
     },
 ].concat(new Array(12).fill(0).map((x, idx) => ({ label: idx + 1 + '월', value: idx + 1 + '' })))
 
+const initFileter = {
+    global: { value: '', matchMode: FilterMatchMode.CONTAINS },
+    productsName: { operator: FilterOperator.AND, constraints: [{ value: '', matchMode: FilterMatchMode.CONTAINS }] },
+    managerName: { value: '', matchMode: FilterMatchMode.CONTAINS },
+    sellerList: { value: '', matchMode: FilterMatchMode.CONTAINS },
+    marketList: { value: '', matchMode: FilterMatchMode.CONTAINS },
+    'products.0.items.0.units.0.skuId': { value: '', matchMode: FilterMatchMode.CONTAINS },
+}
+
 function ProductManageList() {
     const [dialogId, setDialogId] = useState<DialogId>()
     const [productList, setProductList] = useState<ProductGruop[]>([])
     const [detailModalProps, setDetailmodalProps] = useState<DetailModalProps>()
     const [searchOptions, setSearhOptions] = useState<SearchOptions>(initSearhOptions)
+    const [filter, setFilter] = useState(initFileter)
 
     const productsNameBodyTemplate = (rowData: any) => {
         return (
@@ -99,18 +112,18 @@ function ProductManageList() {
     }
 
     const optionsBodyTemplate = (rowData: any, index: number) => {
-        const option = rowData.products[0].items[0].itemOptions[index]
+        const option = rowData.products[0].items[0].itemOptions[index] as string
         const itemsLength = rowData.products[0].items.length
 
         if (itemsLength > 1) {
             return (
                 <span>
-                    {option as string} 외(
+                    {option} 외(
                     {itemsLength - 1})
                 </span>
             )
         } else {
-            return <span>{option as string}</span>
+            return <span>{option}</span>
         }
     }
 
@@ -128,7 +141,6 @@ function ProductManageList() {
 
     const onClickProductsName = (pk: string) => {
         setDialogId('DETAIL')
-        console.log(pk)
         setDetailmodalProps({ pk })
     }
 
@@ -145,10 +157,9 @@ function ProductManageList() {
     const loadProductList = async () => {
         try {
             const { data } = await axios.get(BASE_URL + 'products')
-
             setProductList(
                 map(data, function (x, i) {
-                    const item = data[0].products[0].items[0]
+                    const item = x.products[0].items[0]
                     const salePrice = item.salePrice
                     const deliveryCharge = item.deliveryCharge
                     const commissionRate = item.commissionRate
@@ -158,12 +169,17 @@ function ProductManageList() {
                     const profit = settlementPrice - purchasePrice
                     const profitRate = profit / salePrice
 
+                    const sellerList: string = map(x.products, (product) => product.sellerPk).join(',')
+                    const marketList: string = map(x.products, (product) => product.marketId).join(',')
+
                     return {
                         ...x,
                         seq: i + 1,
                         settlementPrice,
                         profit,
                         profitRate,
+                        sellerList,
+                        marketList,
                     }
                 })
             )
@@ -173,8 +189,6 @@ function ProductManageList() {
     }
 
     const onChangeSearchOptionDropdown = (event: DropdownChangeParams) => {
-        console.log(event.target.name)
-        console.log(typeof event.value)
         setSearhOptions((prev) => ({
             ...prev,
             [event.target.name]: event.value,
@@ -186,6 +200,65 @@ function ProductManageList() {
             ...prev,
             [event.target.name]: event.target.value,
         }))
+    }
+
+    const onSearch = () => {
+        const { searchCate, searchText, marketId, seller } = searchOptions
+
+        console.log(productList)
+
+        const sellerListFilter = { value: seller, matchMode: FilterMatchMode.CONTAINS }
+        const marketListFilter = { value: marketId, matchMode: FilterMatchMode.CONTAINS }
+        const searchCateFilter = { value: searchText, matchMode: FilterMatchMode.CONTAINS }
+
+        if (searchCate === 'productsName') {
+            setFilter((prev) => ({
+                ...prev,
+                productsName: {
+                    ...prev.productsName,
+                    constraints: searchText.split(' ').map((word) => ({ value: word, matchMode: FilterMatchMode.CONTAINS })),
+                },
+                sellerList: sellerListFilter,
+                marketList: marketListFilter,
+            }))
+        } else {
+            // setFilter((prev) => set(cloneDeep(prev), [searchCate, 'value'], searchText))
+            setFilter((prev) => ({
+                ...prev,
+                [searchCate]: searchCateFilter,
+                sellerList: sellerListFilter,
+                marketList: marketListFilter,
+            }))
+        }
+        setFilter((prev) => ({ ...prev, sellerList: sellerListFilter, marketList: marketListFilter }))
+    }
+
+    const onClickExcelMenu = (action: string) => {
+        const itemPkList = flattenDeep(map(productList, (g) => map(g.products, (p) => map(p.items, (i) => i.pk))))
+
+        const xlsxColumn = ['그룹ID', '그룹상품명']
+        exportXlsx(xlsxColumn, productList)
+    }
+
+    const exportXlsx = (column: string[], data: ProductGruop[]) => {
+        const exceFileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
+        const excelFileExtension = '.xlsx'
+        const excelFileName = '상품리스트_' + new Date().getTime()
+
+        const ws = XLSX.utils.aoa_to_sheet([column])
+
+        data.map((item) => XLSX.utils.sheet_add_aoa(ws, [Object.values(item)], { origin: -1 }))
+
+        const wb: any = { Sheets: { data: ws }, SheetNames: ['data'] }
+        const excelBuffer = XLSX.write(wb, { bookType: 'xlsx', type: 'array' })
+        const excelFile = new Blob([excelBuffer], { type: exceFileType })
+
+        FileSaver.saveAs(excelFile, excelFileName + excelFileExtension)
+    }
+
+    const resetSearchOptions = () => {
+        setSearhOptions(initSearhOptions)
+        setFilter(initFileter)
     }
 
     useEffect(() => {
@@ -203,7 +276,7 @@ function ProductManageList() {
                         </div>
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : {productList.length}</span>
                     </div>
-                    <div className="flex space-x-4 p-4">
+                    <div className="flex space-x-4 p-4 min-w-[70vw]">
                         <div className="flex space-x-2 items-center">
                             <span className="font-bold text-[13px]">판매사</span>
                             <Dropdown
@@ -237,14 +310,14 @@ function ProductManageList() {
                                 name="searchCate"
                                 optionLabel="label"
                                 optionValue="field"
-                                options={searchCate}
+                                options={searchCateList}
                                 value={searchOptions.searchCate}
                                 onChange={onChangeSearchOptionDropdown}
                             />
 
                             <InputText name="searchText" value={searchOptions.searchText} onChange={onChangeSearchOptionInput} />
                         </div>
-                        <div className="flex items-center space-x-2">
+                        {/* <div className="flex items-center space-x-2">
                             <span className="font-bold text-[13px]">등록일</span>
                             <button className="border rounded px-4 h-[30px] text-[12px] border-[#ddd] text-black">전체</button>
                             <Dropdown
@@ -268,14 +341,18 @@ function ProductManageList() {
                             <InputText type="date" name="startDate" value={searchOptions.startDate} onChange={onChangeSearchOptionInput} />
                             <span>~</span>
                             <InputText type="date" name="endDate" value={searchOptions.endDate} onChange={onChangeSearchOptionInput} />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
                 <div className="border-l flex flex-col">
                     <div className="h-[65px]"></div>
                     <div className="flex items-end space-x-2 p-4">
-                        <button className="btn default-btn">초기화</button>
-                        <button className="btn primary-btn">검색</button>
+                        <button className="btn default-btn" onClick={resetSearchOptions}>
+                            초기화
+                        </button>
+                        <button className="btn primary-btn" onClick={onSearch}>
+                            검색
+                        </button>
                     </div>
                 </div>
             </div>
@@ -304,7 +381,7 @@ function ProductManageList() {
                             color="#098000"
                             menu={['전체상품 엑셀 다운로드', '선택상품 엑셀 다운로드', '엑셀 업로드(상품 수정)']}
                             icon={<img src="./assets/icons/excel.png" alt="excel" width={28} className="object-contain" />}
-                            onClickMenu={(action: string) => alert(action)}
+                            onClickMenu={onClickExcelMenu}
                         />
                     </div>
                 </div>
@@ -316,7 +393,8 @@ function ProductManageList() {
                     resizableColumns
                     className="max-h-[99vh]"
                     columnResizeMode="expand"
-                    onValueChange={(value) => console.log(value)}
+                    filters={filter}
+                    globalFilterFields={['productsName', 'managerName', 'products.0.items.0.units.0.skuId']}
                 >
                     <Column
                         align="center"
@@ -329,8 +407,14 @@ function ProductManageList() {
                     ></Column>
                     <Column align="center" className="text-[12px]" field="seq" header="NO" />
                     <Column align="center" className="text-[12px]" field="createdAt" header="등록일" />
-                    <Column align="center" className="text-[12px]" field="managerName" header="담당자" />
-                    <Column align="center" className="text-[12px]" field="products.0.items.0.units.0.skuId" header="상품코드" />
+                    <Column align="center" className="text-[12px]" field="managerName" header="담당자" filterField="managerName" />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
+                        header="상품코드"
+                        field="products.0.items.0.units.0.skuId"
+                        filterField="products.0.items.0.units.0.skuId"
+                    />
                     <Column align="center" className="text-[12px]" field="productsImageUrl" header="이미지" body={imageBodyTemplate} />
                     <Column
                         align="center"
@@ -345,6 +429,7 @@ function ProductManageList() {
                         className="text-[12px]"
                         field="productsName"
                         header="상품명"
+                        filterField="productsName"
                         headerStyle={{
                             width: '250px',
                         }}
