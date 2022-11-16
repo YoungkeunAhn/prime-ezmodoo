@@ -8,7 +8,7 @@ export const fakeConfig = {
     markets: [
         { id: 'coupang_rocket', name: '쿠팡-로켓' },
         { id: 'coupang_jet', name: '쿠팡-제트' },
-        { id: 'coupang', name: '쿠팡-판매자배송' },
+        { id: 'coupang_3p', name: '쿠팡-판매자배송' },
         { id: 'auction', name: '옥션' },
         { id: 'street11', name: '11번가' },
         { id: 'gmarket', name: '지마켓' },
