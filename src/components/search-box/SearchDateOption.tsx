@@ -37,16 +37,10 @@ function SearchDateOption(props: Props) {
         onChangeDates('', '')
     }
 
-    const onClickAll = () => {
-        alert('XX')
-    }
-
     return (
         <div className="flex items-center space-x-2">
             <span className="font-bold text-[13px]">등록일</span>
-            <button className="border rounded px-4 h-[30px] text-[12px] border-[#ddd] text-black" onClick={onClickAll}>
-                전체
-            </button>
+
             <Dropdown
                 className="min-w-[100px]"
                 name="year"

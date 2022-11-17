@@ -14,3 +14,8 @@ declare interface StockSearchOption extends BaseSearchOption {
         endNumber: number
     }
 }
+
+declare type SearchCate = {
+    label: string
+    field: string
+}

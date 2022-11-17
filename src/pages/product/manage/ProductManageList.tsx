@@ -83,7 +83,7 @@ function ProductManageList() {
     const [dialogId, setDialogId] = useState<DialogId>()
     const [productList, setProductList] = useState<ProductGruop[]>([])
     const [detailModalProps, setDetailmodalProps] = useState<DetailModalProps>()
-    const [searchOptions, setSearhOptions] = useState<SearchOptions>(initSearhOptions)
+    const [searchOptions, setSearchOptions] = useState<SearchOptions>(initSearhOptions)
     const [filter, setFilter] = useState(initFileter)
     const [selection, setSelection] = useState<any[]>([])
 
@@ -169,21 +169,21 @@ function ProductManageList() {
     }
 
     const onChangeSearchOptionDropdown = (event: DropdownChangeParams) => {
-        setSearhOptions((prev) => ({
+        setSearchOptions((prev) => ({
             ...prev,
             [event.target.name]: event.value,
         }))
     }
 
     const onChangeSearchOptionInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSearhOptions((prev) => ({
+        setSearchOptions((prev) => ({
             ...prev,
             [event.target.name]: event.target.value,
         }))
     }
 
     const onChangeDates = (startDate: string, endDate: string) => {
-        setSearhOptions((prev) => ({
+        setSearchOptions((prev) => ({
             ...prev,
             startDate,
             endDate,
@@ -245,7 +245,7 @@ function ProductManageList() {
     }
 
     const resetSearchOptions = () => {
-        setSearhOptions(initSearhOptions)
+        setSearchOptions(initSearhOptions)
         setFilter(initFileter)
     }
 

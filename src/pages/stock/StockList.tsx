@@ -4,6 +4,7 @@ import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
+import { InputNumber } from 'primereact/inputnumber'
 import { InputText } from 'primereact/inputtext'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
@@ -16,7 +17,33 @@ import { wrapColumnHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import { ProductItemUnit } from 'src/types/product-manage'
 import LogViewModal from './LogViewModal'
 
-const searchOptionSellers = ['아이마마', '엘케이알', '와이엘']
+type SearchOptions = {
+    marketId: string
+    year: string
+    month: string
+    startDate: string
+    endDate: string
+    searchText: string
+    searchCate: 'global' | 'productsName' | 'managerName' | 'products.0.items.0.units.0.skuId' | 'products.0.items.0.units.0.trade.purchasePrice'
+
+    searchNumberCate: string
+    searchNumberStart: number | null
+    searchNumberEnd: number | null
+}
+
+const initSearhOptions: SearchOptions = {
+    marketId: '',
+    searchCate: 'global',
+    searchText: '',
+    year: '',
+    month: '',
+    startDate: '',
+    endDate: '',
+
+    searchNumberCate: 'stock.availableQty',
+    searchNumberStart: null,
+    searchNumberEnd: null,
+}
 
 const searchCateTextOptions = [
     { label: '통합', field: 'global' },
@@ -26,19 +53,17 @@ const searchCateTextOptions = [
     { label: '재고바코드', field: 'barcode' },
 ]
 
-const searchCateNumberOptions = [
-    { label: '재고수량', field: 'stockQty' },
-    { label: '재고금액', field: 'stockPrice' },
-    { label: '최근입고가', field: 'purchasePrice' },
-    { label: '최근입고수량', field: 'purchaseQty' },
+const searchCateNumberOptions: SearchCate[] = [
+    { label: '재고수량', field: 'stock.availableQty' },
+    { label: '재고금액', field: 'order.totalReceiptPrice' },
+    { label: '최근입고가', field: 'order.lastReceiptPrice' },
+    { label: '최근입고수량', field: 'order.lastReceiptQty' },
 ]
 
 function StockList() {
     const [logId, setLogId] = useState<number>(0)
     const [unitList, setUnitList] = useState<ProductItemUnit[]>([])
-    const [searchOption, setSearchOption] = useState()
-    const [searchCategory1, setSearchCategory1] = useState('상품명')
-    const [searchOptionSeller, setSearchOptionSeller] = useState(searchOptionSellers[0])
+    const [searchOptions, setSearchOptions] = useState<SearchOptions>(initSearhOptions)
 
     const [logOpen, setLogOpen] = useState<boolean>(false)
 
@@ -50,8 +75,19 @@ function StockList() {
         )
     }
 
-    const onChangeDropdown = (event: DropdownChangeParams) => {}
-    const onChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {}
+    const onChangeSearchOptionDropdown = (event: DropdownChangeParams) => {
+        setSearchOptions((prev) => ({
+            ...prev,
+            [event.target.name]: event.value,
+        }))
+    }
+
+    const onChangeSearchOptionInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchOptions((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value,
+        }))
+    }
 
     const onClickLog = (id: number) => {
         setLogOpen(true)
@@ -97,20 +133,27 @@ function StockList() {
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : {unitList.length}</span>
                     </div>
                     <div className="flex space-x-4 px-4 pt-4">
-                        <SearchMarketIdOption value="" onChange={onChangeDropdown} />
+                        <SearchMarketIdOption value={searchOptions.marketId} onChange={onChangeSearchOptionDropdown} />
                         <SearchCateTextOption
-                            cate=""
-                            text=""
+                            cate={searchOptions.searchCate}
+                            text={searchOptions.searchText}
                             options={searchCateTextOptions}
-                            onChangeDropdown={onChangeDropdown}
-                            onChangeText={onChangeInput}
+                            onChangeDropdown={onChangeSearchOptionDropdown}
+                            onChangeText={onChangeSearchOptionInput}
                         />
                         <div className="flex space-x-2 items-center">
-                            <Dropdown options={searchCateNumberOptions} value="재고수량" />
+                            <Dropdown
+                                className="min-w-[100px]"
+                                name="searchNumberCate"
+                                optionLabel="label"
+                                optionValue="field"
+                                options={searchCateNumberOptions}
+                                value={searchOptions.searchNumberCate}
+                            />
                             <div className="flex space-x-2 items-center">
-                                <InputText />
+                                <InputNumber value={searchOptions.searchNumberStart} />
                                 <span>~</span>
-                                <InputText />
+                                <InputNumber value={searchOptions.searchNumberEnd} />
                             </div>
                         </div>
                     </div>
