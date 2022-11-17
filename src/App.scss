@@ -145,3 +145,16 @@ html {
 .text-center input {
     text-align: center;
 }
+.p-selectbutton .p-button {
+    font-size: inherit;
+    padding: 8px;
+    border-radius: 3px;
+}
+
+.p-selectbutton .p-button + .p-button {
+    margin-left: 1px;
+}
+
+.p-selectbutton .p-button.p-highlight {
+    background-color: #3b82f6;
+}

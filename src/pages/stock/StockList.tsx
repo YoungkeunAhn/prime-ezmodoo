@@ -5,6 +5,7 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import { InputNumber } from 'primereact/inputnumber'
+import { SelectButton, SelectButtonChangeParams } from 'primereact/selectbutton'
 import { InputText } from 'primereact/inputtext'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
@@ -29,6 +30,8 @@ type SearchOptions = {
     searchNumberCate: string
     searchNumberStart: number | null
     searchNumberEnd: number | null
+
+    serachIsStockQty: string[]
 }
 
 const initSearhOptions: SearchOptions = {
@@ -43,6 +46,8 @@ const initSearhOptions: SearchOptions = {
     searchNumberCate: 'stock.availableQty',
     searchNumberStart: null,
     searchNumberEnd: null,
+
+    serachIsStockQty: ['hasStock', 'emptyStock'],
 }
 
 const searchCateTextOptions = [
@@ -58,6 +63,11 @@ const searchCateNumberOptions: SearchCate[] = [
     { label: '재고금액', field: 'order.totalReceiptPrice' },
     { label: '최근입고가', field: 'order.lastReceiptPrice' },
     { label: '최근입고수량', field: 'order.lastReceiptQty' },
+]
+
+const selectBtnOptions = [
+    { name: '재고있음', value: 'hasStock' },
+    { name: '재고없음', value: 'emptyStock' },
 ]
 
 function StockList() {
@@ -87,6 +97,11 @@ function StockList() {
             ...prev,
             [event.target.name]: event.target.value,
         }))
+    }
+
+    const onChangeSelectBtn = (event: SelectButtonChangeParams) => {
+        console.log(event.value)
+        setSearchOptions((prev) => ({ ...prev, serachIsStockQty: event.value }))
     }
 
     const onClickLog = (id: number) => {
@@ -125,7 +140,7 @@ function StockList() {
         <div>
             <div className="page-header border rounded-lg flex bg-white mb-5">
                 <div>
-                    <div className="flex items-center px-4 pt-4 border-b h-[66px] box-border">
+                    <div className="flex items-center px-4 pt-4 border-b h-[66px] box-border min-w-[70vw]">
                         <div className="flex flex-col justify-center ">
                             <span className="font-bold text-lg relative">재고관리</span>
                             <div className="border-2 w-full border-blue-500 relative -bottom-[14px]"></div>
@@ -160,12 +175,14 @@ function StockList() {
                     <div className="flex space-x-4 px-4 pt-4 pb-4">
                         <SearchDateOption startDate="" endDate="" onChangeDates={() => {}} onChangeInput={() => {}} />
                         <div className="flex items-center space-x-2">
-                            <button className="border px-1 h-[30px] flex justify-center items-center rounded text-[#BEBEBE] text-sm">
-                                재고있는 상품만 표시
-                            </button>
-                            <button className="border px-1 h-[30px] flex justify-center items-center rounded text-[#BEBEBE] text-sm">
-                                재고없는 상품만 표시
-                            </button>
+                            <SelectButton
+                                multiple
+                                optionLabel="name"
+                                className="h-[32px] text-xs border-box"
+                                options={selectBtnOptions}
+                                value={searchOptions.serachIsStockQty}
+                                onChange={onChangeSelectBtn}
+                            />
                         </div>
                     </div>
                 </div>
