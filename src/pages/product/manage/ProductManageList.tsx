@@ -13,7 +13,7 @@ import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption
 import SearchDateOption from 'src/components/search-box/SearchDateOption'
 import SearchMarketIdOption from 'src/components/search-box/SearchMarketIdOption'
 import SellerOption from 'src/components/search-box/SearchSellerOption'
-import { imageBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
+import { dateBodyTemplate, imageBodyTemplate, numberBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { ProductGruop } from 'src/types/product-manage'
 import * as XLSX from 'xlsx'
 import ProductDialog from './detail-modal/ProductDialog'
@@ -63,7 +63,7 @@ export const ecommerceList = [
     'smartstore',
 ]
 
-export const searchCateList = [
+const searchCateTextOptions = [
     { label: '통합', field: 'global' },
     { label: '상품명', field: 'productsName' },
     { label: '담당자', field: 'managerName' },
@@ -85,6 +85,7 @@ function ProductManageList() {
     const [detailModalProps, setDetailmodalProps] = useState<DetailModalProps>()
     const [searchOptions, setSearhOptions] = useState<SearchOptions>(initSearhOptions)
     const [filter, setFilter] = useState(initFileter)
+    const [selection, setSelection] = useState<any[]>([])
 
     const productsNameBodyTemplate = (rowData: any) => {
         return (
@@ -108,10 +109,6 @@ function ProductManageList() {
         } else {
             return <span>{option}</span>
         }
-    }
-
-    const numberBodyTemplate = (value: number) => {
-        return numeral(value).format('0,0')
     }
 
     const commissionRateBodyTemplate = (rowData: any) => {
@@ -273,7 +270,7 @@ function ProductManageList() {
                         <SearchMarketIdOption value={searchOptions.marketId} onChange={onChangeSearchOptionDropdown} />
 
                         <SearchCateTextOption
-                            options={searchCateList}
+                            options={searchCateTextOptions}
                             cate={searchOptions.searchCate}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                             text={searchOptions.searchText}
@@ -337,6 +334,9 @@ function ProductManageList() {
                     resizableColumns
                     className="max-h-[99vh]"
                     columnResizeMode="expand"
+                    selectionMode="checkbox"
+                    selection={selection}
+                    onSelectionChange={(e) => setSelection(e.value)}
                     filters={filter}
                     globalFilterFields={['productsName', 'managerName', 'products.0.items.0.units.0.skuId']}
                 >
@@ -350,7 +350,7 @@ function ProductManageList() {
                         field="productsId"
                     ></Column>
                     <Column align="center" className="text-[12px]" field="seq" header="NO" />
-                    <Column align="center" className="text-[12px]" field="createdAt" header="등록일" />
+                    <Column align="center" className="text-[12px]" field="createdAt" header="등록일" body={dateBodyTemplate} />
                     <Column align="center" className="text-[12px]" field="managerName" header="담당자" filterField="managerName" />
                     <Column
                         align="center"

@@ -5,7 +5,6 @@ import { Route, useLocation } from 'react-router-dom'
 import { AppMenu } from './AppMenu'
 
 import Dashboard from './components/Dashboard'
-import Documentation from './components/Documentation'
 
 import ProductManageList from './pages/product/manage/ProductManageList'
 import StockList from './pages/stock/StockList'
@@ -21,10 +20,10 @@ import { AppTopbar } from './AppTopbar'
 import './assets/demo/Demos.scss'
 import './assets/demo/flags/flags.css'
 import './assets/layout/layout.scss'
+import TableDemo from './components/TableDemo'
 import DesignManageList from './pages/design-manage/DesignManageList'
 import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
 import OrderManage from './pages/order/manage/OrderManage'
-import TableDemo from './components/TableDemo'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -287,7 +286,13 @@ const App = () => {
         <div className={wrapperClass} onClick={onWrapperClick}>
             {/* <Tooltip ref={copyTooltipRef} target=".block-action-copy" position="bottom" content="Copied to clipboard" event="focus" /> */}
 
-            <AppTopbar onToggleMenuClick={onToggleMenuClick} layoutColorMode={layoutColorMode} mobileTopbarMenuActive={mobileTopbarMenuActive} onMobileTopbarMenuClick={onMobileTopbarMenuClick} onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick} />
+            <AppTopbar
+                onToggleMenuClick={onToggleMenuClick}
+                layoutColorMode={layoutColorMode}
+                mobileTopbarMenuActive={mobileTopbarMenuActive}
+                onMobileTopbarMenuClick={onMobileTopbarMenuClick}
+                onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}
+            />
 
             <div className="layout-sidebar" onClick={onSidebarClick} style={{ width: '200px', height: 'calc(100vh - 9rem)', top: '7rem', left: 0 }}>
                 <AppMenu model={menu} onMenuItemClick={onMenuItemClick} layoutColorMode={layoutColorMode} />
@@ -318,7 +323,6 @@ const App = () => {
                     <Route path="/order/china-wear" component={ChinaWearOrder} />
                     <Route path="/stock" component={StockList} />
                     <Route path="/product/manage" component={ProductManageList} />
-                    <Route path="/documentation" component={Documentation} />
                 </div>
 
                 {/* <AppFooter layoutColorMode={layoutColorMode} /> */}

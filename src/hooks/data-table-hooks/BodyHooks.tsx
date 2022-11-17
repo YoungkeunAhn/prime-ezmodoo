@@ -1,3 +1,5 @@
+import dayjs from 'dayjs'
+import numeral from 'numeral'
 import { Image } from 'primereact/image'
 import React from 'react'
 
@@ -19,4 +21,16 @@ export const printBodyTemplate = (rowData: any) => {
             <i className="fa-solid fa-print"></i>
         </button>
     )
+}
+
+export const numberBodyTemplate = (value: number) => {
+    return numeral(value).format('0,0')
+}
+
+export const dateBodyTemplate = (rowData: any, option: any) => {
+    return dayjs(rowData[option.field]).format('YYYY-MM-DD')
+}
+
+export const arrayCommaBodyTemplate = (value: string[]) => {
+    return value.join(', ')
 }
