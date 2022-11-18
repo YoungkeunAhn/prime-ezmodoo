@@ -68,6 +68,14 @@ export declare type ProductItemUnit = {
     memo: string
     stock: UnitStock
     trade: UnitTrade
+    order: {
+        lastReceiptDate: string
+        lastReceiptPrice: number
+        lastReceiptQty: number
+        totalReceiptPrice: number
+    }
+
+    image: string
 }
 
 export declare type ProductItem = {

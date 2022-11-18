@@ -294,7 +294,7 @@ const App = () => {
                 onMobileSubTopbarMenuClick={onMobileSubTopbarMenuClick}
             />
 
-            <div className="layout-sidebar" onClick={onSidebarClick} style={{ width: '200px', height: 'calc(100vh - 9rem)', top: '7rem', left: 0 }}>
+            <div className="layout-sidebar" onClick={onSidebarClick}>
                 <AppMenu model={menu} onMenuItemClick={onMenuItemClick} layoutColorMode={layoutColorMode} />
             </div>
 

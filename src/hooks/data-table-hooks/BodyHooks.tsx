@@ -4,7 +4,15 @@ import { Image } from 'primereact/image'
 import React from 'react'
 
 export const imageBodyTemplate = (rowData: any, option?: any) => {
-    return <Image src={rowData[option.field]} alt={rowData[option.field]} className="w-[65px] h-[65px] m-auto" preview />
+    return (
+        <Image
+            src={rowData[option.field]}
+            alt={rowData[option.field]}
+            className="w-[60px] h-[60px] m-auto p-0 mb-0"
+            imageClassName="m-auto w-full h-full"
+            preview
+        />
+    )
 }
 
 export const urlBodyTemplate = (url: string) => {

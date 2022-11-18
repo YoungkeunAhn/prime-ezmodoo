@@ -54,6 +54,9 @@ html {
     max-height: 98vh;
 }
 .p-datatable .p-datatable-tbody > tr > td {
+    padding: 0px 4px;
+}
+.p-datatable .p-datatable-tbody > tr > .p-0 {
     padding: 0px;
 }
 
@@ -157,4 +160,10 @@ html {
 
 .p-selectbutton .p-button.p-highlight {
     background-color: #3b82f6;
+}
+
+.p-datatable-thead {
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }

@@ -85,7 +85,7 @@ function ProductManageList() {
     const [detailModalProps, setDetailmodalProps] = useState<DetailModalProps>()
     const [searchOptions, setSearchOptions] = useState<SearchOptions>(initSearhOptions)
     const [filter, setFilter] = useState(initFileter)
-    const [selection, setSelection] = useState<any[]>([])
+    const [selection, setSelection] = useState<ProductGruop[]>([])
 
     const productsNameBodyTemplate = (rowData: any) => {
         return (
@@ -210,7 +210,6 @@ function ProductManageList() {
                 marketList: marketListFilter,
             }))
         } else {
-            // setFilter((prev) => set(cloneDeep(prev), [searchCate, 'value'], searchText))
             setFilter((prev) => ({
                 ...prev,
                 [searchCate]: searchCateFilter,
@@ -244,7 +243,7 @@ function ProductManageList() {
         FileSaver.saveAs(excelFile, excelFileName + excelFileExtension)
     }
 
-    const resetSearchOptions = () => {
+    const clearSearchOptions = () => {
         setSearchOptions(initSearhOptions)
         setFilter(initFileter)
     }
@@ -288,7 +287,7 @@ function ProductManageList() {
                 <div className="border-l flex flex-col">
                     <div className="h-[65px]"></div>
                     <div className="flex items-end space-x-2 p-4">
-                        <button className="btn default-btn" onClick={resetSearchOptions}>
+                        <button className="btn default-btn" onClick={clearSearchOptions}>
                             초기화
                         </button>
                         <button className="btn primary-btn" onClick={onSearch}>
@@ -328,17 +327,17 @@ function ProductManageList() {
                 </div>
                 <DataTable
                     value={productList}
-                    responsiveLayout="scroll"
-                    sortMode="multiple"
                     removableSort
-                    resizableColumns
+                    sortMode="multiple"
+                    responsiveLayout="scroll"
                     className="max-h-[99vh]"
-                    columnResizeMode="expand"
                     selectionMode="checkbox"
                     selection={selection}
                     onSelectionChange={(e) => setSelection(e.value)}
                     filters={filter}
                     globalFilterFields={['productsName', 'managerName', 'products.0.items.0.units.0.skuId']}
+                    // resizableColumns
+                    // columnResizeMode="expand"
                 >
                     <Column
                         align="center"
