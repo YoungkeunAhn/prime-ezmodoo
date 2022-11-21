@@ -21,10 +21,27 @@ type Props = {
     onChangePurchasePrice: (value: number | null, index: number) => void
     onChangeDeliveryCharge: (value: number | null, index: number) => void
     onChangeCommissionRate: (value: number | null, index: number) => void
+    onChangeOptionsInput: (event: React.ChangeEvent<HTMLInputElement>, index: number, optionIndex: number) => void
 }
 
 function ProductExpandView(props: Props) {
-    const { productItemList, checkList, vendorInfo, tradeInfo, onChangeVendor, onChangeTrade, onChangeProductItemText, onChangeCommissionRate, onChangeDeliveryCharge, onChangeDropdown, onChangeImage, onChangePurchasePrice, onChangeSalePrice, onToggleCheckbox } = props
+    const {
+        productItemList,
+        checkList,
+        vendorInfo,
+        tradeInfo,
+        onChangeVendor,
+        onChangeTrade,
+        onChangeProductItemText,
+        onChangeCommissionRate,
+        onChangeDeliveryCharge,
+        onChangeDropdown,
+        onChangeImage,
+        onChangePurchasePrice,
+        onChangeSalePrice,
+        onToggleCheckbox,
+        onChangeOptionsInput,
+    } = props
 
     return (
         <div className="flex border-t-4 border-[#0D3157] h-auto">
@@ -44,6 +61,7 @@ function ProductExpandView(props: Props) {
                             onChangePurchasePrice={onChangePurchasePrice}
                             onChangeDeliveryCharge={onChangeDeliveryCharge}
                             onChangeCommissionRate={onChangeCommissionRate}
+                            onChangeOptionsInput={onChangeOptionsInput}
                         />
                     ))}
                 </SortableList>

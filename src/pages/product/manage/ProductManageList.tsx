@@ -6,7 +6,7 @@ import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { DropdownChangeParams } from 'primereact/dropdown'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
@@ -132,40 +132,7 @@ function ProductManageList() {
     const onCloseModal = () => {
         setDialogId(undefined)
         setDetailmodalProps(undefined)
-    }
-
-    const loadProductList = async () => {
-        try {
-            const { data } = await axios.get(BASE_URL + 'products')
-            setProductList(
-                map(data, function (x, i) {
-                    const item = x.products[0].items[0]
-                    const salePrice = item.salePrice
-                    const deliveryCharge = item.deliveryCharge
-                    const commissionRate = item.commissionRate
-                    const purchasePrice = item.units[0].trade.purchasePrice
-
-                    const settlementPrice = (salePrice / 100) * (100 - commissionRate) - deliveryCharge
-                    const profit = settlementPrice - purchasePrice
-                    const profitRate = profit / salePrice
-
-                    const sellerList: string = map(x.products, (product) => product.sellerPk).join(',')
-                    const marketList: string = map(x.products, (product) => product.marketId).join(',')
-
-                    return {
-                        ...x,
-                        seq: i + 1,
-                        settlementPrice,
-                        profit,
-                        profitRate,
-                        sellerList,
-                        marketList,
-                    }
-                })
-            )
-        } catch (err) {
-            console.error(err)
-        }
+        loadProductList()
     }
 
     const onChangeSearchOptionDropdown = (event: DropdownChangeParams) => {
@@ -248,6 +215,57 @@ function ProductManageList() {
         setFilter(initFileter)
     }
 
+    const deleteProductGroup = useCallback(async () => {
+        try {
+            if (selection.length > 0) {
+                // eslint-disable-next-line no-restricted-globals
+                if (confirm('삭제하시겠습니까?')) {
+                    const checkList = selection.map((select) => select.pk)
+                    await axios.post(BASE_URL + `products?_method=DELETE`, checkList)
+
+                    setProductList((prev) => prev.filter((it) => !checkList.includes(it.pk)))
+                }
+                alert('삭제되었습니다.')
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }, [selection])
+
+    const loadProductList = async () => {
+        try {
+            const { data } = await axios.get(BASE_URL + 'products')
+            setProductList(
+                map(data, function (x, i) {
+                    const item = x.products[0].items[0]
+                    const salePrice = item.salePrice
+                    const deliveryCharge = item.deliveryCharge
+                    const commissionRate = item.commissionRate
+                    const purchasePrice = item.units[0].trade.purchasePrice
+
+                    const settlementPrice = (salePrice / 100) * (100 - commissionRate) - deliveryCharge
+                    const profit = settlementPrice - purchasePrice
+                    const profitRate = profit / salePrice
+
+                    const sellerList: string = map(x.products, (product) => product.sellerPk).join(',')
+                    const marketList: string = map(x.products, (product) => product.marketId).join(',')
+
+                    return {
+                        ...x,
+                        seq: i + 1,
+                        settlementPrice,
+                        profit,
+                        profitRate,
+                        sellerList,
+                        marketList,
+                    }
+                })
+            )
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     useEffect(() => {
         loadProductList()
     }, [])
@@ -277,6 +295,7 @@ function ProductManageList() {
                         />
 
                         <SearchDateOption
+                            title="등록일"
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}
@@ -302,7 +321,9 @@ function ProductManageList() {
                         <button className="btn primary-btn" onClick={onClickCreateBtn}>
                             신규등록
                         </button>
-                        <button className="btn primary-btn">선택삭제</button>
+                        <button className="btn primary-btn" onClick={deleteProductGroup}>
+                            선택삭제
+                        </button>
                         <button className="btn primary-btn">선택복사</button>
                         <button className="btn primary-btn">상품마감</button>
                         <button className="btn primary-btn">마감해제</button>
@@ -349,7 +370,13 @@ function ProductManageList() {
                         field="productsId"
                     ></Column>
                     <Column align="center" className="text-[12px]" field="seq" header="NO" />
-                    <Column align="center" className="text-[12px]" field="createdAt" header="등록일" body={dateBodyTemplate} />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
+                        field="createdAt"
+                        header="등록일"
+                        body={(rowData) => dateBodyTemplate(rowData.createdAt)}
+                    />
                     <Column align="center" className="text-[12px]" field="managerName" header="담당자" filterField="managerName" />
                     <Column
                         align="center"
@@ -369,7 +396,7 @@ function ProductManageList() {
                     <Column
                         alignHeader="center"
                         align="left"
-                        className="text-[12px]"
+                        className="text-[12px] cursor-pointer"
                         field="productsName"
                         header="상품명"
                         filterField="productsName"

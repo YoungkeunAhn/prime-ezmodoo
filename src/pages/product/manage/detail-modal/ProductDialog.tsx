@@ -66,7 +66,7 @@ const initContentProductItem: ContentProductItem = {
     marketQrcode: '',
     itemId: '',
     itemImageUrls: [''],
-    itemOptions: [],
+    itemOptions: ['', ''],
     itemName: '',
     marketId: '',
     productName: '',
@@ -110,7 +110,7 @@ function ProductDialog(props: Props) {
     const [imageList, setImageList] = useState<Image[]>([])
     const [checkList, setCheckList] = useState<string[]>([])
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         onClose()
         setHeaderInfo(initHeaderInfo)
         setProductItemList([initContentProductItem])
@@ -118,7 +118,7 @@ function ProductDialog(props: Props) {
         setTradeInfo(initTradeInfo)
         setImageList([])
         setCheckList([])
-    }
+    }, [onClose])
 
     const onClickListView = () => {
         setTabId('LIST')
@@ -261,32 +261,66 @@ function ProductDialog(props: Props) {
         }
     }
 
+    const onChangeOptionsInput = (event: React.ChangeEvent<HTMLInputElement>, index: number, optionIndex: number) => {
+        console.log(event.target.value)
+        setProductItemList((prev) =>
+            prev.map((item, idx) =>
+                idx === index
+                    ? { ...item, itemOptions: item.itemOptions.map((option, idx) => (idx === optionIndex ? event.target.value : option)) }
+                    : item
+            )
+        )
+    }
+
     const onToggleCheckbox = (pk: string) => {
         setCheckList((prev) => xor(prev, [pk]))
     }
 
-    const saveProductGroup = async () => {
+    const saveProductGroup = useCallback(async () => {
         try {
             const formData = new FormData()
 
             const data = {
                 productItemList,
                 headerInfo,
-                tradeInfo: vendorInfo,
-                stockInfo: tradeInfo,
+                vendorInfo: vendorInfo,
+                tradeInfo: tradeInfo,
             }
 
             formData.append('data', JSON.stringify(data))
             imageList.forEach((image) => formData.append(image.index.toString(), image.file))
 
-            await axios.post(BASE_URL + 'products', formData)
+            if (pk) {
+                await axios.post(BASE_URL + 'products?_method=PATCH', formData)
+            } else {
+                await axios.post(BASE_URL + 'products', formData)
+            }
 
             alert('저장이 완료되었습니다.')
+
+            closeModal()
         } catch (err) {
             console.error(err)
             alert('저장실패')
         }
-    }
+    }, [closeModal, headerInfo, tradeInfo, vendorInfo, imageList, pk, productItemList])
+
+    const deleteProduct = useCallback(async () => {
+        try {
+            if (checkList.length > 0) {
+                // eslint-disable-next-line no-restricted-globals
+                if (confirm('삭제하시겠습니까?')) {
+                    await axios.post(BASE_URL + `products/${pk}?_method=DELETE`, checkList)
+                }
+            }
+
+            alert('삭제되었습니다.')
+
+            setProductItemList((prev) => prev.filter((it) => !checkList.includes(it.pk)))
+        } catch (err) {
+            console.error(err)
+        }
+    }, [pk, checkList])
 
     const loadProduct = useCallback(async () => {
         try {
@@ -387,7 +421,8 @@ function ProductDialog(props: Props) {
                     </button>
                     <button
                         style={{ lineHeight: '1.1rem' }}
-                        className="p-1.5 min-w-[60px] border border-[#707070] rounded text-[#A10C0C] text-[12px] "
+                        className="p-1.5 min-w-[60px] border border-[#707070] rounded text-[#A10C0C] text-[12px]"
+                        onClick={deleteProduct}
                     >
                         삭제
                     </button>
@@ -443,6 +478,7 @@ function ProductDialog(props: Props) {
                         onChangePurchasePrice={onChangePurchasePrice}
                         onChangeSalePrice={onChangeSalePrice}
                         onToggleCheckbox={onToggleCheckbox}
+                        onChangeOptionsInput={onChangeOptionsInput}
                     />
                 )}
                 {tabId === 'LIST' && (

@@ -22,6 +22,7 @@ type Props = {
     onChangeCommissionRate: (value: number | null, index: number) => void
     onChangeDropdown: (event: DropdownChangeParams, index: number) => void
     onChangeImage: (file: File | string, index: number) => void
+    onChangeOptionsInput: (event: React.ChangeEvent<HTMLInputElement>, index: number, optionIndex: number) => void
 }
 
 const hasBarcodeOptions = [
@@ -49,6 +50,7 @@ function ManageListItem(props: Props) {
         onChangeCommissionRate,
         onChangeDropdown,
         onChangeImage,
+        onChangeOptionsInput,
     } = props
     const {
         pk,
@@ -207,23 +209,32 @@ function ManageListItem(props: Props) {
                             className="w-full p-1 border-none h-full pl-3"
                             name="stockUnitId"
                             value={stockUnitId}
-                            onChange={onChangeTextInputs}
+                            // onChange={onChangeTextInputs}
                         />
                     </div>
 
-                    <ItemLabel label="옵션ID" />
-                    <div className="col-span-2 border-b">
-                        <InputText className="w-full p-1 border-none h-full pl-3" name="itemId" value={itemId} onChange={onChangeTextInputs} />
-                    </div>
-
                     <ItemLabel label="옵션1" />
-                    <div className="col-span-2 border-b border-r h-[32px]">
-                        <InputText className="w-full p-1 border-none h-full pl-3" value={itemOptions[0]} />
+                    <div className="col-span-2 border-b h-[32px]">
+                        <InputText
+                            className="w-full p-1 border-none h-full pl-3"
+                            name="itemOptions"
+                            value={itemOptions[0]}
+                            onChange={(event) => onChangeOptionsInput(event, idx, 0)}
+                        />
+                    </div>
+                    <ItemLabel label="옵션ID" />
+                    <div className="col-span-2 border-b  border-r">
+                        <InputText className="w-full p-1 border-none h-full pl-3" name="itemId" value={itemId} onChange={onChangeTextInputs} />
                     </div>
 
                     <ItemLabel label="옵션2" />
                     <div className="col-span-2 border-b">
-                        <InputText className="w-full p-1 border-none h-full pl-3" value={itemOptions[1]} />
+                        <InputText
+                            className="w-full p-1 border-none h-full pl-3"
+                            name="itemOptions"
+                            value={itemOptions[1]}
+                            onChange={(event) => onChangeOptionsInput(event, idx, 1)}
+                        />
                     </div>
 
                     <ItemLabel label="상품바코드" />

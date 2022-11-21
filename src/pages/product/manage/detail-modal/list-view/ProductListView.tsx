@@ -88,7 +88,7 @@ function ProductListView(props: Props) {
                     headerStyle={{ width: '130px' }}
                     body={marketIdBodyTemplate}
                 />
-                <Column align="center" className="text-[12px]" field="stockUnitId" header="재고코드" editor />
+                <Column align="center" className="text-[12px]" field="stockUnitId" header="재고코드" />
                 <Column
                     align="center"
                     className="text-[12px]"

@@ -76,6 +76,7 @@ export declare type ProductItemUnit = {
     }
 
     image: string
+    createdAt: string
 }
 
 export declare type ProductItem = {
