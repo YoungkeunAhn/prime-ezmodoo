@@ -1,8 +1,9 @@
-import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
+import { DropdownChangeParams } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
 
 type Props = {
+    title: string
     startDate: string
     endDate: string
     onChangeDates: (startDate: string, endDate: string) => void
@@ -23,12 +24,13 @@ const monthList = [
 ].concat(new Array(12).fill(0).map((x, idx) => ({ label: idx + 1 + '월', value: idx + 1 + '' })))
 
 function SearchDateOption(props: Props) {
-    const { startDate, endDate, onChangeDates, onChangeInput } = props
+    const { title, startDate, endDate, onChangeDates, onChangeInput } = props
     const [year, setYear] = useState<string>('')
     const [month, setMonth] = useState<string>('')
 
     const onChangeYear = (event: DropdownChangeParams) => {
         setYear(event.value)
+
         onChangeDates('', '')
     }
 
@@ -39,9 +41,9 @@ function SearchDateOption(props: Props) {
 
     return (
         <div className="flex items-center space-x-2">
-            <span className="font-bold text-[13px]">등록일</span>
+            <span className="font-bold text-[13px]">{title}</span>
 
-            <Dropdown
+            {/* <Dropdown
                 className="min-w-[100px]"
                 name="year"
                 optionLabel="label"
@@ -58,7 +60,7 @@ function SearchDateOption(props: Props) {
                 options={monthList}
                 value={month}
                 onChange={onChangeMonth}
-            />
+            /> */}
             <InputText type="date" name="startDate" value={startDate} onChange={onChangeInput} />
             <span>~</span>
             <InputText type="date" name="endDate" value={endDate} onChange={onChangeInput} />

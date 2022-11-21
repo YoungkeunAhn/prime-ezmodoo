@@ -35,8 +35,8 @@ export const numberBodyTemplate = (value: number) => {
     return numeral(value).format('0,0')
 }
 
-export const dateBodyTemplate = (rowData: any, option: any) => {
-    return dayjs(rowData[option.field]).format('YYYY-MM-DD')
+export const dateBodyTemplate = (value: string | Date) => {
+    return dayjs(value).format('YYYY-MM-DD')
 }
 
 export const arrayCommaBodyTemplate = (value: string[]) => {

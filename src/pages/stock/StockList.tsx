@@ -1,4 +1,5 @@
 import axios from 'axios'
+import dayjs from 'dayjs'
 import { map } from 'lodash'
 import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import { Button } from 'primereact/button'
@@ -80,6 +81,7 @@ const initFileter: DataTableFilterMeta = {
     managerName: { value: '', matchMode: FilterMatchMode.CONTAINS },
     skuId: { value: '', matchMode: FilterMatchMode.CONTAINS },
     barcode: { value: '', matchMode: FilterMatchMode.CONTAINS },
+    createdAt: { operator: FilterOperator.AND, constraints: [{ value: new Date('2000-01-01'), matchMode: FilterMatchMode.DATE_AFTER }] },
 
     'stock.availableQty': {
         operator: FilterOperator.AND,
@@ -147,6 +149,11 @@ function StockList() {
         setSearchOptions((prev) => ({ ...prev, serachIsStockQty: event.value }))
     }
 
+    const onChangeDates = (startDate: string, endDate: string) => {
+        console.log(startDate, endDate)
+        setSearchOptions((prev) => ({ ...prev, startDate, endDate }))
+    }
+
     const onClickLog = (id: number) => {
         setLogOpen(true)
         setLogId(id)
@@ -158,14 +165,8 @@ function StockList() {
     }
 
     const onSearch = () => {
-        const { searchCate, searchText, marketId, searchRangeCate, searchNumberStart, searchNumberEnd, serachIsStockQty, startDate, endDate } =
-            searchOptions
+        const { searchCate, searchText, searchRangeCate, searchNumberStart, searchNumberEnd, startDate, endDate } = searchOptions
 
-        const globalFilter = {
-            operator: FilterOperator.OR,
-        }
-
-        const marketIdFilter = { value: marketId, matchMode: FilterMatchMode.CONTAINS }
         const searchCateFilter = { value: searchText, matchMode: FilterMatchMode.CONTAINS }
         const skuNameFilter = {
             operator: FilterOperator.AND,
@@ -178,12 +179,20 @@ function StockList() {
                 { value: searchNumberEnd, matchMode: FilterMatchMode.LESS_THAN_OR_EQUAL_TO },
             ],
         }
+        const rangeCreatedAtFilter = {
+            operator: FilterOperator.AND,
+            constraints: [
+                { value: new Date(startDate) || 0, matchMode: FilterMatchMode.DATE_AFTER },
+                { value: new Date(endDate), matchMode: FilterMatchMode.DATE_BEFORE },
+            ],
+        }
 
         if (searchCate === 'skuName') {
             setFilter((prev) => ({
                 ...prev,
                 skuName: skuNameFilter,
                 [searchRangeCate]: rangeNumberFilter,
+                createdAt: rangeCreatedAtFilter,
 
                 // marketId: marketIdFilter,
             }))
@@ -192,6 +201,7 @@ function StockList() {
                 ...prev,
                 [searchCate]: searchCateFilter,
                 [searchRangeCate]: rangeNumberFilter,
+                createdAt: rangeCreatedAtFilter,
 
                 // marketId: marketIdFilter,
             }))
@@ -206,13 +216,13 @@ function StockList() {
     const getUnitList = async () => {
         try {
             const { data } = await axios.get(BASE_URL + 'units')
-            console.log(data)
             const stockList = map(data, (unit, idx) => {
                 const image = unit.skuImageUrls[0]
                 return {
                     ...unit,
                     seq: idx + 1,
                     image,
+                    createdAt: new Date(unit.createdAt),
                 }
             })
             setUnitList(stockList)
@@ -275,7 +285,13 @@ function StockList() {
                         </div>
                     </div>
                     <div className="flex space-x-4 px-4 pt-4 pb-4">
-                        <SearchDateOption startDate="" endDate="" onChangeDates={() => {}} onChangeInput={() => {}} />
+                        <SearchDateOption
+                            title="등록일"
+                            startDate={searchOptions.startDate}
+                            endDate={searchOptions.endDate}
+                            onChangeDates={onChangeDates}
+                            onChangeInput={onChangeSearchOptionInput}
+                        />
                         <div className="flex items-center space-x-2">
                             <SelectButton
                                 multiple
@@ -358,7 +374,6 @@ function StockList() {
                         className="text-[12px] min-w-[300px]"
                         headerClassName="min-w-[300px]"
                         field="skuName"
-                        filter
                         filterField="skuName"
                         header="상품명"
                     />
@@ -382,7 +397,7 @@ function StockList() {
                         className="text-[12px]"
                         field="order.lastReceiptDate"
                         header={wrapColumnHeader('최근 입고일')}
-                        body={dateBodyTemplate}
+                        body={(rowData) => dateBodyTemplate(rowData.order.lastReceipt)}
                         sortable
                     />
                     <Column
