@@ -113,7 +113,7 @@ export declare type Product = {
     items: ProductItem[]
 }
 
-export declare type ProductGruop = {
+export declare type ProductsGruop = {
     pk: string
     productsId: string
     productsCode: string
@@ -124,6 +124,8 @@ export declare type ProductGruop = {
 
     sellerList: string
     marketList: string
+
+    isSales: boolean
 }
 
 export declare type CommonTableContent = {

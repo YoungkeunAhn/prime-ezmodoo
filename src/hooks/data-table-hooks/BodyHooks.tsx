@@ -42,3 +42,7 @@ export const dateBodyTemplate = (value: string | Date) => {
 export const arrayCommaBodyTemplate = (value: string[]) => {
     return value.join(', ')
 }
+
+export const seqBodyTemplate = (rowData: any, option: any) => {
+    return option.rowIndex + 1
+}

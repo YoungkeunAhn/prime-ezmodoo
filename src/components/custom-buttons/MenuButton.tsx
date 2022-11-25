@@ -2,14 +2,14 @@ import React, { useState } from 'react'
 
 type Props = {
     title: string
-    menu: string[]
+    menu: { label: string; action: string }[]
     position?: string
     icon?: React.ReactElement
     className?: string
     color?: string
     height?: string
 
-    onClickMenu: (action: string) => void
+    onClickMenu: (action: any) => void
 }
 
 function MenuButton(props: Props) {
@@ -26,14 +26,23 @@ function MenuButton(props: Props) {
 
     return (
         <>
-            <button className={`border border-[${color ?? '#000'}] rounded bg-white flex items-center space-x-2 p-1 px-2 h-[${height ?? '32px'}] relative ${className}`} onClick={onToogleBtn}>
+            <button
+                className={`border border-[${color ?? '#000'}] rounded bg-white flex items-center space-x-2 p-1 px-2 h-[${
+                    height ?? '32px'
+                }] relative ${className}`}
+                onClick={onToogleBtn}
+            >
                 {icon}
                 <span className="font-bold text-black text-sm">{title}</span>
                 <i className={`fa-solid fa-ellipsis-vertical text-[${color ?? '#000'}]`}></i>
-                <ul className={`border bg-white absolute z-20 -${position ?? 'right'}-[160px] -top-[2px] p-2 flex flex-col text-start text-gray-400 text-sm space-y-2 rounded ${open ? '' : 'hidden'}`}>
+                <ul
+                    className={`border bg-white absolute z-20 -${
+                        position ?? 'right'
+                    }-[160px] -top-[2px] p-2 flex flex-col text-start text-gray-400 text-sm space-y-2 rounded ${open ? '' : 'hidden'}`}
+                >
                     {menu.map((item, idx) => (
-                        <li key={idx} className="w-full" onClick={() => onClickMenu(item)}>
-                            {item}
+                        <li key={idx} className="w-full" onClick={() => onClickMenu(item.action)}>
+                            {item.label}
                         </li>
                     ))}
                 </ul>

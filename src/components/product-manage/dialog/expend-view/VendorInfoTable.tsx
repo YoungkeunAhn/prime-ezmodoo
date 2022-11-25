@@ -12,7 +12,7 @@ function VendorInfoTable(props: Props) {
     const { company, linkUrls, officer } = info
 
     return (
-        <table className="text-[12px] w-[400px] border-t-0 table-fixed relative -right-[1px] border mb-4">
+        <table className="text-[12px] w-full border-t-0 table-fixed relative -right-[1px] border">
             <tr className="h-[32px] bg-[#305496] text-white">
                 <th colSpan={2}>
                     <div className=" h-[32px] rounded-r-[40px] flex justify-center items-center w-full">공급사 정보</div>

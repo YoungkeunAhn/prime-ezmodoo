@@ -6,15 +6,15 @@ import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { DropdownChangeParams } from 'primereact/dropdown'
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
 import SearchDateOption from 'src/components/search-box/SearchDateOption'
 import SearchMarketIdOption from 'src/components/search-box/SearchMarketIdOption'
 import SellerOption from 'src/components/search-box/SearchSellerOption'
-import { dateBodyTemplate, imageBodyTemplate, numberBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
-import { ProductGruop } from 'src/types/product-manage'
+import { dateBodyTemplate, imageBodyTemplate, numberBodyTemplate, seqBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
+import { ProductsGruop } from 'src/types/product-manage'
 import * as XLSX from 'xlsx'
 import ProductDialog from './detail-modal/ProductDialog'
 
@@ -23,6 +23,8 @@ type DialogId = 'CREATE' | 'DETAIL'
 type DetailModalProps = {
     pk: string
 }
+
+export type TableViwer = 'ALL' | 'true' | 'false'
 
 type SearchOptions = {
     seller: string
@@ -46,23 +48,6 @@ const initSearhOptions: SearchOptions = {
     endDate: '',
 }
 
-export const ecommerceList = [
-    'coupang_rocket',
-    'coupang_jet',
-    'coupang_3p',
-    'auction',
-    'street11',
-    'gmarket',
-    'tmon',
-    'wemakeprice',
-    'interpark',
-    'ably',
-    'zigzag',
-    'talkstore',
-    'funshop',
-    'smartstore',
-]
-
 const searchCateTextOptions = [
     { label: '통합', field: 'global' },
     { label: '상품명', field: 'productsName' },
@@ -79,13 +64,27 @@ const initFileter = {
     'products.0.items.0.units.0.skuId': { value: '', matchMode: FilterMatchMode.CONTAINS },
 }
 
+const excelBtnMenu = [
+    { label: '전체상품 엑셀 다운로드', action: 'ALL' },
+    { label: '선택상품 엑셀 다운로드', action: 'select' },
+    { label: '엑셀 업로드(증감/차감)', action: 'upload' },
+]
+
+const showBtnMenu = [
+    { label: '전체상품 보기', action: 'ALL' },
+    { label: '전체상품 보기(마감제외)', action: 'true' },
+    { label: '마감상품 보기', action: 'false' },
+]
+
 function ProductManageList() {
     const [dialogId, setDialogId] = useState<DialogId>()
-    const [productList, setProductList] = useState<ProductGruop[]>([])
+    const [productsGroupList, setProductsGroupList] = useState<ProductsGruop[]>([])
     const [detailModalProps, setDetailmodalProps] = useState<DetailModalProps>()
     const [searchOptions, setSearchOptions] = useState<SearchOptions>(initSearhOptions)
     const [filter, setFilter] = useState(initFileter)
-    const [selection, setSelection] = useState<ProductGruop[]>([])
+    const [selection, setSelection] = useState<ProductsGruop[]>([])
+
+    const [tableViewer, setTableViewer] = useState<TableViwer>('ALL')
 
     const productsNameBodyTemplate = (rowData: any) => {
         return (
@@ -99,16 +98,7 @@ function ProductManageList() {
         const option = rowData.products[0].items[0].itemOptions[index] as string
         const itemsLength = rowData.products[0].items.length
 
-        if (itemsLength > 1) {
-            return (
-                <span>
-                    {option} 외(
-                    {itemsLength - 1})
-                </span>
-            )
-        } else {
-            return <span>{option}</span>
-        }
+        return <span>{itemsLength > 1 ? `${option} 외(${itemsLength - 1})` : option}</span>
     }
 
     const commissionRateBodyTemplate = (rowData: any) => {
@@ -160,7 +150,7 @@ function ProductManageList() {
     const onSearch = () => {
         const { searchCate, searchText, marketId, seller } = searchOptions
 
-        console.log(productList)
+        console.log(productsGroupList)
 
         const sellerListFilter = { value: seller, matchMode: FilterMatchMode.CONTAINS }
         const marketListFilter = { value: marketId, matchMode: FilterMatchMode.CONTAINS }
@@ -188,13 +178,13 @@ function ProductManageList() {
     }
 
     const onClickExcelMenu = (action: string) => {
-        const itemPkList = flattenDeep(map(productList, (g) => map(g.products, (p) => map(p.items, (i) => i.pk))))
+        const itemPkList = flattenDeep(map(productsGroupList, (g) => map(g.products, (p) => map(p.items, (i) => i.pk))))
 
         const xlsxColumn = ['그룹ID', '그룹상품명']
-        exportXlsx(xlsxColumn, productList)
+        exportXlsx(xlsxColumn, productsGroupList)
     }
 
-    const exportXlsx = (column: string[], data: ProductGruop[]) => {
+    const exportXlsx = (column: string[], data: ProductsGruop[]) => {
         const exceFileType = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;charset=UTF-8'
         const excelFileExtension = '.xlsx'
         const excelFileName = '상품리스트_' + new Date().getTime()
@@ -215,6 +205,56 @@ function ProductManageList() {
         setFilter(initFileter)
     }
 
+    const onClickTableViewerBtn = (action: TableViwer) => {
+        setTableViewer(action)
+    }
+
+    const isSalesTrue = useCallback(async () => {
+        try {
+            if (selection.length > 0) {
+                // eslint-disable-next-line no-restricted-globals
+                if (confirm('선택상품을 마감처리 하시겠습니까?')) {
+                    await axios.post(
+                        BASE_URL + 'products/isSales?value=true',
+                        selection.map((select) => select.pk)
+                    )
+                }
+
+                alert('완료되었습니다.')
+                setSelection([])
+
+                const selectionPkList = selection.map((select) => select.pk)
+                setProductsGroupList((prev) => prev.map((group) => (selectionPkList.includes(group.pk) ? { ...group, isSales: true } : group)))
+                console.log(productsGroupList)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }, [selection, productsGroupList])
+
+    const isSalesFalse = useCallback(async () => {
+        try {
+            if (selection.length > 0) {
+                // eslint-disable-next-line no-restricted-globals
+                if (confirm('선택상품을 마감해제 하시겠습니까?')) {
+                    await axios.post(
+                        BASE_URL + 'products/isSales?value=false',
+                        selection.map((select) => select.pk)
+                    )
+                }
+
+                alert('완료되었습니다.')
+                setSelection([])
+
+                const selectionPkList = selection.map((select) => select.pk)
+                setProductsGroupList((prev) => prev.map((group) => (selectionPkList.includes(group.pk) ? { ...group, isSales: false } : group)))
+                console.log(productsGroupList)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }, [selection, productsGroupList])
+
     const deleteProductGroup = useCallback(async () => {
         try {
             if (selection.length > 0) {
@@ -223,9 +263,10 @@ function ProductManageList() {
                     const checkList = selection.map((select) => select.pk)
                     await axios.post(BASE_URL + `products?_method=DELETE`, checkList)
 
-                    setProductList((prev) => prev.filter((it) => !checkList.includes(it.pk)))
+                    setProductsGroupList((prev) => prev.filter((it) => !checkList.includes(it.pk)))
                 }
                 alert('삭제되었습니다.')
+                setSelection([])
             }
         } catch (err) {
             console.error(err)
@@ -235,7 +276,7 @@ function ProductManageList() {
     const loadProductList = async () => {
         try {
             const { data } = await axios.get(BASE_URL + 'products')
-            setProductList(
+            setProductsGroupList(
                 map(data, function (x, i) {
                     const item = x.products[0].items[0]
                     const salePrice = item.salePrice
@@ -279,7 +320,7 @@ function ProductManageList() {
                             <span className="font-bold text-lg relative">상품관리</span>
                             <div className="border-2 w-full border-blue-500 relative -bottom-[14px]"></div>
                         </div>
-                        <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : {productList.length}</span>
+                        <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : {productsGroupList.length}</span>
                     </div>
                     <div className="flex space-x-4 p-4 min-w-[70vw]">
                         <SellerOption value={searchOptions.seller} onChange={onChangeSearchOptionDropdown} />
@@ -324,15 +365,16 @@ function ProductManageList() {
                         <button className="btn primary-btn" onClick={deleteProductGroup}>
                             선택삭제
                         </button>
-                        <button className="btn primary-btn">선택복사</button>
-                        <button className="btn primary-btn">상품마감</button>
-                        <button className="btn primary-btn">마감해제</button>
-                        <MenuButton
-                            title="전체상품보기"
-                            color="#146BCE"
-                            menu={['전체상품 보기', '전체상품 보기(마감제외)', '마감상품 보기']}
-                            onClickMenu={(action: string) => alert(action)}
-                        />
+                        <button className="btn primary-btn" onClick={() => alert('추후 업데이트 될 예정입니다.')}>
+                            선택복사
+                        </button>
+                        <button className="btn primary-btn" onClick={isSalesFalse}>
+                            상품마감
+                        </button>
+                        <button className="btn primary-btn" onClick={isSalesTrue}>
+                            마감해제
+                        </button>
+                        <MenuButton title="전체상품보기" color="#146BCE" menu={showBtnMenu} onClickMenu={onClickTableViewerBtn} />
                         <button className="btn primary-btn">디자인요청</button>
                     </div>
                     <div className="flex items-center space-x-2">
@@ -340,14 +382,20 @@ function ProductManageList() {
                             title="EXCEL"
                             position="left"
                             color="#098000"
-                            menu={['전체상품 엑셀 다운로드', '선택상품 엑셀 다운로드', '엑셀 업로드(상품 수정)']}
+                            menu={excelBtnMenu}
                             icon={<img src="./assets/icons/excel.png" alt="excel" width={28} className="object-contain" />}
                             onClickMenu={onClickExcelMenu}
                         />
                     </div>
                 </div>
                 <DataTable
-                    value={productList}
+                    value={
+                        tableViewer === 'ALL'
+                            ? productsGroupList
+                            : tableViewer === 'true'
+                            ? productsGroupList.filter((it) => it.isSales)
+                            : productsGroupList.filter((it) => !it.isSales)
+                    }
                     removableSort
                     sortMode="multiple"
                     responsiveLayout="scroll"
@@ -369,7 +417,7 @@ function ProductManageList() {
                         }}
                         field="productsId"
                     ></Column>
-                    <Column align="center" className="text-[12px]" field="seq" header="NO" />
+                    <Column align="center" className="text-[12px]" field="seq" header="NO" body={seqBodyTemplate} />
                     <Column
                         align="center"
                         className="text-[12px]"
@@ -391,7 +439,7 @@ function ProductManageList() {
                         className="text-[12px]"
                         field="url"
                         header="URL"
-                        body={(rowData: any) => urlBodyTemplate(rowData.productsLinkUrls[0])}
+                        body={(rowData) => urlBodyTemplate(rowData.productsLinkUrls[0])}
                     />
                     <Column
                         alignHeader="center"

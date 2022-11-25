@@ -1,4 +1,4 @@
-import { DropdownChangeParams } from 'primereact/dropdown'
+import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
 
@@ -43,7 +43,7 @@ function SearchDateOption(props: Props) {
         <div className="flex items-center space-x-2">
             <span className="font-bold text-[13px]">{title}</span>
 
-            {/* <Dropdown
+            <Dropdown
                 className="min-w-[100px]"
                 name="year"
                 optionLabel="label"
@@ -60,7 +60,7 @@ function SearchDateOption(props: Props) {
                 options={monthList}
                 value={month}
                 onChange={onChangeMonth}
-            /> */}
+            />
             <InputText type="date" name="startDate" value={startDate} onChange={onChangeInput} />
             <span>~</span>
             <InputText type="date" name="endDate" value={endDate} onChange={onChangeInput} />

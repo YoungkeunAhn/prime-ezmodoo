@@ -173,7 +173,7 @@ const App = () => {
             label: '발주',
             icon: 'pi pi-fw pi-clone',
             items: [
-                { label: '발주관리', icon: 'pi pi-fw pi-calendar', to: '/order/manage' },
+                { label: '발주리스트', icon: 'pi pi-fw pi-calendar', to: '/order/manage' },
                 { label: '중국의류발주', icon: 'pi pi-fw pi-circle-off', to: '/order/china-wear' },
             ],
         },

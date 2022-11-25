@@ -14,7 +14,7 @@ function TradeInfoTable(props: Props) {
     const { cbm, enSkuMaterial, enSkuName, gwt, lwh, nwt, qtyPerBox, receiptPeriod, tariffRate } = info
 
     return (
-        <table className="text-[12px] w-[400px] border-t-0 table-fixed relative -right-[1px] border">
+        <table className="text-[12px] w-full border-t-0 table-fixed border">
             <tr className="h-[32px] bg-[#305496] text-white">
                 <th colSpan={2}>
                     <div className=" h-[32px] rounded-r-[40px] flex justify-center items-center w-full">상품물류 정보</div>
@@ -28,11 +28,29 @@ function TradeInfoTable(props: Props) {
                 <td className="text-[#667084]">
                     <div className="p-inputgroup border-none">
                         <div className="w-full flex items-center">
-                            <InputText className="border-none w-full px-2 py-1 text-center" name="lwh.width" value={lwh.width || ''} onChange={onChange} placeholder="가로" />
+                            <InputText
+                                className="border-none w-full px-2 py-1 text-center"
+                                name="lwh.width"
+                                value={lwh.width || ''}
+                                onChange={onChange}
+                                placeholder="가로"
+                            />
                             *
-                            <InputText className="border-none w-full px-2 py-1 text-center" name="lwh.length" value={lwh.length || ''} onChange={onChange} placeholder="세로" />
+                            <InputText
+                                className="border-none w-full px-2 py-1 text-center"
+                                name="lwh.length"
+                                value={lwh.length || ''}
+                                onChange={onChange}
+                                placeholder="세로"
+                            />
                             *
-                            <InputText className="border-none w-full px-2 py-1 text-center" name="lwh.height" value={lwh.height || ''} onChange={onChange} placeholder="높이" />
+                            <InputText
+                                className="border-none w-full px-2 py-1 text-center"
+                                name="lwh.height"
+                                value={lwh.height || ''}
+                                onChange={onChange}
+                                placeholder="높이"
+                            />
                         </div>
                         <span className="p-inputgroup-addon h-[32px] bg-[#F8F9FB] border-none ml-1">cm</span>
                     </div>

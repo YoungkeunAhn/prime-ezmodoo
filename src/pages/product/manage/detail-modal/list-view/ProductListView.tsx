@@ -1,6 +1,6 @@
 import { difference, filter, flatten, map } from 'lodash'
 import { Column, ColumnEditorOptions } from 'primereact/column'
-import { DataTable, DataTableRowClickEventParams, DataTableRowReorderParams } from 'primereact/datatable'
+import { DataTable, DataTableRowReorderParams } from 'primereact/datatable'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import React, { useState } from 'react'
 import { fakeConfig } from 'src/common/fake-data/config'
@@ -9,7 +9,6 @@ import VendorInfoBox from 'src/components/product-manage/dialog/list-view/Vendor
 import { numberEditor, textEditor } from 'src/hooks/data-table-hooks/EditorHooks'
 import { marketTemplate } from 'src/hooks/dropdown/ValueTemplate'
 import { ContentProductItem, ITrade, IVendor } from 'src/types/product-manage'
-import { ecommerceList } from '../../ProductManageList'
 
 type Props = {
     productItemList: ContentProductItem[]

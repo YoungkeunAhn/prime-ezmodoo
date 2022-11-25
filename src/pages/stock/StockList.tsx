@@ -1,5 +1,4 @@
 import axios from 'axios'
-import dayjs from 'dayjs'
 import { map } from 'lodash'
 import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import { Button } from 'primereact/button'
@@ -112,6 +111,12 @@ const initFileter: DataTableFilterMeta = {
         ],
     },
 }
+
+const excelBtnMenu = [
+    { label: '전체상품 엑셀 다운로드', action: 'ALL' },
+    { label: '선택상품 엑셀 다운로드', action: 'select' },
+    { label: '엑셀 업로드(증감/차감)', action: 'upload' },
+]
 
 function StockList() {
     const [logId, setLogId] = useState<number>(0)
@@ -318,27 +323,19 @@ function StockList() {
             </div>
             <div className="card">
                 <div className="flex items-center justify-between pb-4">
-                    <div className="flex space-x-2 items-center">
-                        <span className="font-bold">재고수동입출고</span>
-                        <InputText placeholder="상세내역" className="w-[300px] h-[30px] rounded" />
-                        <InputText placeholder="수량" className="w-[80px] h-[30px] rounded text-center" />
-                        <button className="min-w-[50px] h-[30px] border border-[#146BCE] text-[#146BCE] rounded text-sm font-bold">입고</button>
-                        <button className="min-w-[50px] h-[30px] border border-[#098000] text-[#098000] rounded text-sm font-bold">출고</button>
-                    </div>
+                    <div></div>
                     <div className="flex space-x-2">
                         <MenuButton
                             title="EXCEL"
                             position="left"
                             color="#098000"
-                            menu={['전체상품 엑셀 다운로드', '선택상품 엑셀 다운로드', '엑셀 업로드(증감/차감)']}
+                            menu={excelBtnMenu}
                             icon={<img src="./assets/icons/excel.png" alt="excel" width={28} className="object-contain" />}
                             onClickMenu={(action: string) => alert(action)}
                         />
                         <button
                             className="font-bold border text-sm border-[#146BCE] rounded text-black p-1 px-2 bg-white h-[32px]"
-                            onClick={() => {
-                                onClickLog(0)
-                            }}
+                            onClick={() => onClickLog(0)}
                         >
                             전체로그확인
                         </button>

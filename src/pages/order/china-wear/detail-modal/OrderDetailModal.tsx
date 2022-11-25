@@ -65,7 +65,9 @@ function OrderDetailModal(props: Props) {
                         </div>
 
                         <div className="text-sm flex flex-col mt-2">
-                            <div className="col-span-3 rounded-t-[10px] bg-[#146BCE] text-white flex justify-center items-center h-[32px]">발주정보수정</div>
+                            <div className="col-span-3 rounded-t-[10px] bg-[#146BCE] text-white flex justify-center items-center h-[32px]">
+                                발주정보수정
+                            </div>
                             <div className="grid grid-cols-3 border w-[400px]">
                                 <div className="border-b border-r p-2 font-bold bg-[#F8F9FB] flex items-center">발주일자</div>
                                 <div className="col-span-2 border-b">
