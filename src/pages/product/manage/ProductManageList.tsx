@@ -178,7 +178,7 @@ function ProductManageList() {
     }
 
     const onClickExcelMenu = (action: string) => {
-        const itemPkList = flattenDeep(map(productsGroupList, (g) => map(g.products, (p) => map(p.items, (i) => i.pk))))
+        // const itemPkList = flattenDeep(map(productsGroupList, (g) => map(g.products, (p) => map(p.items, (i) => i.pk))))
 
         const xlsxColumn = ['그룹ID', '그룹상품명']
         exportXlsx(xlsxColumn, productsGroupList)

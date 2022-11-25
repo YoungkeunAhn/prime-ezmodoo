@@ -1,6 +1,9 @@
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
+import { Dialog } from 'primereact/dialog'
 import React, { useState } from 'react'
+import { dateBodyTemplate, seqBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
+import { wrapColumnHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 
 const fakeData = [
     {
@@ -20,7 +23,7 @@ const fakeData = [
         surtax: 114024,
         exchangeRate: 1330,
     },
-].map((data, idx) => ({ ...data, seq: idx + 1 }))
+]
 
 function InvoiceList() {
     const [selection, setSelection] = useState([])
@@ -66,24 +69,39 @@ function InvoiceList() {
                     resizableColumns
                     scrollHeight="82vh"
                     sortMode="multiple"
+                    selectionMode="checkbox"
                     columnResizeMode="expand"
                     responsiveLayout="scroll"
                     selection={selection}
                     onSelectionChange={(e) => setSelection(e.value)}
                 >
                     <Column align="center" className="max-w-[50px]" selectionMode="multiple" selectionAriaLabel="id" field="id"></Column>
-                    <Column align="center" className="text-[12px]" field="managerName" header="담당자" />
-                    <Column align="center" className="text-[12px]" field="skuId" header="재고코드" />
+                    <Column align="center" field="seq" header="NO" body={seqBodyTemplate} />
+                    <Column align="center" className="text-[12px]" field="createdAt" header="작성일" />
+                    <Column align="center" className="text-[12px]" field="forwarding" header="포워딩상호" />
                     <Column
-                        alignHeader="center"
-                        align="left"
-                        className="text-[12px] min-w-[300px]"
-                        headerClassName="min-w-[300px]"
-                        field="skuName"
-                        filterField="skuName"
-                        header="상품명"
+                        align="center"
+                        className="text-[12px]"
+                        field="commingDate"
+                        header="물류입고일"
+                        body={(rowData) => dateBodyTemplate(rowData.commingDate)}
                     />
+                    <Column align="center" className="text-[12px]" field="blNumber" header="BL번호" />
+                    <Column align="center" className="text-[12px]" field="registeredNumber" header="신고번호" />
+                    <Column align="center" className="text-[12px]" field="importCommition" header="통관수수료" />
+                    <Column align="center" className="text-[12px]" field="internalDeliveryCharge" header={wrapColumnHeader('내륙 운송비')} />
+                    <Column align="center" className="text-[12px]" field="documentPee" header="서류발급비" />
+                    <Column align="center" className="text-[12px]" field="certificatePee" header="원산지증명서" />
+                    <Column align="center" className="text-[12px]" field="id" header="수입신고서" body={() => <button>등록</button>} />
+                    <Column align="center" className="text-[12px]" field="totalCurrencyTax" header={wrapColumnHeader('총과세가격 (USD)')} />
+                    <Column align="center" className="text-[12px]" field="deliveryCharge" header="운임" />
+                    <Column align="center" className="text-[12px]" field="duty" header="관세" />
+                    <Column align="center" className="text-[12px]" field="surtax" header="부과세" />
+                    <Column align="center" className="text-[12px]" field="exchangeRate" header="구매시환율" />
                 </DataTable>
+                <div>
+                    <textarea name="" id="" className="border w-full" rows={25} contentEditable={true}></textarea>
+                </div>
             </div>
         </div>
     )

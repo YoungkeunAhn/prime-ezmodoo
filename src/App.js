@@ -24,6 +24,7 @@ import TableDemo from './components/TableDemo'
 import DesignManageList from './pages/design-manage/DesignManageList'
 import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
 import OrderManage from './pages/order/manage/OrderManage'
+import InvoiceList from './pages/invoice/InvoiceList'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -165,16 +166,17 @@ const App = () => {
             icon: 'pi pi-fw pi-clone',
             items: [
                 { label: '재고관리', icon: 'pi pi-fw pi-user-edit', to: '/stock' },
-                { label: '상품관리', icon: 'pi pi-fw pi-circle-off', to: '/product/manage' },
-                { label: '디자인관리', icon: 'pi pi-fw pi-prime', to: '/design/manage' },
+                { label: '상품관리', icon: 'pi pi-fw pi-circle-off', to: '/products' },
+                { label: '디자인관리', icon: 'pi pi-fw pi-prime', to: '/design' },
             ],
         },
         {
             label: '발주',
             icon: 'pi pi-fw pi-clone',
             items: [
-                { label: '발주리스트', icon: 'pi pi-fw pi-calendar', to: '/order/manage' },
+                { label: '발주리스트', icon: 'pi pi-fw pi-calendar', to: '/order' },
                 { label: '중국의류발주', icon: 'pi pi-fw pi-circle-off', to: '/order/china-wear' },
+                { label: '물류', icon: 'pi pi-car', to: '/invoice' },
             ],
         },
         {
@@ -301,28 +303,14 @@ const App = () => {
             <div className="layout-main-container">
                 <div className="layout-main">
                     <Route path="/" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
-                    {/* <Route path="/formlayout" component={FormLayoutDemo} />
-                    <Route path="/input" component={InputDemo} />
-                    <Route path="/floatlabel" component={FloatLabelDemo} />
-                    <Route path="/invalidstate" component={InvalidStateDemo} />
-                    <Route path="/button" component={ButtonDemo} />
-                    <Route path="/list" component={ListDemo} />
-                    <Route path="/tree" component={TreeDemo} />
-                    <Route path="/panel" component={PanelDemo} />
-                    <Route path="/overlay" component={OverlayDemo} />
-                    <Route path="/media" component={MediaDemo} />
-                    <Route path="/menu" component={MenuDemo} />
-                    <Route path="/messages" component={MessagesDemo} />
-                <Route path="/blocks" component={BlocksDemo} /> */}
-                    {/* <Route path="/file" component={FileDemo} />
-                    <Route path="/chart" render={() => <ChartDemo colorMode={layoutColorMode} location={location} />} />
-                <Route path="/misc" component={MiscDemo} /> */}
+
                     <Route path="/table" component={TableDemo} />
-                    <Route path="/design/manage" component={DesignManageList} />
-                    <Route path="/order/manage" component={OrderManage} />
+                    <Route path="/design" component={DesignManageList} />
+                    <Route path="/order" component={OrderManage} />
                     <Route path="/order/china-wear" component={ChinaWearOrder} />
                     <Route path="/stock" component={StockList} />
-                    <Route path="/product/manage" component={ProductManageList} />
+                    <Route path="/products" component={ProductManageList} />
+                    <Route path="/invoice" component={InvoiceList} />
                 </div>
 
                 {/* <AppFooter layoutColorMode={layoutColorMode} /> */}

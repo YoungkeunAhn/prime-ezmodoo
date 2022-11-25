@@ -13,7 +13,13 @@ import { BASE_URL } from 'src/api/ApiConfig'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
 import SearchDateOption from 'src/components/search-box/SearchDateOption'
-import { arrayCommaBodyTemplate, dateBodyTemplate, imageBodyTemplate, numberBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
+import {
+    arrayCommaBodyTemplate,
+    dateBodyTemplate,
+    imageBodyTemplate,
+    numberBodyTemplate,
+    seqBodyTemplate,
+} from 'src/hooks/data-table-hooks/BodyHooks'
 import { wrapColumnHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import { ProductItemUnit } from 'src/types/product-manage'
 import LogViewModal from './LogViewModal'
@@ -234,10 +240,6 @@ function StockList() {
         } catch (err) {
             console.error(err)
         }
-    }
-
-    const seqBodyTemplate = (rowData: any, options: any) => {
-        console.log(rowData, options)
     }
 
     useEffect(() => {
