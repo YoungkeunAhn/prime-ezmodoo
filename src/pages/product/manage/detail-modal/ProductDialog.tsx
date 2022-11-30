@@ -324,7 +324,7 @@ function ProductDialog(props: Props) {
 
     const loadProduct = useCallback(async () => {
         try {
-            if (pk !== '') {
+            if (pk && pk !== '') {
                 const { data } = await axios.get(BASE_URL + 'products/' + pk)
 
                 const { managerName, createdAt, productsName } = data

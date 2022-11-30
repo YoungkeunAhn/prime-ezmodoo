@@ -1,9 +1,10 @@
-import axios from 'axios'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { Dropdown } from 'primereact/dropdown'
+import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
-import React, { useCallback, useState } from 'react'
+import React, { useState } from 'react'
+import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
+import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
 import { imageBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import DegsignManageDetailModal from './detail-modal/DegsignManageDetailModal'
 
@@ -40,10 +41,47 @@ const fakeData = [
     },
 ]
 
+type SearchOptions = {
+    dataRangeCate: 'createdAt'
+    startDate: Date
+    endDate: Date
+
+    searchCate: 'global' | 'productName'
+    searchText: string
+}
+
+const initSearchOptions: SearchOptions = {
+    dataRangeCate: 'createdAt',
+    startDate: new Date(),
+    endDate: new Date(),
+
+    searchCate: 'global',
+    searchText: '',
+}
+
+const searchDateRangeCateOptions: SearchCate[] = [
+    {
+        label: '등록일',
+        field: 'createdAt',
+    },
+]
+
+const searchCateOptions: SearchCate[] = [
+    {
+        label: '통합',
+        field: 'global',
+    },
+    {
+        label: '상품명',
+        field: 'productName',
+    },
+]
+
 type DialogId = 'DETAIL'
 
 function DesignManageList() {
     const [dialogId, setDialogId] = useState<DialogId>()
+    const [searchOptions, setSearchOptions] = useState<SearchOptions>(initSearchOptions)
 
     const openDetailModal = () => {
         setDialogId('DETAIL')
@@ -53,24 +91,54 @@ function DesignManageList() {
         setDialogId(undefined)
     }
 
-    const onClickConfirmBtn = useCallback(async (id: string, name: string) => {
-        try {
-            // await axios.post(BASE_URL + 'design/confirm', { id, name })
-        } catch (err) {
-            console.error(err)
-        }
-    }, [])
+    const onChangeDates = (range: { startDate: Date; endDate: Date }) => {
+        const { startDate, endDate } = range
+
+        setSearchOptions((prev) => ({ ...prev, startDate: startDate, endDate: endDate }))
+    }
+
+    const onChangeSearchOptionDropdown = (event: DropdownChangeParams) => {
+        setSearchOptions((prev) => ({
+            ...prev,
+            [event.target.name]: event.value,
+        }))
+    }
+
+    const onChangeSearchOptionInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setSearchOptions((prev) => ({
+            ...prev,
+            [event.target.name]: event.target.value,
+        }))
+    }
 
     const confirmStatusBodyTemplate = (rowData: any) => {
         return (
             <div className="flex flex-col space-y-1 p-1">
-                <button className={`w-full rounded p-2 font-bold text-black border ${rowData.confirmStatus.includes('디자인') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'}`}>디자인</button>
-                <button className={`w-full rounded p-2 font-bold text-black border ${rowData.confirmStatus.includes('MD') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'}`}>MD</button>
+                <button
+                    className={`w-full rounded p-2 font-bold text-black border ${
+                        rowData.confirmStatus.includes('디자인') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'
+                    }`}
+                >
+                    디자인
+                </button>
+                <button
+                    className={`w-full rounded p-2 font-bold text-black border ${
+                        rowData.confirmStatus.includes('MD') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'
+                    }`}
+                >
+                    MD
+                </button>
 
                 {rowData.confirmStatus.includes('보류') ? (
                     <button className="w-full rounded p-2 font-bold text-black border bg-[#FE7979]">보류</button>
                 ) : (
-                    <button className={`w-full rounded p-2 font-bold text-black border ${rowData.confirmStatus.includes('최종') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'}`}>최종</button>
+                    <button
+                        className={`w-full rounded p-2 font-bold text-black border ${
+                            rowData.confirmStatus.includes('최종') ? 'bg-[#5F8EEC]' : 'bg-[#BEBEBE]'
+                        }`}
+                    >
+                        최종
+                    </button>
                 )}
             </div>
         )
@@ -87,19 +155,21 @@ function DesignManageList() {
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : 3862</span>
                     </div>
                     <div className="flex space-x-4 p-4">
-                        <div className="flex items-center space-x-2">
-                            <span className="font-bold text-[13px]">등록일</span>
-                            <button className="border rounded px-4 h-[30px] text-[12px] border-[#ddd] text-black">전체</button>
-                            <Dropdown value="연도별" />
-                            <Dropdown value="월별" />
-                            <InputText type="date" />
-                            <span>~</span>
-                            <InputText type="date" />
-                        </div>
-                        <div className="flex space-x-2 items-center">
-                            <Dropdown value="상품명" />
-                            <InputText />
-                        </div>
+                        <SearchCateDateRangeOption
+                            startDate={searchOptions.startDate}
+                            endDate={searchOptions.endDate}
+                            onChangeDates={onChangeDates}
+                            cate={searchOptions.dataRangeCate}
+                            options={searchDateRangeCateOptions}
+                            onChangeDropdown={onChangeSearchOptionDropdown}
+                        />
+                        <SearchCateTextOption
+                            cate={searchOptions.searchCate}
+                            options={searchCateOptions}
+                            text={searchOptions.searchText}
+                            onChangeDropdown={onChangeSearchOptionDropdown}
+                            onChangeText={onChangeSearchOptionInput}
+                        />
                     </div>
                 </div>
                 <div className="border-l flex flex-col">
@@ -115,7 +185,14 @@ function DesignManageList() {
                     <button className="btn primary-btn">선택삭제</button>
                     <button className="btn primary-btn">선택복사</button>
                 </div>
-                <DataTable value={fakeData} responsiveLayout="scroll" resizableColumns onRowClick={openDetailModal} className="text-sm" columnResizeMode="expand">
+                <DataTable
+                    value={fakeData}
+                    responsiveLayout="scroll"
+                    resizableColumns
+                    onRowClick={openDetailModal}
+                    className="text-sm"
+                    columnResizeMode="expand"
+                >
                     <Column align="center" selectionMode="multiple" selectionAriaLabel="id" headerStyle={{ width: '3em' }} field="id"></Column>
                     <Column align="center" field="seq" header="NO" />
                     <Column align="center" field="productCode" header="상품코드" />

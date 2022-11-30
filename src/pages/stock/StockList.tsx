@@ -6,13 +6,12 @@ import { Column } from 'primereact/column'
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import { InputNumber } from 'primereact/inputnumber'
-import { InputText } from 'primereact/inputtext'
 import { SelectButton, SelectButtonChangeParams } from 'primereact/selectbutton'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
+import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
-import SearchDateOption from 'src/components/search-box/SearchDateOption'
 import {
     arrayCommaBodyTemplate,
     dateBodyTemplate,
@@ -30,10 +29,13 @@ type SearchOptions = {
     marketId: string
     year: string
     month: string
-    startDate: string
-    endDate: string
-    searchText: string
+
+    dateRangeCate: 'order.lastReceiptDate'
+    startDate: Date
+    endDate: Date
+
     searchCate: 'global' | 'skuName' | 'managerName' | 'skuId' | 'barcode'
+    searchText: string
 
     searchRangeCate: 'stock.availableQty' | 'order.totalReceiptPrice' | 'order.lastReceiptPrice' | 'order.lastReceiptQty'
     searchNumberStart: number | null
@@ -48,8 +50,10 @@ const initSearhOptions: SearchOptions = {
     searchText: '',
     year: '',
     month: '',
-    startDate: '',
-    endDate: '',
+
+    dateRangeCate: 'order.lastReceiptDate',
+    startDate: new Date(),
+    endDate: new Date(),
 
     searchRangeCate: 'stock.availableQty',
     searchNumberStart: null,
@@ -77,6 +81,8 @@ const selectBtnOptions = [
     { name: '재고있음', value: 'hasStock' },
     { name: '재고없음', value: 'emptyStock' },
 ]
+
+const dateRangeCateOptions = [{ label: '최근입고일', field: 'order.lastReceiptDate' }]
 
 const initFileter: DataTableFilterMeta = {
     global: { value: '', matchMode: FilterMatchMode.CONTAINS },
@@ -160,8 +166,8 @@ function StockList() {
         setSearchOptions((prev) => ({ ...prev, serachIsStockQty: event.value }))
     }
 
-    const onChangeDates = (startDate: string, endDate: string) => {
-        console.log(startDate, endDate)
+    const onChangeDates = (range: { startDate: Date; endDate: Date }) => {
+        const { startDate, endDate } = range
         setSearchOptions((prev) => ({ ...prev, startDate, endDate }))
     }
 
@@ -266,6 +272,23 @@ function StockList() {
                             onChangeDropdown={onChangeSearchOptionDropdown}
                             onChangeText={onChangeSearchOptionInput}
                         />
+                        {/* <SearchDateOption
+                            title="등록일"
+                            startDate={searchOptions.startDate}
+                            endDate={searchOptions.endDate}
+                            onChangeDates={onChangeDates}
+                            onChangeInput={onChangeSearchOptionInput}
+                        /> */}
+                        <SearchCateDateRangeOption
+                            startDate={searchOptions.startDate}
+                            endDate={searchOptions.endDate}
+                            onChangeDates={onChangeDates}
+                            options={dateRangeCateOptions}
+                            cate={searchOptions.dateRangeCate}
+                            onChangeDropdown={onChangeSearchOptionDropdown}
+                        />
+                    </div>
+                    <div className="flex space-x-4 px-4 pt-4 pb-4">
                         <div className="flex space-x-2 items-center">
                             <Dropdown
                                 className="min-w-[100px]"
@@ -290,15 +313,6 @@ function StockList() {
                                 />
                             </div>
                         </div>
-                    </div>
-                    <div className="flex space-x-4 px-4 pt-4 pb-4">
-                        <SearchDateOption
-                            title="등록일"
-                            startDate={searchOptions.startDate}
-                            endDate={searchOptions.endDate}
-                            onChangeDates={onChangeDates}
-                            onChangeInput={onChangeSearchOptionInput}
-                        />
                         <div className="flex items-center space-x-2">
                             <SelectButton
                                 multiple

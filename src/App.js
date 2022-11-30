@@ -174,7 +174,7 @@ const App = () => {
             label: '발주',
             icon: 'pi pi-fw pi-clone',
             items: [
-                { label: '발주리스트', icon: 'pi pi-fw pi-calendar', to: '/order' },
+                { label: '발주리스트', icon: 'pi pi-fw pi-calendar', to: '/order/list' },
                 { label: '중국의류발주', icon: 'pi pi-fw pi-circle-off', to: '/order/china-wear' },
                 { label: '물류', icon: 'pi pi-car', to: '/invoice' },
             ],
@@ -306,7 +306,7 @@ const App = () => {
 
                     <Route path="/table" component={TableDemo} />
                     <Route path="/design" component={DesignManageList} />
-                    <Route path="/order" component={OrderManage} />
+                    <Route path="/order/list" component={OrderManage} />
                     <Route path="/order/china-wear" component={ChinaWearOrder} />
                     <Route path="/stock" component={StockList} />
                     <Route path="/products" component={ProductManageList} />

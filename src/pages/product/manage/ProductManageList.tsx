@@ -1,6 +1,6 @@
 import axios from 'axios'
 import * as FileSaver from 'file-saver'
-import { flattenDeep, map } from 'lodash'
+import { map } from 'lodash'
 import numeral from 'numeral'
 import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import { Column } from 'primereact/column'
@@ -9,8 +9,8 @@ import { DropdownChangeParams } from 'primereact/dropdown'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
+import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
-import SearchDateOption from 'src/components/search-box/SearchDateOption'
 import SearchMarketIdOption from 'src/components/search-box/SearchMarketIdOption'
 import SellerOption from 'src/components/search-box/SearchSellerOption'
 import { dateBodyTemplate, imageBodyTemplate, numberBodyTemplate, seqBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
@@ -31,8 +31,10 @@ type SearchOptions = {
     marketId: string
     year: string
     month: string
-    startDate: string
-    endDate: string
+
+    dateRangeCate: 'createdAt'
+    startDate: Date
+    endDate: Date
     searchText: string
     searchCate: 'global' | 'productsName' | 'managerName' | 'products.0.items.0.units.0.skuId' | 'products.0.items.0.units.0.trade.purchasePrice'
 }
@@ -44,15 +46,24 @@ const initSearhOptions: SearchOptions = {
     searchText: '',
     year: '',
     month: '',
-    startDate: '',
-    endDate: '',
+
+    dateRangeCate: 'createdAt',
+    startDate: new Date(),
+    endDate: new Date(),
 }
 
-const searchCateTextOptions = [
+const searchCateTextOptions: SearchCate[] = [
     { label: '통합', field: 'global' },
     { label: '상품명', field: 'productsName' },
     { label: '담당자', field: 'managerName' },
     { label: '상품코드', field: 'products.0.items.0.units.0.skuId' },
+]
+
+const searchCateDateRangeOptions: SearchCate[] = [
+    {
+        label: '등록일',
+        field: 'createdAt',
+    },
 ]
 
 const initFileter = {
@@ -139,7 +150,8 @@ function ProductManageList() {
         }))
     }
 
-    const onChangeDates = (startDate: string, endDate: string) => {
+    const onChangeDates = (range: { startDate: Date; endDate: Date }) => {
+        const { startDate, endDate } = range
         setSearchOptions((prev) => ({
             ...prev,
             startDate,
@@ -299,6 +311,8 @@ function ProductManageList() {
                         profitRate,
                         sellerList,
                         marketList,
+
+                        createdAt: new Date(x.createdAt),
                     }
                 })
             )
@@ -335,12 +349,20 @@ function ProductManageList() {
                             onChangeText={onChangeSearchOptionInput}
                         />
 
-                        <SearchDateOption
+                        {/* <SearchDateOption
                             title="등록일"
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}
                             onChangeInput={onChangeSearchOptionInput}
+                        /> */}
+                        <SearchCateDateRangeOption
+                            startDate={searchOptions.startDate}
+                            endDate={searchOptions.endDate}
+                            onChangeDates={onChangeDates}
+                            options={searchCateDateRangeOptions}
+                            cate={searchOptions.dateRangeCate}
+                            onChangeDropdown={onChangeSearchOptionDropdown}
                         />
                     </div>
                 </div>
