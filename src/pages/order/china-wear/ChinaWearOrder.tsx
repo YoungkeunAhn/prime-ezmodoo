@@ -4,7 +4,7 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import React, { useState } from 'react'
 import { imageBodyTemplate, printBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
-import { wrapColumnHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
+import { lineHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import OrderDetailModal from './detail-modal/OrderDetailModal'
 import PaymentLogModal from './payment-log-modal/PaymentLogModal'
 import ChinaWearPaymentTable from './paymentTable/ChinaWearPaymentTable'
@@ -105,7 +105,10 @@ function ChinaWearOrder() {
                         </div>
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : 3862</span>
                         <div className="flex ml-10 h-full text-sm space-x-5">
-                            <div className="rounded-b-full pt-1 bg-[#BC0033] text-center text-white h-[35px] cursor-pointer w-[75px]" onClick={onTogglePayment}>
+                            <div
+                                className="rounded-b-full pt-1 bg-[#BC0033] text-center text-white h-[35px] cursor-pointer w-[75px]"
+                                onClick={onTogglePayment}
+                            >
                                 결제금액
                             </div>
                             <ChinaWearPaymentTable open={paymentOpen} openModal={openPaymentDialog} />
@@ -146,7 +149,16 @@ function ChinaWearOrder() {
                         <span className="font-bold text-black text-sm">엑셀 다운로드</span>
                     </button>
                 </div>
-                <DataTable value={fakeData} responsiveLayout="scroll" resizableColumns onRowClick={openDetailDialog} className="text-sm" columnResizeMode="expand" rowGroupMode="rowspan" groupRowsBy="id">
+                <DataTable
+                    value={fakeData}
+                    responsiveLayout="scroll"
+                    resizableColumns
+                    onRowClick={openDetailDialog}
+                    className="text-sm"
+                    columnResizeMode="expand"
+                    rowGroupMode="rowspan"
+                    groupRowsBy="id"
+                >
                     <Column align="center" selectionMode="multiple" selectionAriaLabel="id" headerStyle={{ width: '3em' }} field="id"></Column>
                     {/* <Column align="center" field="seq" header="NO" /> */}
                     <Column align="center" field="id" header="발주번호" />
@@ -168,12 +180,12 @@ function ChinaWearOrder() {
                     <Column align="center" field="id" header="발주총금액" />
                     <Column align="center" field="transitPee" header="운송비" />
                     <Column align="center" field="paymentDate" header="결제일" />
-                    <Column align="center" field="factoryReceptionDate" header={wrapColumnHeader('B공장 접수일')} />
-                    <Column align="center" field="forwardingEstimatedDate" header={wrapColumnHeader('출고 예정일')} />
-                    <Column align="center" field="forwardingDate" header={wrapColumnHeader('실제 공장출고일')} />
-                    <Column align="center" field="forwardingQty" header={wrapColumnHeader('실제 출고수량')} />
+                    <Column align="center" field="factoryReceptionDate" header={lineHeader('B공장 접수일')} />
+                    <Column align="center" field="forwardingEstimatedDate" header={lineHeader('출고 예정일')} />
+                    <Column align="center" field="forwardingDate" header={lineHeader('실제 공장출고일')} />
+                    <Column align="center" field="forwardingQty" header={lineHeader('실제 출고수량')} />
                     <Column align="center" field="forwardingPrice" header="출고금액" />
-                    <Column align="center" field="arrivalDate" header={wrapColumnHeader('본사도착 예정일')} />
+                    <Column align="center" field="arrivalDate" header={lineHeader('본사도착 예정일')} />
                     <Column align="center" field="print" header="인쇄" body={printBodyTemplate} />
                 </DataTable>
             </div>

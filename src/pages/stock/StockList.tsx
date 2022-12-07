@@ -19,7 +19,7 @@ import {
     numberBodyTemplate,
     seqBodyTemplate,
 } from 'src/hooks/data-table-hooks/BodyHooks'
-import { wrapColumnHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
+import { lineHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import { ProductItemUnit } from 'src/types/product-manage'
 import LogViewModal from './LogViewModal'
 
@@ -394,7 +394,7 @@ function StockList() {
                         align="center"
                         className="text-[12px]"
                         field="order.lastReceiptPrice"
-                        header={wrapColumnHeader('최근 입고가격')}
+                        header={lineHeader('최근 입고가격')}
                         body={(rowData) => numberBodyTemplate(rowData.order.lastReceiptPrice)}
                         sortable
                     />
@@ -402,14 +402,14 @@ function StockList() {
                         align="center"
                         className="text-[12px]"
                         field="order.lastReceiptQty"
-                        header={wrapColumnHeader('최근 입고수량')}
+                        header={lineHeader('최근 입고수량')}
                         body={(rowData) => numberBodyTemplate(rowData.order.lastReceiptQty)}
                     />
                     <Column
                         align="center"
                         className="text-[12px]"
                         field="order.lastReceiptDate"
-                        header={wrapColumnHeader('최근 입고일')}
+                        header={lineHeader('최근 입고일')}
                         body={(rowData) => dateBodyTemplate(rowData.order.lastReceipt)}
                         sortable
                     />
@@ -417,7 +417,7 @@ function StockList() {
                         align="center"
                         className="text-[12px]"
                         field="order.totalReceiptPrice"
-                        header={wrapColumnHeader('재고금액 (수량x입고가격)')}
+                        header={lineHeader('재고금액 (수량x입고가격)')}
                         body={(rowData) => numberBodyTemplate(rowData.order.totalReceiptPrice)}
                     />
                     <Column align="center" className="text-[12px]" field="stock.availableQty" header="재고수량" sortable />

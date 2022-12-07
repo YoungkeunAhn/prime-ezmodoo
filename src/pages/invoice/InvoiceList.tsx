@@ -6,7 +6,7 @@ import React, { useRef, useState } from 'react'
 import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
 import { dateBodyTemplate, numberBodyTemplate, seqBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { numberEditor } from 'src/hooks/data-table-hooks/EditorHooks'
-import { wrapColumnHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
+import { lineHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import ReportInfoModal from './report-info-modal/ReportInfoModal'
 
 const fakeData = [
@@ -160,7 +160,7 @@ function InvoiceList() {
                         align="center"
                         className="text-[12px]"
                         field="internalDeliveryCharge"
-                        header={wrapColumnHeader('내륙 운송비')}
+                        header={lineHeader('내륙 운송비')}
                         body={(rowData, option) => numberBodyTemplate(rowData[option.field])}
                     />
                     <Column
@@ -181,7 +181,7 @@ function InvoiceList() {
                         align="center"
                         className="text-[12px]"
                         field="totalCurrencyTax"
-                        header={wrapColumnHeader('총과세가격 (USD)')}
+                        header={lineHeader('총과세가격 (USD)')}
                         body={(rowData, option) => numberBodyTemplate(rowData[option.field])}
                     />
                     <Column
@@ -216,7 +216,7 @@ function InvoiceList() {
                         align="center"
                         className="text-[12px]"
                         field="id"
-                        header={wrapColumnHeader('수입신고서 정보')}
+                        header={lineHeader('수입신고서 정보')}
                         body={importReportEditBodyTemplate}
                     />
                 </DataTable>

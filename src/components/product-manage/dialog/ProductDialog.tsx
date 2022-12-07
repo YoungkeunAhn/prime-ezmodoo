@@ -7,7 +7,7 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import { ContentProductItem, HeaderInfo, ITrade, IVendor } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
-import ProductExpandView from './expand-view/ProductExpandView'
+import ProductExpandView from './expend-view/ProductExpandView'
 
 import ProductListView from './list-view/ProductListView'
 

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const wrapColumnHeader = (text: string) => {
+export const lineHeader = (text: string) => {
     return (
         <div className="flex flex-col justify-center">
             {text.split(' ').map((word, idx) => (
