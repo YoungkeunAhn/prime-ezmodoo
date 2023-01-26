@@ -6,7 +6,7 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { DropdownChangeParams } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import PaletteManageDialog from 'src/components/jet-request/palette-manage-dialog/PaletteManageDialog'
 import ReqeustInfoDialog from 'src/components/jet-request/request-info-dialog/ReqeustInfoDialog'
 import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
@@ -399,6 +399,10 @@ function JetRequestList() {
         console.log(props)
         return <InputText type="date" />
     }
+
+    useEffect(() => {
+        setDialogId('palette')
+    }, [])
 
     return (
         <div>

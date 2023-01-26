@@ -95,7 +95,7 @@ function ProductManageList() {
     const [filter, setFilter] = useState(initFileter)
     const [selection, setSelection] = useState<ProductsGruop[]>([])
 
-    const [tableViewer, setTableViewer] = useState<TableViwer>('ALL')
+    const [tableViewer, setTableViewer] = useState<TableViwer>('true')
 
     const productsNameBodyTemplate = (rowData: any) => {
         return (
@@ -109,7 +109,9 @@ function ProductManageList() {
         const option = rowData.products[0].items[0].itemOptions[index] as string
         const itemsLength = rowData.products[0].items.length
 
-        return <span>{itemsLength > 1 ? `${option} 외(${itemsLength - 1})` : option}</span>
+        if (option) {
+            return <span>{itemsLength > 1 ? `${option} 외(${itemsLength - 1})` : option}</span>
+        }
     }
 
     const commissionRateBodyTemplate = (rowData: any) => {
@@ -220,6 +222,42 @@ function ProductManageList() {
     const onClickTableViewerBtn = (action: TableViwer) => {
         setTableViewer(action)
     }
+
+    const changeIsSaleState = useCallback(
+        async (action: 'true' | 'false') => {
+            try {
+                if (selection.length > 0) {
+                    if (action === 'true') {
+                        // eslint-disable-next-line no-restricted-globals
+                        if (confirm('선택상품을 마감처리 하시겠습니까?')) {
+                            await axios.post(
+                                BASE_URL + 'products/isSales?value=true',
+                                selection.map((select) => select.pk)
+                            )
+                        } else {
+                            // eslint-disable-next-line no-restricted-globals
+                            if (confirm('선택상품을 마감해제 하시겠습니까?')) {
+                                await axios.post(
+                                    BASE_URL + 'products/isSales?value=false',
+                                    selection.map((select) => select.pk)
+                                )
+                            }
+                        }
+                    }
+
+                    alert('완료되었습니다.')
+                    setSelection([])
+
+                    const selectionPkList = selection.map((select) => select.pk)
+                    setProductsGroupList((prev) => prev.map((group) => (selectionPkList.includes(group.pk) ? { ...group, isSales: true } : group)))
+                    console.log(productsGroupList)
+                }
+            } catch (err) {
+                console.error(err)
+            }
+        },
+        [selection, productsGroupList]
+    )
 
     const isSalesTrue = useCallback(async () => {
         try {
@@ -349,13 +387,6 @@ function ProductManageList() {
                             onChangeText={onChangeSearchOptionInput}
                         />
 
-                        {/* <SearchDateOption
-                            title="등록일"
-                            startDate={searchOptions.startDate}
-                            endDate={searchOptions.endDate}
-                            onChangeDates={onChangeDates}
-                            onChangeInput={onChangeSearchOptionInput}
-                        /> */}
                         <SearchCateDateRangeOption
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
@@ -387,9 +418,9 @@ function ProductManageList() {
                         <button className="btn primary-btn" onClick={deleteProductGroup}>
                             선택삭제
                         </button>
-                        <button className="btn primary-btn" onClick={() => alert('추후 업데이트 될 예정입니다.')}>
+                        {/* <button className="btn primary-btn" onClick={() => alert('추후 업데이트 될 예정입니다.')}>
                             선택복사
-                        </button>
+                        </button> */}
                         <button className="btn primary-btn" onClick={isSalesFalse}>
                             상품마감
                         </button>
@@ -470,16 +501,14 @@ function ProductManageList() {
                         field="productsName"
                         header="상품명"
                         filterField="productsName"
-                        headerStyle={{
-                            width: '250px',
-                        }}
+                        headerClassName="min-w-[250px]"
                         body={productsNameBodyTemplate}
                     />
                     <Column
                         alignHeader="center"
                         align="left"
                         className="text-[12px]"
-                        field=""
+                        field="options"
                         header="옵션1"
                         body={(rowdata) => optionsBodyTemplate(rowdata, 0)}
                     />
@@ -487,7 +516,7 @@ function ProductManageList() {
                         alignHeader="center"
                         align="left"
                         className="text-[12px]"
-                        field=""
+                        field="options"
                         header="옵션2"
                         body={(rowdata) => optionsBodyTemplate(rowdata, 1)}
                     />

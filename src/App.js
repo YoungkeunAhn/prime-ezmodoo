@@ -26,6 +26,7 @@ import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
 import OrderManage from './pages/order/manage/OrderManage'
 import InvoiceList from './pages/invoice/InvoiceList'
 import JetRequestList from './pages/jet-warehousing/JetRequestList'
+import ValidationTest from './pages/vaildation-test/ValidationTest'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -185,17 +186,17 @@ const App = () => {
             icon: 'pi pi-fw pi-clone',
             items: [{ label: '제트입고요청', icon: 'pi pi-fw pi-calendar', to: '/jet-wearhousing/requests' }],
         },
-        // {
-        //     label: '데모',
-        //     icon: 'pi pi-fw pi-sitemap',
-        //     items: [
-        //         {
-        //             label: '테이블',
-        //             icon: 'pi pi-fw pi-table',
-        //             to: '/table',
-        //         },
-        //     ],
-        // },
+        {
+            label: '데모',
+            icon: 'pi pi-fw pi-sitemap',
+            items: [
+                {
+                    label: 'validation',
+                    icon: 'pi pi-exclamation-circle',
+                    to: '/test/validation',
+                },
+            ],
+        },
         {
             label: 'Menu Hierarchy',
             icon: 'pi pi-fw pi-search',
@@ -248,25 +249,6 @@ const App = () => {
                 },
             ],
         },
-        // {
-        //     label: 'Get Started',
-        //     items: [
-        //         {
-        //             label: 'Documentation',
-        //             icon: 'pi pi-fw pi-question',
-        //             command: () => {
-        //                 window.location = '#/documentation'
-        //             },
-        //         },
-        //         {
-        //             label: 'View Source',
-        //             icon: 'pi pi-fw pi-search',
-        //             command: () => {
-        //                 window.location = 'https://github.com/primefaces/sakai-react'
-        //             },
-        //         },
-        //     ],
-        // },
     ]
 
     const addClass = (element, className) => {
@@ -318,6 +300,7 @@ const App = () => {
                     <Route path="/products" component={ProductManageList} />
                     <Route path="/invoice" component={InvoiceList} />
                     <Route path="/jet-wearhousing/requests" component={JetRequestList} />
+                    <Route path="/test/validation" component={ValidationTest} />
                 </div>
 
                 {/* <AppFooter layoutColorMode={layoutColorMode} /> */}
