@@ -78,6 +78,7 @@ function ManageListItem(props: Props) {
         purchasePrice,
         hasBarcode,
         hasCarton,
+        cnItemName,
     } = productItem
     const [urlChecked, setUrlChecked] = useState<boolean>(false)
     const [imageUrl, setImageUrl] = useState<string>('')
@@ -129,11 +130,10 @@ function ManageListItem(props: Props) {
                                     height: 0,
                                 }}
                             >
-                                {' '}
                             </div>
                         </div>
                         <div className="flex justify-evenly items-center border-t pt-1 w-full h-[32px]">
-                            <InputText className="w-full p-1 border-none h-full pl-3 text-center" placeholder="옵션명" />
+                            <InputText className="w-full p-1 border-none h-full pl-3 text-center" name='cnItemName' value={cnItemName} onChange={onChangeTextInputs} placeholder="옵션명"/>
                         </div>
                         {urlChecked ? (
                             <div className="flex items-center">

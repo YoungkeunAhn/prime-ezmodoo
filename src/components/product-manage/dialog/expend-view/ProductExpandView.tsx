@@ -1,5 +1,5 @@
 import { DropdownChangeParams } from 'primereact/dropdown'
-import React from 'react'
+import React, { useEffect } from 'react'
 import SortableList from 'react-easy-sort'
 import ManageListItem from 'src/components/product-manage/dialog/expend-view/ManageListItem'
 import TradeInfoTable from 'src/components/product-manage/dialog/expend-view/StockInfoTable'
@@ -42,6 +42,7 @@ function ProductExpandView(props: Props) {
         onToggleCheckbox,
         onChangeOptionsInput,
     } = props
+
 
     return (
         <div className="flex border-t-4 border-[#0D3157] h-auto">

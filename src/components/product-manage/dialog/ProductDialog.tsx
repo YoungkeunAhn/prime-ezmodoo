@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { cloneDeep, findIndex, flatten, map, set, xor } from 'lodash'
+import { cloneDeep, find, findIndex, flatten, map, set, xor } from 'lodash'
 import { DataTableRowReorderParams } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { DropdownChangeParams } from 'primereact/dropdown'
@@ -70,6 +70,7 @@ const initContentProductItem: ContentProductItem = {
     itemName: '',
     marketId: '',
     productName: '',
+    cnItemName:'',
     productPk: '',
     sellerPk: '',
     sellerName: '',
@@ -103,7 +104,7 @@ type Image = {
 function ProductDialog(props: Props) {
     const { open, pk, onClose } = props
     const [tabId, setTabId] = useState<TabId>('EXPAND')
-    const [productItemList, setProductItemList] = useState<ContentProductItem[]>([initContentProductItem])
+    const [productItemList, setProductItemList] = useState<any[]>([initContentProductItem])
     const [vendorInfo, setVendorInfo] = useState<IVendor>(initVendorInfo)
     const [tradeInfo, setTradeInfo] = useState<ITrade>(initTradeInfo)
     const [headerInfo, setHeaderInfo] = useState<HeaderInfo>(initHeaderInfo)
@@ -162,6 +163,8 @@ function ProductDialog(props: Props) {
     }
 
     const onChangeProductItemText = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
+        console.log('event name: ',event.target.name)
+        console.log('index : ',index)
         setProductItemList(productItemList.map((item, idx) => (idx === index ? { ...item, [event.target.name]: event.target.value } : item)))
     }
 
@@ -266,7 +269,7 @@ function ProductDialog(props: Props) {
         setProductItemList((prev) =>
             prev.map((item, idx) =>
                 idx === index
-                    ? { ...item, itemOptions: item.itemOptions.map((option, idx) => (idx === optionIndex ? event.target.value : option)) }
+                    ? { ...item, itemOptions: item.itemOptions.map((option:any, idx:number) => (idx === optionIndex ? event.target.value : option)) }
                     : item
             )
         )
@@ -274,6 +277,11 @@ function ProductDialog(props: Props) {
 
     const onToggleCheckbox = (pk: string) => {
         setCheckList((prev) => xor(prev, [pk]))
+    }
+
+    const pasteProductItem = () => {
+        const findItems  = map(checkList, (pk) => find(productItemList, {pk}))
+        setProductItemList((prev) => prev.concat(findItems))
     }
 
     const saveProductGroup = useCallback(async () => {
@@ -338,13 +346,14 @@ function ProductDialog(props: Props) {
                     map(data.products, function (product) {
                         return map(product.items, function (item) {
                             const { pk, productName, sellerName, marketId } = product
-                            const { skuId } = item.units[0]
+                            const { skuId,trade, stock } = item.units[0]
                             const { totalQty, availableQty, disusedQty } = item.units[0].stock
                             const { reorderPeriod, purchasePrice, hasBarcode, hasCarton } = item.units[0].trade
 
                             const calcPrice = Math.floor((item.salePrice / 100) * (100 - item.commissionRate) - item.deliveryCharge)
                             const profit = Math.floor(calcPrice - purchasePrice)
                             const profitRate = profit / item.salePrice
+
 
                             return {
                                 ...item,
@@ -368,10 +377,19 @@ function ProductDialog(props: Props) {
                         })
                     })
                 )
-
                 setProductItemList(productItems)
+
+                const {trade} = data.products[0].items[0].units[0]
+                const {vendors,cbm, enSkuMaterial,enSkuName,gwt,lwh,nwt,qtyPerBox,receiptPeriod,tariffRate} = trade
+                const {company, linkUrls, officer,memo} = vendors[0]
+
+                setVendorInfo({company, linkUrls: linkUrls.length > 0 ? linkUrls : ['',''], officer,memo})
+                setTradeInfo({cbm, enSkuMaterial,enSkuName,gwt,lwh,nwt,qtyPerBox,receiptPeriod,tariffRate})
             }
-        } catch (err) {}
+        } catch (err) {
+
+            console.error(err)
+        }
     }, [pk])
 
     useEffect(() => {
@@ -428,21 +446,21 @@ function ProductDialog(props: Props) {
                     >
                         삭제
                     </button>
-                    <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]">
+                    <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]" onClick={pasteProductItem}>
                         복사
                     </button>
                     {pk && (
                         <>
                             <button
                                 onClick={onClickExpandView}
-                                style={{ lineHeight: '1.1rem' }}
+                                style={{ lineHeight: '1.1rem', background: tabId === 'EXPAND' ? '#FFD504': 'white' }}
                                 className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
                             >
                                 펼쳐보기
                             </button>
                             <button
                                 onClick={onClickListView}
-                                style={{ lineHeight: '1.1rem' }}
+                                style={{ lineHeight: '1.1rem', background: tabId === 'LIST' ? '#FFD504': 'white' }}
                                 className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
                             >
                                 리스트형식보기

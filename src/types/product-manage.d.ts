@@ -191,6 +191,7 @@ export declare type HeaderInfo = {
 export declare interface ContentProductItem extends ProductItem {
     productPk: string
     productName: string
+    cnItemName: string
     sellerPk: string
     sellerName: string
     marketId: string
