@@ -287,6 +287,7 @@ function ProductDialog(props: Props) {
                 tradeInfo: tradeInfo,
             }
 
+            formData.append('pk', pk ?? '')
             formData.append('data', JSON.stringify(data))
             imageList.forEach((image) => formData.append(image.index.toString(), image.file))
 
@@ -374,6 +375,7 @@ function ProductDialog(props: Props) {
     }, [pk])
 
     useEffect(() => {
+        console.log(pk)
         loadProduct()
     }, [loadProduct])
 

@@ -326,6 +326,32 @@ function ProductManageList() {
     const loadProductList = async () => {
         try {
             const { data } = await axios.get(BASE_URL + 'products')
+            console.log( map(data, function (x, i) {
+                const item = x.products[0].items[0]
+                const salePrice = item.salePrice
+                const deliveryCharge = item.deliveryCharge
+                const commissionRate = item.commissionRate
+                const purchasePrice = item.units[0].trade.purchasePrice
+
+                const settlementPrice = (salePrice / 100) * (100 - commissionRate) - deliveryCharge
+                const profit = settlementPrice - purchasePrice
+                const profitRate = profit / salePrice
+
+                const sellerList: string = map(x.products, (product) => product.sellerPk).join(',')
+                const marketList: string = map(x.products, (product) => product.marketId).join(',')
+
+                return {
+                    ...x,
+                    seq: i + 1,
+                    settlementPrice,
+                    profit,
+                    profitRate,
+                    sellerList,
+                    marketList,
+
+                    createdAt: new Date(x.createdAt),
+                }
+            }))
             setProductsGroupList(
                 map(data, function (x, i) {
                     const item = x.products[0].items[0]
@@ -349,7 +375,6 @@ function ProductManageList() {
                         profitRate,
                         sellerList,
                         marketList,
-
                         createdAt: new Date(x.createdAt),
                     }
                 })
@@ -441,6 +466,15 @@ function ProductManageList() {
                         />
                     </div>
                 </div>
+                <div>{productsGroupList.length}개</div>
+                {
+                    productsGroupList.map((product, idx) => {
+                        return <div key={idx}>
+                            
+                            <div>{product.productsId}</div>
+                        </div>
+                    })
+                }
                 <DataTable
                     value={
                         tableViewer === 'ALL'
