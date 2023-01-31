@@ -18,6 +18,7 @@ type Props = {
     onChangeDropdown: (event: DropdownChangeParams, index: number) => void
     onToggleCheckbox: (pk: string) => void
     onChangeSalePrice: (value: number | null, index: number) => void
+    onChangeCouponPrice: (value: number | null, index: number) => void
     onChangePurchasePrice: (value: number | null, index: number) => void
     onChangeDeliveryCharge: (value: number | null, index: number) => void
     onChangeCommissionRate: (value: number | null, index: number) => void
@@ -39,6 +40,7 @@ function ProductExpandView(props: Props) {
         onChangeImage,
         onChangePurchasePrice,
         onChangeSalePrice,
+        onChangeCouponPrice,
         onToggleCheckbox,
         onChangeOptionsInput,
     } = props
@@ -58,6 +60,7 @@ function ProductExpandView(props: Props) {
                             onChangeDropdown={onChangeDropdown}
                             onToggleCheckbox={onToggleCheckbox}
                             onChangeSalePrice={onChangeSalePrice}
+                            onChangeCouponPrice={onChangeCouponPrice}
                             onChangeText={onChangeProductItemText}
                             onChangePurchasePrice={onChangePurchasePrice}
                             onChangeDeliveryCharge={onChangeDeliveryCharge}

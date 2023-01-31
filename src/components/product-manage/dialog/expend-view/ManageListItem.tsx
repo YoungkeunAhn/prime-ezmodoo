@@ -19,6 +19,7 @@ type Props = {
     onChangePurchasePrice: (value: number | null, index: number) => void
     onChangeDeliveryCharge: (value: number | null, index: number) => void
     onChangeSalePrice: (value: number | null, index: number) => void
+    onChangeCouponPrice: (value: number | null, index: number) => void
     onChangeCommissionRate: (value: number | null, index: number) => void
     onChangeDropdown: (event: DropdownChangeParams, index: number) => void
     onChangeImage: (file: File | string, index: number) => void
@@ -46,6 +47,7 @@ function ManageListItem(props: Props) {
         onChangeText,
         onChangePurchasePrice,
         onChangeSalePrice,
+        onChangeCouponPrice,
         onChangeDeliveryCharge,
         onChangeCommissionRate,
         onChangeDropdown,
@@ -310,7 +312,11 @@ function ManageListItem(props: Props) {
                         />
                     </div>
                     <div className="col-span-2 border-b border-r h-[32px]">
-                        <InputNumber className="text-center p-1 w-full" inputClassName="border-none w-full px-2 py-1" value={couponPrice} />
+                        <InputNumber className="text-center p-1 w-full" inputClassName="border-none w-full px-2 py-1" value={couponPrice} 
+                            onChange={(event) => {
+                                onChangeCouponPrice(event.value, idx)
+                            }}
+                        />
                     </div>
                     <div className="col-span-2 border-b border-r h-[32px]">
                         <InputNumber
@@ -326,11 +332,11 @@ function ManageListItem(props: Props) {
                         <InputNumber
                             className="text-center p-1 w-full"
                             inputClassName="border-none w-full px-2 py-1"
-                            suffix="%"
                             value={commissionRate}
                             onChange={(event) => {
                                 onChangeCommissionRate(event.value, idx)
                             }}
+                            maxFractionDigits={2}
                         />
                     </div>
                     <div className="col-span-2 border-b h-[32px]">

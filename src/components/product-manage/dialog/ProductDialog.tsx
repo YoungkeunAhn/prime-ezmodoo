@@ -163,77 +163,101 @@ function ProductDialog(props: Props) {
     }
 
     const onChangeProductItemText = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        console.log('event name: ',event.target.name)
-        console.log('index : ',index)
+        console.log('event name: ', event.target.name)
+        console.log('index: ', index)
         setProductItemList(productItemList.map((item, idx) => (idx === index ? { ...item, [event.target.name]: event.target.value } : item)))
     }
 
     const onChangePurchasePrice = (value: number | null, index: number) => {
-        if (value) {
+        if (value !== null) {
+            const field = "purchasePrice"
             setProductItemList(
-                productItemList.map((item, idx) =>
-                    idx === index
-                        ? {
-                              ...item,
-                              purchasePrice: value,
-                              profit: Math.floor(item.calcPrice - value),
-                              profitRate: (item.calcPrice - value) / item.salePrice,
-                          }
-                        : item
+                productItemList.map((item, idx) => {
+                        if(idx === index)
+                        {
+                            item[field] = value
+                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
+                            item.profit = item.calcPrice - item.purchasePrice
+                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
+                        }
+                        return item
+                    }
                 )
             )
         }
     }
 
     const onChangeSalePrice = (value: number | null, index: number) => {
-        if (value) {
+        if (value !== null) {
+            const field = "salePrice"
             setProductItemList(
-                productItemList.map((item, idx) =>
-                    idx === index
-                        ? {
-                              ...item,
-                              salePrice: value,
-                              calcPrice: Math.floor((value * (100 - item.commissionRate)) / 100 - item.deliveryCharge),
-                              profit: Math.floor((value * (100 - item.commissionRate)) / 100 - item.deliveryCharge - item.purchasePrice),
-                              profitRate: Math.floor((value * (100 - item.commissionRate)) / 100 - item.deliveryCharge - item.purchasePrice) / value,
-                          }
-                        : item
+                productItemList.map((item, idx) => {
+                        if(idx === index)
+                        {
+                            item[field] = value
+                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
+                            item.profit = item.calcPrice - item.purchasePrice
+                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
+                        }
+                        return item
+                    }
+                )
+            )
+        }
+    }
+
+    const onChangeCouponPrice = (value: number | null, index: number) => {
+        if (value !== null) {
+            const field = "couponPrice"
+            setProductItemList(
+                productItemList.map((item, idx) => {
+                        if(idx === index)
+                        {
+                            item[field] = value
+                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
+                            item.profit = item.calcPrice - item.purchasePrice
+                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
+                        }
+                        return item
+                    }
                 )
             )
         }
     }
 
     const onChangeDeliveryCharge = (value: number | null, index: number) => {
-        if (value) {
+        if (value !== null) {
+            const field = "deliveryCharge"
             setProductItemList(
-                productItemList.map((item, idx) =>
-                    idx === index
-                        ? {
-                              ...item,
-                              deliveryCharge: value,
-                              calcPrice: (item.salePrice * (100 - item.commissionRate)) / 100 - value,
-                              profit: (item.salePrice * (100 - item.commissionRate)) / 100 - value - item.purchasePrice,
-                              profitRate: ((item.salePrice * (100 - item.commissionRate)) / 100 - value - item.purchasePrice) / item.salePrice,
-                          }
-                        : item
+                productItemList.map((item, idx) => {
+                        if(idx === index)
+                        {
+                            item[field] = value
+                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
+                            item.profit = item.calcPrice - item.purchasePrice
+                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
+                        }
+                        return item
+                    }
                 )
             )
         }
     }
 
     const onChangeCommissionRate = (value: number | null, index: number) => {
-        if (value) {
+        if (value !== null) {
+            const field = "commissionRate"
             setProductItemList(
-                productItemList.map((item, idx) =>
-                    idx === index
-                        ? {
-                              ...item,
-                              commissionRate: value,
-                              calcPrice: (item.salePrice * (100 - value)) / 100 - item.deliveryCharge,
-                              profit: (item.salePrice * (100 - value)) / 100 - item.deliveryCharge - item.purchasePrice,
-                              profitRate: ((item.salePrice * (100 - value)) / 100 - item.deliveryCharge - item.purchasePrice) / item.salePrice,
-                          }
-                        : item
+                productItemList.map((item, idx) => {
+                        if(idx === index)
+                        {
+                            item[field] = value
+                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
+                            item.profit = item.calcPrice - item.purchasePrice
+                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
+                        }
+                        return item
+                    }
                 )
             )
         }
@@ -346,14 +370,13 @@ function ProductDialog(props: Props) {
                     map(data.products, function (product) {
                         return map(product.items, function (item) {
                             const { pk, productName, sellerName, marketId } = product
-                            const { skuId,trade, stock } = item.units[0]
+                            const { skuId, trade, stock } = item.units[0]
                             const { totalQty, availableQty, disusedQty } = item.units[0].stock
                             const { reorderPeriod, purchasePrice, hasBarcode, hasCarton } = item.units[0].trade
 
-                            const calcPrice = Math.floor((item.salePrice / 100) * (100 - item.commissionRate) - item.deliveryCharge)
-                            const profit = Math.floor(calcPrice - purchasePrice)
-                            const profitRate = profit / item.salePrice
-
+                            const calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
+                            const profit = calcPrice - purchasePrice
+                            const profitRate = profit / (item.salePrice - item.couponPrice)
 
                             return {
                                 ...item,
@@ -379,12 +402,12 @@ function ProductDialog(props: Props) {
                 )
                 setProductItemList(productItems)
 
-                const {trade} = data.products[0].items[0].units[0]
-                const {vendors,cbm, enSkuMaterial,enSkuName,gwt,lwh,nwt,qtyPerBox,receiptPeriod,tariffRate} = trade
-                const {company, linkUrls, officer,memo} = vendors[0]
+                const { enSkuName, enSkuMaterial, trade } = data.products[0].items[0].units[0]
+                const { cbm, lwh, gwt, nwt, qtyPerBox, tariffRate, receiptPeriod, vendors: [vendor] } = trade
+                const { memo, company, company: { siteUrls: linkUrls }, officer} = vendor
 
-                setVendorInfo({company, linkUrls: linkUrls.length > 0 ? linkUrls : ['',''], officer,memo})
-                setTradeInfo({cbm, enSkuMaterial,enSkuName,gwt,lwh,nwt,qtyPerBox,receiptPeriod,tariffRate})
+                setVendorInfo({ memo, company, officer, linkUrls: linkUrls?.length > 0 ? linkUrls : ['', ''] })
+                setTradeInfo({ enSkuMaterial, enSkuName, cbm, lwh, gwt, nwt, qtyPerBox, tariffRate, receiptPeriod })
             }
         } catch (err) {
 
@@ -497,6 +520,7 @@ function ProductDialog(props: Props) {
                         onChangeProductItemText={onChangeProductItemText}
                         onChangePurchasePrice={onChangePurchasePrice}
                         onChangeSalePrice={onChangeSalePrice}
+                        onChangeCouponPrice={onChangeCouponPrice}
                         onToggleCheckbox={onToggleCheckbox}
                         onChangeOptionsInput={onChangeOptionsInput}
                     />
