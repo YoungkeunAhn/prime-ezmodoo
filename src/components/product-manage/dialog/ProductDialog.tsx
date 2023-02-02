@@ -5,6 +5,7 @@ import { Dialog } from 'primereact/dialog'
 import { DropdownChangeParams } from 'primereact/dropdown'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
+import { valiCheckListLength } from 'src/pages/vaildation-test/CheckListValidation'
 import { ContentProductItem, HeaderInfo, ITrade, IVendor } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
 import ProductExpandView from './expend-view/ProductExpandView'
@@ -91,6 +92,7 @@ const initContentProductItem: ContentProductItem = {
     disusedQty: 0,
     reorderPeriod: 0,
     purchasePrice: 0,
+    isVisible: true,
     hasBarcode: null,
     hasCarton: null,
     units: [],
@@ -110,6 +112,7 @@ function ProductDialog(props: Props) {
     const [headerInfo, setHeaderInfo] = useState<HeaderInfo>(initHeaderInfo)
     const [imageList, setImageList] = useState<Image[]>([])
     const [checkList, setCheckList] = useState<string[]>([])
+    const [hideView, setHideView] = useState<boolean>(false)
 
     const closeModal = useCallback(() => {
         onClose()
@@ -147,6 +150,9 @@ function ProductDialog(props: Props) {
     }
 
     const onChangeHeaderInfo = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.name === 'productsName' && productItemList[0].productName === '') {
+            setProductItemList(productItemList.map((item, idx) => (idx === 0 ? { ...item, productName: event.target.value } : item)))
+        }
         setHeaderInfo((prev) => ({ ...prev, [event.target.name]: event.target.value }))
     }
 
@@ -164,8 +170,6 @@ function ProductDialog(props: Props) {
     }
 
     const onChangeProductItemText = (event: React.ChangeEvent<HTMLInputElement>, index: number) => {
-        console.log('event name: ', event.target.name)
-        console.log('index: ', index)
         setProductItemList(productItemList.map((item, idx) => (idx === index ? { ...item, [event.target.name]: event.target.value } : item)))
     }
 
@@ -280,7 +284,6 @@ function ProductDialog(props: Props) {
     }
 
     const onChangeOptionsInput = (event: React.ChangeEvent<HTMLInputElement>, index: number, optionIndex: number) => {
-        console.log(event.target.value)
         setProductItemList((prev) =>
             prev.map((item, idx) =>
                 idx === index
@@ -300,6 +303,39 @@ function ProductDialog(props: Props) {
     const pasteProductItem = () => {
         const findItems = map(checkList, (pk) => find(productItemList, { pk }))
         setProductItemList((prev) => prev.concat(findItems))
+    }
+
+    const itemIsVisibleFalse = async () => {
+        try {
+            valiCheckListLength(checkList)
+
+            if (window.confirm('숨김처리 하시겠습니까?')) {
+                await axios.post(BASE_URL + 'products/items/isVisible?value=true', { checkList })
+                setProductItemList(productItemList.map((item) => (checkList.includes(item.pk) ? { ...item, isVisible: false } : item)))
+                console.log('visible change : ', productItemList)
+                alert('숨김처리 되었습니다.')
+
+                setCheckList([])
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    const itemIsVisibleTrue = async (pk: string) => {
+        try {
+            if (window.confirm('숨김해제 하시겠습니까?')) {
+                await axios.post(BASE_URL + 'products/items/isVisible?value=false', { checkList: [pk] })
+                setProductItemList(productItemList.map((item) => (pk === item.pk ? { ...item, isVisible: true } : item)))
+                alert('숨김해제되었습니다')
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    const onClickHideViwerBtn = () => {
+        setHideView(!hideView)
     }
 
     const saveProductGroup = useCallback(async () => {
@@ -425,7 +461,6 @@ function ProductDialog(props: Props) {
     }, [pk])
 
     useEffect(() => {
-        console.log(pk)
         loadProduct()
     }, [loadProduct])
 
@@ -504,18 +539,29 @@ function ProductDialog(props: Props) {
                             <button
                                 style={{ lineHeight: '1.1rem' }}
                                 className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
+                                onClick={itemIsVisibleFalse}
                             >
-                                <i className="fa-regular fa-eye-slash mr-1"></i>
+                                <i className="fa-solid fa-ban mr-1"></i>
                                 <span>숨김처리</span>
                             </button>
                             <button
                                 style={{ lineHeight: '1.1rem' }}
-                                className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
+                                className="p-1.5 w-[120px] border border-[#707070] rounded text-black text-[12px]"
+                                onClick={onClickHideViwerBtn}
                             >
-                                <i className="fa-regular fa-eye mr-1"></i>
-                                <span>모든옵션보기</span>
+                                {hideView ? (
+                                    <>
+                                        <i className="fa-regular fa-eye-slash mr-1"></i>
+                                        <span>숨김처리비노출</span>
+                                    </>
+                                ) : (
+                                    <>
+                                        <i className="fa-regular fa-eye mr-1"></i>
+                                        <span>모든 옵션보기</span>
+                                    </>
+                                )}
                             </button>
-                            <span className="text-sm font-bold" style={{ marginLeft: '310px' }}>
+                            <span className="text-sm font-bold" style={{ marginLeft: '300px' }}>
                                 총 옵션{productItemList.length}개
                             </span>
                         </>
@@ -523,6 +569,7 @@ function ProductDialog(props: Props) {
                 </div>
                 {tabId === 'EXPAND' && (
                     <ProductExpandView
+                        hideView={hideView}
                         checkList={checkList}
                         productItemList={productItemList}
                         vendorInfo={vendorInfo}
@@ -539,6 +586,7 @@ function ProductDialog(props: Props) {
                         onChangeCouponPrice={onChangeCouponPrice}
                         onToggleCheckbox={onToggleCheckbox}
                         onChangeOptionsInput={onChangeOptionsInput}
+                        itemIsVisibleTrue={itemIsVisibleTrue}
                     />
                 )}
                 {tabId === 'LIST' && (

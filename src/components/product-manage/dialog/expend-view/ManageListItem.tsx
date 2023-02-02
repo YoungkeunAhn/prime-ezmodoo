@@ -1,10 +1,13 @@
+import axios from 'axios'
+import { debounce } from 'lodash'
 import numeral from 'numeral'
 import { Checkbox } from 'primereact/checkbox'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import { InputNumber } from 'primereact/inputnumber'
 import { InputText } from 'primereact/inputtext'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { SortableItem, SortableKnob } from 'react-easy-sort'
+import { BASE_URL } from 'src/api/ApiConfig'
 import { fakeConfig } from 'src/common/fake-data/config'
 import { marketTemplate } from 'src/hooks/dropdown/ValueTemplate'
 import { ContentProductItem } from 'src/types/product-manage'
@@ -24,6 +27,7 @@ type Props = {
     onChangeDropdown: (event: DropdownChangeParams, index: number) => void
     onChangeImage: (file: File | string, index: number) => void
     onChangeOptionsInput: (event: React.ChangeEvent<HTMLInputElement>, index: number, optionIndex: number) => void
+    itemIsVisibleTrue: (pk: string) => void
 }
 
 const hasBarcodeOptions = [
@@ -53,6 +57,7 @@ function ManageListItem(props: Props) {
         onChangeDropdown,
         onChangeImage,
         onChangeOptionsInput,
+        itemIsVisibleTrue,
     } = props
     const {
         pk,
@@ -81,9 +86,14 @@ function ManageListItem(props: Props) {
         hasBarcode,
         hasCarton,
         cnItemName,
+        isVisible,
+        memo,
     } = productItem
     const [urlChecked, setUrlChecked] = useState<boolean>(false)
     const [imageUrl, setImageUrl] = useState<string>('')
+    const [memoOpen, setMemoOpen] = useState<boolean>(false)
+    const [componentMemo, setComponentMemo] = useState<string>('')
+    const textareaRef = useRef<HTMLTextAreaElement>(null)
 
     const onChangeTextInputs = (event: React.ChangeEvent<HTMLInputElement>) => {
         onChangeText(event, idx)
@@ -93,8 +103,44 @@ function ManageListItem(props: Props) {
         onChangeImage(imageUrl, idx)
     }
 
+    const debounceMemo = useCallback(
+        debounce(async (value: string) => {
+            try {
+                await axios.post(BASE_URL + `products/items/${pk}/memo`, { memo: value })
+            } catch (err) {
+                console.error(err)
+            }
+        }, 300),
+        []
+    )
+
+    const onChangeComponentMemo = (value: string) => {
+        setComponentMemo(value)
+        debounceMemo(value)
+    }
+
+    const onClickMemoBtn = () => {
+        setMemoOpen(!memoOpen)
+        if (textareaRef.current) {
+            textareaRef.current.focus()
+        }
+    }
+
+    useEffect(() => {
+        if (componentMemo === '') {
+            setComponentMemo(memo)
+        }
+    }, [memo, componentMemo])
+
     return (
-        <div className="border">
+        <div className="border relative">
+            {!isVisible && (
+                <div className="absolute w-full h-full flex justify-center items-center bg-[rgba(0,0,0,0.5)] z-10">
+                    <button className="text-white text-2xl font-bold" onClick={() => itemIsVisibleTrue(pk)}>
+                        숨김해제
+                    </button>
+                </div>
+            )}
             <SortableItem>
                 <div className="grid overflow-hidden grid-cols-12 grid-rows-none gap-0">
                     <div className="row-span-6 col-span-4 border-r border-b flex flex-col">
@@ -115,8 +161,22 @@ function ManageListItem(props: Props) {
                             </div>
 
                             <img src={itemImageUrls[0] || './assets/images/no_image.jpg'} alt="test" className="h-[127px] w-[127px] m-auto" />
-                            <div className="flex flex-col justify-between items-center p-2">
-                                <button className="border text-gray-400 px-2 py-1 rounded text-[11px]">메모추가/수정</button>
+                            <div className="relative flex flex-col justify-between items-center p-2">
+                                <button className="border text-gray-400 px-2 py-1 rounded text-[11px]" onClick={onClickMemoBtn}>
+                                    메모추가/수정
+                                </button>
+                                <div className="absolute right-[-150px] bottom-[-50px]">
+                                    <textarea
+                                        ref={textareaRef}
+                                        className={`w-[280px] border rounded-lg p-2 ${memoOpen ? 'block' : 'hidden'}`}
+                                        rows={6}
+                                        name="memo"
+                                        style={{ resize: 'none' }}
+                                        value={componentMemo}
+                                        onChange={(e) => onChangeComponentMemo(e.target.value)}
+                                        autoFocus
+                                    />
+                                </div>
                                 <div className="flex flex-col items-center text-gray-400">
                                     <span>대표이미지</span>
                                     <span>(500*500 px)</span>
@@ -131,11 +191,16 @@ function ManageListItem(props: Props) {
                                     width: 0,
                                     height: 0,
                                 }}
-                            >
-                            </div>
+                            ></div>
                         </div>
                         <div className="flex justify-evenly items-center border-t pt-1 w-full h-[32px]">
-                            <InputText className="w-full p-1 border-none h-full pl-3 text-center" name='cnItemName' value={cnItemName} onChange={onChangeTextInputs} placeholder="옵션명"/>
+                            <InputText
+                                className="w-full p-1 border-none h-full pl-3 text-center"
+                                name="cnItemName"
+                                value={cnItemName}
+                                onChange={onChangeTextInputs}
+                                placeholder="중국옵션명"
+                            />
                         </div>
                         {urlChecked ? (
                             <div className="flex items-center">
@@ -312,7 +377,10 @@ function ManageListItem(props: Props) {
                         />
                     </div>
                     <div className="col-span-2 border-b border-r h-[32px]">
-                        <InputNumber className="text-center p-1 w-full" inputClassName="border-none w-full px-2 py-1" value={couponPrice} 
+                        <InputNumber
+                            className="text-center p-1 w-full"
+                            inputClassName="border-none w-full px-2 py-1"
+                            value={couponPrice}
                             onChange={(event) => {
                                 onChangeCouponPrice(event.value, idx)
                             }}

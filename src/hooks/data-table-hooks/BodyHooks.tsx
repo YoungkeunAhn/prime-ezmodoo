@@ -16,7 +16,6 @@ export const imageBodyTemplate = (rowData: any, option?: any) => {
 }
 
 export const urlBodyTemplate = (url: string) => {
-    console.log('url : ', url)
     return (
         <a href={url} target="blank" className="text-[#39cc2f] hover:text-[#146bce] transition cursor-pointer">
             <i className="fa-solid fa-link text-[12px]"></i>

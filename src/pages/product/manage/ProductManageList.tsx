@@ -6,6 +6,7 @@ import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { DropdownChangeParams } from 'primereact/dropdown'
+import { Paginator, PaginatorPageState } from 'primereact/paginator'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
@@ -97,6 +98,14 @@ function ProductManageList() {
 
     const [tableViewer, setTableViewer] = useState<TableViwer>('true')
 
+    const [basicFirst, setBasicFirst] = useState(0)
+    const [basicRows, setBasicRows] = useState(10)
+
+    const onBasicPageChange = (event: PaginatorPageState) => {
+        setBasicFirst(event.first)
+        setBasicRows(event.rows)
+    }
+
     const productsNameBodyTemplate = (rowData: any) => {
         return (
             <span className="flex w-full py-2" onClick={() => onClickProductsName(rowData.pk)}>
@@ -120,6 +129,10 @@ function ProductManageList() {
 
     const profitRateBodyTemplate = (rowData: any) => {
         return numeral(rowData.profitRate).format('0.0%')
+    }
+
+    const isSalesBodyTemplate = (rowData: any) => {
+        return rowData.isSales ? '판매중' : '마감'
     }
 
     const onClickProductsName = (pk: string) => {
@@ -223,47 +236,11 @@ function ProductManageList() {
         setTableViewer(action)
     }
 
-    const changeIsSaleState = useCallback(
-        async (action: 'true' | 'false') => {
-            try {
-                if (selection.length > 0) {
-                    if (action === 'true') {
-                        // eslint-disable-next-line no-restricted-globals
-                        if (confirm('선택상품을 마감처리 하시겠습니까?')) {
-                            await axios.post(
-                                BASE_URL + 'products/isSales?value=true',
-                                selection.map((select) => select.pk)
-                            )
-                        } else {
-                            // eslint-disable-next-line no-restricted-globals
-                            if (confirm('선택상품을 마감해제 하시겠습니까?')) {
-                                await axios.post(
-                                    BASE_URL + 'products/isSales?value=false',
-                                    selection.map((select) => select.pk)
-                                )
-                            }
-                        }
-                    }
-
-                    alert('완료되었습니다.')
-                    setSelection([])
-
-                    const selectionPkList = selection.map((select) => select.pk)
-                    setProductsGroupList((prev) => prev.map((group) => (selectionPkList.includes(group.pk) ? { ...group, isSales: true } : group)))
-                    console.log(productsGroupList)
-                }
-            } catch (err) {
-                console.error(err)
-            }
-        },
-        [selection, productsGroupList]
-    )
-
     const isSalesTrue = useCallback(async () => {
         try {
             if (selection.length > 0) {
                 // eslint-disable-next-line no-restricted-globals
-                if (confirm('선택상품을 마감처리 하시겠습니까?')) {
+                if (confirm('선택상품을 마감해제 하시겠습니까?')) {
                     await axios.post(
                         BASE_URL + 'products/isSales?value=true',
                         selection.map((select) => select.pk)
@@ -286,7 +263,7 @@ function ProductManageList() {
         try {
             if (selection.length > 0) {
                 // eslint-disable-next-line no-restricted-globals
-                if (confirm('선택상품을 마감해제 하시겠습니까?')) {
+                if (confirm('선택상품을 마감처리 하시겠습니까?')) {
                     await axios.post(
                         BASE_URL + 'products/isSales?value=false',
                         selection.map((select) => select.pk)
@@ -326,7 +303,7 @@ function ProductManageList() {
     const loadProductList = async () => {
         try {
             const { data } = await axios.get(BASE_URL + 'products')
-            
+
             setProductsGroupList(
                 map(data, function (x, i) {
                     const item = x.products[0].items[0]
@@ -441,7 +418,7 @@ function ProductManageList() {
                         />
                     </div>
                 </div>
-                
+
                 <DataTable
                     value={
                         tableViewer === 'ALL'
@@ -568,11 +545,10 @@ function ProductManageList() {
                         body={(rowData, option) => numberBodyTemplate(rowData[option.field])}
                     />
                     <Column align="center" className="text-[12px]" field="profitRate" header="판매이익률" sortable body={profitRateBodyTemplate} />
-                    {/* 
-                    <Column align="center" className="text-[12px]" field="seller" header="판매사" />
-                    <Column align="center" className="text-[12px]" field="ecommerce" header="판매처" body={ecommerceBodyTemplate} />
-                    */}
+                    <Column align="center" className="text-[12px]" field="isSales" header="판매상태" sortable body={isSalesBodyTemplate} />
                 </DataTable>
+
+                <Paginator first={basicFirst} rows={basicRows} totalRecords={productsGroupList.length} onPageChange={onBasicPageChange}></Paginator>
             </div>
             {<ProductDialog open={dialogId === 'CREATE' || dialogId === 'DETAIL'} onClose={onCloseModal} {...detailModalProps} />}
         </div>

@@ -11,6 +11,7 @@ type Props = {
     checkList: string[]
     vendorInfo: IVendor
     tradeInfo: ITrade
+    hideView: boolean
     onChangeVendor: (event: React.ChangeEvent<HTMLInputElement>) => void
     onChangeTrade: (event: React.ChangeEvent<HTMLInputElement>) => void
     onChangeProductItemText: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void
@@ -23,6 +24,7 @@ type Props = {
     onChangeDeliveryCharge: (value: number | null, index: number) => void
     onChangeCommissionRate: (value: number | null, index: number) => void
     onChangeOptionsInput: (event: React.ChangeEvent<HTMLInputElement>, index: number, optionIndex: number) => void
+    itemIsVisibleTrue: (pk: string) => void
 }
 
 function ProductExpandView(props: Props) {
@@ -31,6 +33,7 @@ function ProductExpandView(props: Props) {
         checkList,
         vendorInfo,
         tradeInfo,
+        hideView,
         onChangeVendor,
         onChangeTrade,
         onChangeProductItemText,
@@ -43,31 +46,58 @@ function ProductExpandView(props: Props) {
         onChangeCouponPrice,
         onToggleCheckbox,
         onChangeOptionsInput,
+        itemIsVisibleTrue,
     } = props
 
+    useEffect(() => {
+        console.log(productItemList)
+    }, [productItemList])
 
     return (
         <div className="flex border-t-4 border-[#0D3157] h-auto">
             <div className="min-w-[1050px]">
                 <SortableList onSortEnd={() => {}} draggedItemClassName="dragged" className="text-[12px] max-h-[76vh] overflow-y-auto manage-list">
-                    {productItemList.map((productItem, idx) => (
-                        <ManageListItem
-                            key={idx}
-                            idx={idx}
-                            checkList={checkList}
-                            productItem={productItem}
-                            onChangeImage={onChangeImage}
-                            onChangeDropdown={onChangeDropdown}
-                            onToggleCheckbox={onToggleCheckbox}
-                            onChangeSalePrice={onChangeSalePrice}
-                            onChangeCouponPrice={onChangeCouponPrice}
-                            onChangeText={onChangeProductItemText}
-                            onChangePurchasePrice={onChangePurchasePrice}
-                            onChangeDeliveryCharge={onChangeDeliveryCharge}
-                            onChangeCommissionRate={onChangeCommissionRate}
-                            onChangeOptionsInput={onChangeOptionsInput}
-                        />
-                    ))}
+                    {hideView
+                        ? productItemList.map((productItem, idx) => (
+                              <ManageListItem
+                                  key={idx}
+                                  idx={idx}
+                                  checkList={checkList}
+                                  productItem={productItem}
+                                  onChangeImage={onChangeImage}
+                                  onChangeDropdown={onChangeDropdown}
+                                  onToggleCheckbox={onToggleCheckbox}
+                                  onChangeSalePrice={onChangeSalePrice}
+                                  onChangeCouponPrice={onChangeCouponPrice}
+                                  onChangeText={onChangeProductItemText}
+                                  onChangePurchasePrice={onChangePurchasePrice}
+                                  onChangeDeliveryCharge={onChangeDeliveryCharge}
+                                  onChangeCommissionRate={onChangeCommissionRate}
+                                  onChangeOptionsInput={onChangeOptionsInput}
+                                  itemIsVisibleTrue={itemIsVisibleTrue}
+                              />
+                          ))
+                        : productItemList
+                              .filter((item) => item.isVisible)
+                              .map((productItem, idx) => (
+                                  <ManageListItem
+                                      key={idx}
+                                      idx={idx}
+                                      checkList={checkList}
+                                      productItem={productItem}
+                                      onChangeImage={onChangeImage}
+                                      onChangeDropdown={onChangeDropdown}
+                                      onToggleCheckbox={onToggleCheckbox}
+                                      onChangeSalePrice={onChangeSalePrice}
+                                      onChangeCouponPrice={onChangeCouponPrice}
+                                      onChangeText={onChangeProductItemText}
+                                      onChangePurchasePrice={onChangePurchasePrice}
+                                      onChangeDeliveryCharge={onChangeDeliveryCharge}
+                                      onChangeCommissionRate={onChangeCommissionRate}
+                                      onChangeOptionsInput={onChangeOptionsInput}
+                                      itemIsVisibleTrue={itemIsVisibleTrue}
+                                  />
+                              ))}
                 </SortableList>
             </div>
             <div className="ml-2 h-auto flex flex-col justify-between">
