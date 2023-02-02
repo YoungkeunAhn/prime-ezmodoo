@@ -70,7 +70,7 @@ const initContentProductItem: ContentProductItem = {
     itemName: '',
     marketId: '',
     productName: '',
-    cnItemName:'',
+    cnItemName: '',
     productPk: '',
     sellerPk: '',
     sellerName: '',
@@ -117,6 +117,7 @@ function ProductDialog(props: Props) {
         setProductItemList([initContentProductItem])
         setVendorInfo(initVendorInfo)
         setTradeInfo(initTradeInfo)
+        setTabId('EXPAND')
         setImageList([])
         setCheckList([])
     }, [onClose])
@@ -170,95 +171,85 @@ function ProductDialog(props: Props) {
 
     const onChangePurchasePrice = (value: number | null, index: number) => {
         if (value !== null) {
-            const field = "purchasePrice"
+            const field = 'purchasePrice'
             setProductItemList(
                 productItemList.map((item, idx) => {
-                        if(idx === index)
-                        {
-                            item[field] = value
-                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
-                            item.profit = item.calcPrice - item.purchasePrice
-                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
-                        }
-                        return item
+                    if (idx === index) {
+                        item[field] = value
+                        item.calcPrice = Math.floor(((item.salePrice - item.couponPrice) / 100) * (100 - item.commissionRate) - item.deliveryCharge)
+                        item.profit = item.calcPrice - item.purchasePrice
+                        item.profitRate = item.profit / (item.salePrice - item.couponPrice)
                     }
-                )
+                    return item
+                })
             )
         }
     }
 
     const onChangeSalePrice = (value: number | null, index: number) => {
         if (value !== null) {
-            const field = "salePrice"
+            const field = 'salePrice'
             setProductItemList(
                 productItemList.map((item, idx) => {
-                        if(idx === index)
-                        {
-                            item[field] = value
-                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
-                            item.profit = item.calcPrice - item.purchasePrice
-                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
-                        }
-                        return item
+                    if (idx === index) {
+                        item[field] = value
+                        item.calcPrice = Math.floor(((item.salePrice - item.couponPrice) / 100) * (100 - item.commissionRate) - item.deliveryCharge)
+                        item.profit = item.calcPrice - item.purchasePrice
+                        item.profitRate = item.profit / (item.salePrice - item.couponPrice)
                     }
-                )
+                    return item
+                })
             )
         }
     }
 
     const onChangeCouponPrice = (value: number | null, index: number) => {
         if (value !== null) {
-            const field = "couponPrice"
+            const field = 'couponPrice'
             setProductItemList(
                 productItemList.map((item, idx) => {
-                        if(idx === index)
-                        {
-                            item[field] = value
-                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
-                            item.profit = item.calcPrice - item.purchasePrice
-                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
-                        }
-                        return item
+                    if (idx === index) {
+                        item[field] = value
+                        item.calcPrice = Math.floor(((item.salePrice - item.couponPrice) / 100) * (100 - item.commissionRate) - item.deliveryCharge)
+                        item.profit = item.calcPrice - item.purchasePrice
+                        item.profitRate = item.profit / (item.salePrice - item.couponPrice)
                     }
-                )
+                    return item
+                })
             )
         }
     }
 
     const onChangeDeliveryCharge = (value: number | null, index: number) => {
         if (value !== null) {
-            const field = "deliveryCharge"
+            const field = 'deliveryCharge'
             setProductItemList(
                 productItemList.map((item, idx) => {
-                        if(idx === index)
-                        {
-                            item[field] = value
-                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
-                            item.profit = item.calcPrice - item.purchasePrice
-                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
-                        }
-                        return item
+                    if (idx === index) {
+                        item[field] = value
+                        item.calcPrice = Math.floor(((item.salePrice - item.couponPrice) / 100) * (100 - item.commissionRate) - item.deliveryCharge)
+                        item.profit = item.calcPrice - item.purchasePrice
+                        item.profitRate = item.profit / (item.salePrice - item.couponPrice)
                     }
-                )
+                    return item
+                })
             )
         }
     }
 
     const onChangeCommissionRate = (value: number | null, index: number) => {
         if (value !== null) {
-            const field = "commissionRate"
+            const field = 'commissionRate'
             setProductItemList(
                 productItemList.map((item, idx) => {
-                        if(idx === index)
-                        {
-                            item[field] = value
-                            item.calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
-                            item.profit = item.calcPrice - item.purchasePrice
-                            item.profitRate = item.profit / (item.salePrice - item.couponPrice)
-                        }
-                        return item
+                    if (idx === index) {
+                        item[field] = value
+                        item.calcPrice = Math.floor(((item.salePrice - item.couponPrice) / 100) * (100 - item.commissionRate) - item.deliveryCharge)
+                        item.profit = item.calcPrice - item.purchasePrice
+                        item.profitRate = item.profit / (item.salePrice - item.couponPrice)
                     }
-                )
+                    return item
+                })
             )
         }
     }
@@ -293,7 +284,10 @@ function ProductDialog(props: Props) {
         setProductItemList((prev) =>
             prev.map((item, idx) =>
                 idx === index
-                    ? { ...item, itemOptions: item.itemOptions.map((option:any, idx:number) => (idx === optionIndex ? event.target.value : option)) }
+                    ? {
+                          ...item,
+                          itemOptions: item.itemOptions.map((option: any, idx: number) => (idx === optionIndex ? event.target.value : option)),
+                      }
                     : item
             )
         )
@@ -304,7 +298,7 @@ function ProductDialog(props: Props) {
     }
 
     const pasteProductItem = () => {
-        const findItems  = map(checkList, (pk) => find(productItemList, {pk}))
+        const findItems = map(checkList, (pk) => find(productItemList, { pk }))
         setProductItemList((prev) => prev.concat(findItems))
     }
 
@@ -374,7 +368,9 @@ function ProductDialog(props: Props) {
                             const { totalQty, availableQty, disusedQty } = item.units[0].stock
                             const { reorderPeriod, purchasePrice, hasBarcode, hasCarton } = item.units[0].trade
 
-                            const calcPrice = Math.floor((item.salePrice - item.couponPrice) / 100 * (100 - item.commissionRate) - item.deliveryCharge)
+                            const calcPrice = Math.floor(
+                                ((item.salePrice - item.couponPrice) / 100) * (100 - item.commissionRate) - item.deliveryCharge
+                            )
                             const profit = calcPrice - purchasePrice
                             const profitRate = profit / (item.salePrice - item.couponPrice)
 
@@ -403,14 +399,27 @@ function ProductDialog(props: Props) {
                 setProductItemList(productItems)
 
                 const { enSkuName, enSkuMaterial, trade } = data.products[0].items[0].units[0]
-                const { cbm, lwh, gwt, nwt, qtyPerBox, tariffRate, receiptPeriod, vendors: [vendor] } = trade
-                const { memo, company, company: { siteUrls: linkUrls }, officer} = vendor
+                const {
+                    cbm,
+                    lwh,
+                    gwt,
+                    nwt,
+                    qtyPerBox,
+                    tariffRate,
+                    receiptPeriod,
+                    vendors: [vendor],
+                } = trade
+                const {
+                    memo,
+                    company,
+                    company: { siteUrls: linkUrls },
+                    officer,
+                } = vendor
 
                 setVendorInfo({ memo, company, officer, linkUrls: linkUrls?.length > 0 ? linkUrls : ['', ''] })
                 setTradeInfo({ enSkuMaterial, enSkuName, cbm, lwh, gwt, nwt, qtyPerBox, tariffRate, receiptPeriod })
             }
         } catch (err) {
-
             console.error(err)
         }
     }, [pk])
@@ -469,21 +478,25 @@ function ProductDialog(props: Props) {
                     >
                         삭제
                     </button>
-                    <button style={{ lineHeight: '1.1rem' }} className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]" onClick={pasteProductItem}>
+                    <button
+                        style={{ lineHeight: '1.1rem' }}
+                        className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
+                        onClick={pasteProductItem}
+                    >
                         복사
                     </button>
                     {pk && (
                         <>
                             <button
                                 onClick={onClickExpandView}
-                                style={{ lineHeight: '1.1rem', background: tabId === 'EXPAND' ? '#FFD504': 'white' }}
+                                style={{ lineHeight: '1.1rem', background: tabId === 'EXPAND' ? '#FFD504' : 'white' }}
                                 className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
                             >
                                 펼쳐보기
                             </button>
                             <button
                                 onClick={onClickListView}
-                                style={{ lineHeight: '1.1rem', background: tabId === 'LIST' ? '#FFD504': 'white' }}
+                                style={{ lineHeight: '1.1rem', background: tabId === 'LIST' ? '#FFD504' : 'white' }}
                                 className="p-1.5 min-w-[60px] border border-[#707070] rounded text-black text-[12px]"
                             >
                                 리스트형식보기
@@ -502,6 +515,9 @@ function ProductDialog(props: Props) {
                                 <i className="fa-regular fa-eye mr-1"></i>
                                 <span>모든옵션보기</span>
                             </button>
+                            <span className="text-sm font-bold" style={{ marginLeft: '310px' }}>
+                                총 옵션{productItemList.length}개
+                            </span>
                         </>
                     )}
                 </div>
