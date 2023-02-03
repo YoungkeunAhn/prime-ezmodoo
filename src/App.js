@@ -143,7 +143,7 @@ const App = () => {
                     icon: <ProductsIcon />,
                     items: [
                         { label: '상품컨택', to: '/products/contact' },
-                        { label: '상품관리', to: '/products' },
+                        { label: '상품관리', to: '/products/manage' },
                         { label: '상품디자인관리', to: '/products/design' },
                     ],
                 },
@@ -207,8 +207,8 @@ const App = () => {
                     icon: <CogChatIcon />,
                     items: [
                         { label: '공지사항', to: '/bbs/notice' },
-                        { label: '업체게시판', to: '/bbs' },
-                        { label: 'faq', to: '/bbs/faq' },
+                        { label: '업체게시판', to: '/bbs/list' },
+                        { label: 'FAQ', to: '/bbs/faq' },
                     ],
                 },
                 {
@@ -267,11 +267,11 @@ const App = () => {
                     <Route path="/" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
 
                     <Route path="/table" component={TableDemo} />
-                    <Route path="/design" component={DesignManageList} />
+                    <Route path="/products/design" component={DesignManageList} />
                     <Route path="/order/list" component={OrderManage} />
                     <Route path="/order/china-wear" component={ChinaWearOrder} />
                     <Route path="/stock" component={StockList} />
-                    <Route path="/products" component={ProductManageList} />
+                    <Route path="/products/manage" component={ProductManageList} />
                     <Route path="/invoice" component={InvoiceList} />
                     <Route path="/jet-wearhousing/requests" component={JetRequestList} />
                     <Route path="/test/validation" component={ValidationTest} />
