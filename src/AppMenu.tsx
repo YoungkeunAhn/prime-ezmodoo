@@ -37,8 +37,9 @@ const AppSubmenu = (props: any) => {
 
         return (
             <React.Fragment>
-                <i className={item.icon}></i>
-                <span>{item.label}</span>
+                {item.className && <div className={item.className}></div>}
+                {item.icon}
+                <span style={{ fontSize: '13px' }}>{item.label}</span>
                 {submenuIcon}
                 {badge}
                 <Ripple />
@@ -51,13 +52,30 @@ const AppSubmenu = (props: any) => {
 
         if (item.to) {
             return (
-                <NavLink aria-label={item.label} role="menuitem" className="p-ripple" activeClassName="router-link-active router-link-exact-active" to={item.to} onClick={(e) => onMenuItemClick(e, item, i)} exact target={item.target}>
+                <NavLink
+                    aria-label={item.label}
+                    role="menuitem"
+                    className="p-ripple"
+                    activeClassName="router-link-active router-link-exact-active"
+                    to={item.to}
+                    onClick={(e) => onMenuItemClick(e, item, i)}
+                    exact
+                    target={item.target}
+                >
                     {content}
                 </NavLink>
             )
         } else {
             return (
-                <a tabIndex={0} aria-label={item.label} role="menuitem" href={item.url} className="p-ripple" onClick={(e) => onMenuItemClick(e, item, i)} target={item.target}>
+                <a
+                    tabIndex={0}
+                    aria-label={item.label}
+                    role="menuitem"
+                    href={item.url}
+                    className="p-ripple"
+                    onClick={(e) => onMenuItemClick(e, item, i)}
+                    target={item.target}
+                >
                     {content}
                 </a>
             )
@@ -105,7 +123,7 @@ const AppSubmenu = (props: any) => {
 export const AppMenu = (props: any) => {
     return (
         <div className="layout-menu-container">
-            <AppSubmenu items={props.model} className="layout-menu text-sm" onMenuItemClick={props.onMenuItemClick} root={true} role="menu" />
+            <AppSubmenu items={props.model} className="layout-menu" onMenuItemClick={props.onMenuItemClick} root={true} role="menu" />
         </div>
     )
 }

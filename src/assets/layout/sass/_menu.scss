@@ -1,6 +1,6 @@
 .layout-sidebar {
     position: fixed;
-    width: 200px;
+    width: 230px;
     height: calc(100vh - 6rem);
     z-index: 999;
     overflow-y: auto;
@@ -8,7 +8,7 @@
     top: 5rem;
     left: 0;
     transition: transform $transitionDuration, left $transitionDuration;
-    background-color: var(--surface-overlay);
+    background-color: rgb(42, 54, 82);
     border-top-right-radius: 12px;
     border-bottom-right-radius: 12px;
     padding: 1.5rem;
@@ -31,7 +31,7 @@
 
         .layout-menuitem-root-text {
             text-transform: uppercase;
-            color: var(--surface-900);
+            color: white;
             font-weight: 600;
             margin-bottom: 0.5rem;
             font-size: 0.875rem;
@@ -42,7 +42,7 @@
             text-decoration: none;
             display: flex;
             align-items: center;
-            color: var(--text-color);
+            color: #bfc3cb;
             transition: color $transitionDuration;
             border-radius: $borderRadius;
             padding: 0.75rem 1rem;
@@ -57,16 +57,16 @@
             }
 
             &:focus {
-                @include focused-inset();
+                // @include focused-inset();
             }
 
             &:hover {
-                background-color: var(--surface-hover);
+                // background-color: var(--surface-hover);
             }
 
             &.router-link-exact-active {
                 font-weight: 700;
-                color: var(--primary-color);
+                color: white;
             }
 
             .p-badge {

@@ -8,7 +8,12 @@ export const AppTopbar = (props: any) => {
                 <img src="./images/logo.png" alt="logo" className="w-[200px]" />
             </Link>
 
-            <button type="button" className="p-link  layout-menu-button layout-topbar-button" onClick={props.onToggleMenuClick}>
+            <button
+                type="button"
+                className="p-link layout-menu-button layout-topbar-button"
+                onClick={props.onToggleMenuClick}
+                style={{ border: 'none' }}
+            >
                 <i className="pi pi-bars" />
             </button>
 

@@ -21,11 +21,22 @@ import './assets/demo/Demos.scss'
 import './assets/demo/flags/flags.css'
 import './assets/layout/layout.scss'
 import TableDemo from './components/TableDemo'
+import BagsIcon from './icons/BagsIcon'
+import ChartIcon from './icons/ChartIcon'
+import CogChatIcon from './icons/CogChatIcon'
+import CogsIcon from './icons/CogsIcon'
+import HomeIcon from './icons/HomeIcon'
+import KeyboardIcon from './icons/KeyboardIcon'
+import LogisTruckIcon from './icons/LogisTruckIcon'
+import NumberIcon from './icons/NumberIcon'
+import ProductsIcon from './icons/ProductsIcons'
+import SearchIcon from './icons/SearchIcon'
+import WonIcon from './icons/WonIcon'
 import DesignManageList from './pages/design-manage/DesignManageList'
-import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
-import OrderManage from './pages/order/manage/OrderManage'
 import InvoiceList from './pages/invoice/InvoiceList'
 import JetRequestList from './pages/jet-warehousing/JetRequestList'
+import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
+import OrderManage from './pages/order/manage/OrderManage'
 import ValidationTest from './pages/vaildation-test/ValidationTest'
 
 const App = () => {
@@ -118,133 +129,96 @@ const App = () => {
     const isDesktop = () => {
         return window.innerWidth >= 992
     }
-
     const menu = [
-        // {
-        //     label: 'Home',
-        //     items: [
-        //         {
-        //             label: 'Dashboard',
-        //             icon: 'pi pi-fw pi-home',
-        //             to: '/',
-        //         },
-        //     ],
-        // },
-        // {
-        //     label: "UI Components",
-        //     icon: "pi pi-fw pi-sitemap",
-        //     items: [
-        //         { label: "Form Layout", icon: "pi pi-fw pi-id-card", to: "/formlayout" },
-        //         { label: "Input", icon: "pi pi-fw pi-check-square", to: "/input" },
-        //         { label: "Float Label", icon: "pi pi-fw pi-bookmark", to: "/floatlabel" },
-        //         { label: "Invalid State", icon: "pi pi-fw pi-exclamation-circle", to: "invalidstate" },
-        //         { label: "Button", icon: "pi pi-fw pi-mobile", to: "/button" },
-        //         { label: "Table", icon: "pi pi-fw pi-table", to: "/table" },
-        //         { label: "List", icon: "pi pi-fw pi-list", to: "/list" },
-        //         { label: "Tree", icon: "pi pi-fw pi-share-alt", to: "/tree" },
-        //         { label: "Panel", icon: "pi pi-fw pi-tablet", to: "/panel" },
-        //         { label: "Overlay", icon: "pi pi-fw pi-clone", to: "/overlay" },
-        //         { label: "Media", icon: "pi pi-fw pi-image", to: "/media" },
-        //         { label: "Menu", icon: "pi pi-fw pi-bars", to: "/menu" },
-        //         { label: "Message", icon: "pi pi-fw pi-comment", to: "/messages" },
-        //         { label: "File", icon: "pi pi-fw pi-file", to: "/file" },
-        //         { label: "Chart", icon: "pi pi-fw pi-chart-bar", to: "/chart" },
-        //         { label: "Misc", icon: "pi pi-fw pi-circle-off", to: "/misc" },
-        //     ],
-        // },
-        // {
-        //     label: "UI Blocks",
-        //     items: [
-        //         { label: "Free Blocks", icon: "pi pi-fw pi-eye", to: "/blocks", badge: "NEW" },
-        //         { label: "All Blocks", icon: "pi pi-fw pi-globe", url: "https://www.primefaces.org/primeblocks-react" },
-        //     ],
-        // },
-        // {
-        //     label: "Icons",
-        //     items: [{ label: "PrimeIcons", icon: "pi pi-fw pi-prime", to: "/icons" }],
-        // },
         {
-            label: '상품',
-            icon: 'pi pi-fw pi-clone',
-            items: [
-                { label: '재고관리', icon: 'pi pi-fw pi-user-edit', to: '/stock' },
-                { label: '상품관리', icon: 'pi pi-fw pi-circle-off', to: '/products' },
-                { label: '디자인관리', icon: 'pi pi-fw pi-prime', to: '/design' },
-            ],
-        },
-        {
-            label: '발주',
-            icon: 'pi pi-fw pi-clone',
-            items: [
-                { label: '발주리스트', icon: 'pi pi-fw pi-calendar', to: '/order/list' },
-                { label: '중국의류발주', icon: 'pi pi-fw pi-circle-off', to: '/order/china-wear' },
-                { label: '물류', icon: 'pi pi-car', to: '/invoice' },
-            ],
-        },
-        {
-            label: '쿠팡-제트',
-            icon: 'pi pi-fw pi-clone',
-            items: [{ label: '제트입고요청', icon: 'pi pi-fw pi-calendar', to: '/jet-wearhousing/requests' }],
-        },
-        {
-            label: '데모',
-            icon: 'pi pi-fw pi-sitemap',
             items: [
                 {
-                    label: 'validation',
-                    icon: 'pi pi-exclamation-circle',
-                    to: '/test/validation',
+                    label: 'Dashboard',
+                    icon: <HomeIcon />,
+                    to: '/',
                 },
-            ],
-        },
-        {
-            label: 'Menu Hierarchy',
-            icon: 'pi pi-fw pi-search',
-            items: [
                 {
-                    label: 'Submenu 1',
-                    icon: 'pi pi-fw pi-bookmark',
+                    label: '상품',
+                    className: 'mt-10',
+                    icon: <ProductsIcon />,
                     items: [
-                        {
-                            label: 'Submenu 1.1',
-                            icon: 'pi pi-fw pi-bookmark',
-                            items: [
-                                { label: 'Submenu 1.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Submenu 1.1.2', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Submenu 1.1.3', icon: 'pi pi-fw pi-bookmark' },
-                            ],
-                        },
-                        {
-                            label: 'Submenu 1.2',
-                            icon: 'pi pi-fw pi-bookmark',
-                            items: [
-                                { label: 'Submenu 1.2.1', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Submenu 1.2.2', icon: 'pi pi-fw pi-bookmark' },
-                            ],
-                        },
+                        { label: '상품컨택', to: '/products/contact' },
+                        { label: '상품관리', to: '/products' },
+                        { label: '상품디자인관리', to: '/products/design' },
                     ],
                 },
                 {
-                    label: 'Submenu 2',
-                    icon: 'pi pi-fw pi-bookmark',
+                    label: '재고관리',
+                    className: 'mt-10',
+                    icon: <BagsIcon />,
+                    to: '/stock',
+                },
+                {
+                    label: '발주관리',
+                    className: 'mt-10',
+                    icon: <KeyboardIcon />,
                     items: [
-                        {
-                            label: 'Submenu 2.1',
-                            icon: 'pi pi-fw pi-bookmark',
-                            items: [
-                                { label: 'Submenu 2.1.1', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Submenu 2.1.2', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Submenu 2.1.3', icon: 'pi pi-fw pi-bookmark' },
-                            ],
-                        },
-                        {
-                            label: 'Submenu 2.2',
-                            icon: 'pi pi-fw pi-bookmark',
-                            items: [
-                                { label: 'Submenu 2.2.1', icon: 'pi pi-fw pi-bookmark' },
-                                { label: 'Submenu 2.2.2', icon: 'pi pi-fw pi-bookmark' },
-                            ],
-                        },
+                        { label: '리오더', to: '/order/reorder' },
+                        { label: '일반발주관리', to: '/order/list' },
+                        { label: '의류발주관리', to: '/order/china-wear' },
+                    ],
+                },
+                {
+                    label: '상품통계',
+                    className: 'mt-10',
+                    icon: <ChartIcon />,
+                    items: [
+                        { label: '전체상품통계', to: '/analnysis/normal' },
+                        { label: '로켓상품통계', to: '/analnysis/rocket' },
+                    ],
+                },
+                {
+                    label: '트렌드키워드',
+                    className: 'mt-10',
+                    icon: <SearchIcon />,
+                    to: '/keywords',
+                },
+                {
+                    label: '판매순위관리',
+                    className: 'mt-10',
+                    icon: <NumberIcon />,
+                    to: '/sales-rank',
+                },
+                {
+                    label: '광고금액관리',
+                    className: 'mt-10',
+                    icon: <WonIcon />,
+                    to: '/advertisement',
+                },
+                {
+                    label: '물류관리',
+                    className: 'mt-10',
+                    icon: <LogisTruckIcon />,
+                    items: [
+                        { label: '물류', to: '/invoice' },
+                        { label: '파렛트', to: '/palette' },
+                        { label: '로켓그로스입고요청', to: '/jet-request' },
+                        { label: '로켓발주리스트', to: '/rocket-invoice' },
+                    ],
+                },
+                {
+                    label: '고객센터',
+                    className: 'mt-10',
+                    icon: <CogChatIcon />,
+                    items: [
+                        { label: '공지사항', to: '/bbs/notice' },
+                        { label: '업체게시판', to: '/bbs' },
+                        { label: 'faq', to: '/bbs/faq' },
+                    ],
+                },
+                {
+                    label: '설정',
+                    className: 'mt-10',
+                    icon: <CogsIcon />,
+                    items: [
+                        { label: '사용자관리', to: '/config/user' },
+                        { label: '계정관리', to: '/config/account' },
+                        { label: '운영관리', to: '/config/operation' },
                     ],
                 },
             ],
@@ -264,7 +238,7 @@ const App = () => {
     const wrapperClass = classNames('layout-wrapper', {
         'layout-overlay': layoutMode === 'overlay',
         'layout-static': layoutMode === 'static',
-        'layout-static-sidebar-inactive': staticMenuInactive && layoutMode === 'static',
+        // 'layout-static-sidebar-inactive': staticMenuInactive && layoutMode === 'static',
         'layout-overlay-sidebar-active': overlayMenuActive && layoutMode === 'overlay',
         'layout-mobile-sidebar-active': mobileMenuActive,
         'p-input-filled': inputStyle === 'filled',
