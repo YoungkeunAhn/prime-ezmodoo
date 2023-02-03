@@ -107,14 +107,12 @@ function ManageListItem(props: Props) {
     const debounceMemo = useCallback(
         debounce(async (value: string) => {
             try {
-                if (pk) {
-                    await axios.post(BASE_URL + `products/items/${pk}/memo`, { memo: value })
-                }
+                await axios.post(BASE_URL + `products/items/${pk}/memo`, { memo: value })
             } catch (err) {
                 console.error(err)
             }
         }, 300),
-        []
+        [pk]
     )
 
     const onChangeComponentMemo = (value: string) => {

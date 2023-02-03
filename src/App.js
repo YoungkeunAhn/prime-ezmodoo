@@ -238,7 +238,7 @@ const App = () => {
     const wrapperClass = classNames('layout-wrapper', {
         'layout-overlay': layoutMode === 'overlay',
         'layout-static': layoutMode === 'static',
-        // 'layout-static-sidebar-inactive': staticMenuInactive && layoutMode === 'static',
+        'layout-static-sidebar-inactive': staticMenuInactive && layoutMode === 'static',
         'layout-overlay-sidebar-active': overlayMenuActive && layoutMode === 'overlay',
         'layout-mobile-sidebar-active': mobileMenuActive,
         'p-input-filled': inputStyle === 'filled',
