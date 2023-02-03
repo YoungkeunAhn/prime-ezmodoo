@@ -310,7 +310,7 @@ function ProductDialog(props: Props) {
             valiCheckListLength(checkList)
 
             if (window.confirm('숨김처리 하시겠습니까?')) {
-                await axios.post(BASE_URL + 'products/items/isVisible?value=true', checkList)
+                await axios.post(BASE_URL + 'products/items/isVisible?value=false', checkList)
                 setProductItemList(productItemList.map((item) => (checkList.includes(item.pk) ? { ...item, isVisible: false } : item)))
                 console.log('visible change : ', productItemList)
                 alert('숨김처리 되었습니다.')
@@ -325,7 +325,7 @@ function ProductDialog(props: Props) {
     const itemIsVisibleTrue = async (pk: string) => {
         try {
             if (window.confirm('숨김해제 하시겠습니까?')) {
-                await axios.post(BASE_URL + 'products/items/isVisible?value=false', [pk])
+                await axios.post(BASE_URL + 'products/items/isVisible?value=true', [pk])
                 setProductItemList(productItemList.map((item) => (pk === item.pk ? { ...item, isVisible: true } : item)))
                 alert('숨김해제되었습니다')
             }

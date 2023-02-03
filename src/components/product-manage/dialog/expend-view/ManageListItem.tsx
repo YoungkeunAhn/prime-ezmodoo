@@ -90,6 +90,7 @@ function ManageListItem(props: Props) {
         memo,
     } = productItem
     const [urlChecked, setUrlChecked] = useState<boolean>(false)
+    const [itemPk, setItemPk] = useState<string>(pk)
     const [imageUrl, setImageUrl] = useState<string>('')
     const [memoOpen, setMemoOpen] = useState<boolean>(false)
     const [componentMemo, setComponentMemo] = useState<string>('')
@@ -106,7 +107,9 @@ function ManageListItem(props: Props) {
     const debounceMemo = useCallback(
         debounce(async (value: string) => {
             try {
-                await axios.post(BASE_URL + `products/items/${pk}/memo`, { memo: value })
+                if (pk) {
+                    await axios.post(BASE_URL + `products/items/${pk}/memo`, { memo: value })
+                }
             } catch (err) {
                 console.error(err)
             }
@@ -127,10 +130,12 @@ function ManageListItem(props: Props) {
     }
 
     useEffect(() => {
+        console.log('useEffect pk : ', pk)
         if (componentMemo === '') {
             setComponentMemo(memo)
         }
-    }, [memo, componentMemo])
+        setItemPk(pk)
+    }, [memo, componentMemo, pk])
 
     return (
         <div className="border relative">
