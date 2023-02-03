@@ -4,15 +4,18 @@ import { Link } from 'react-router-dom'
 export const AppTopbar = (props: any) => {
     return (
         <div className="layout-topbar" style={{ background: '#2A3652' }}>
-            <Link to="/" className="flex text-white">
-                <img src="./images/logo.png" alt="logo" className="w-[200px]" />
-            </Link>
+            <div className="flex items-end">
+                <Link to="/" className="flex text-white">
+                    <img src="./images/logo.png" alt="logo" className="w-[200px]" />
+                </Link>
+                <span className="text-white ml-2 relative bottom-[-4px] font-thin">ver 1.2</span>
+            </div>
 
             <button
                 type="button"
-                className="p-link layout-menu-button layout-topbar-button"
+                className="p-link layout-menu-button layout-topbar-button relative bottom-[-4px]"
                 onClick={props.onToggleMenuClick}
-                style={{ border: 'none' }}
+                style={{ border: 'none', marginLeft: 0 }}
             >
                 <i className="pi pi-bars" />
             </button>

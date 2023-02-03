@@ -2700,7 +2700,7 @@
     border-width: 0 0 1px 0;
     font-weight: 600;
     color: rgba(255, 255, 255, 0.87);
-    background: #1e1e1e;
+    background: #f5f9fd !important;
     transition: box-shadow 0.2s;
 }
 .p-datatable .p-datatable-tfoot > tr > td {
