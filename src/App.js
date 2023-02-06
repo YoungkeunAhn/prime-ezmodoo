@@ -38,6 +38,7 @@ import JetRequestList from './pages/jet-warehousing/JetRequestList'
 import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
 import OrderManage from './pages/order/manage/OrderManage'
 import ValidationTest from './pages/vaildation-test/ValidationTest'
+import ProductContactList from './pages/product/contact/ProductContactList'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -271,6 +272,7 @@ const App = () => {
                     <Route path="/order/list" component={OrderManage} />
                     <Route path="/order/china-wear" component={ChinaWearOrder} />
                     <Route path="/stock" component={StockList} />
+                    <Route path="/products/contact" component={ProductContactList} />
                     <Route path="/products/manage" component={ProductManageList} />
                     <Route path="/invoice" component={InvoiceList} />
                     <Route path="/jet-wearhousing/requests" component={JetRequestList} />
