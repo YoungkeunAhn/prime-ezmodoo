@@ -16,8 +16,15 @@ export const imageBodyTemplate = (rowData: any, option?: any) => {
 }
 
 export const urlBodyTemplate = (url: string) => {
+    // let returnUrl = url.startsWith('http://') || url.startsWith('https://') ? url : 'http://' + url
+    let returnUrl = url
+
+    if (returnUrl && !(url.startsWith('http://') || url.startsWith('https://'))) {
+        returnUrl = 'http://' + returnUrl
+    }
+
     return (
-        <a href={url} target="blank" className="text-[#39cc2f] hover:text-[#146bce] transition cursor-pointer">
+        <a href={returnUrl} target="blank" className="text-[#39cc2f] hover:text-[#146bce] transition cursor-pointer">
             <i className="fa-solid fa-link text-[12px]"></i>
         </a>
     )
