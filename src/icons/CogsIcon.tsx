@@ -15,7 +15,7 @@ function CogsIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 599.9 479"
-            enable-background="new 0 0 599.9 479"
+            enableBackground="new 0 0 599.9 479"
             xmlSpace="preserve"
         >
             <path

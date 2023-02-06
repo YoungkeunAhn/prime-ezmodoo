@@ -1,10 +1,10 @@
 import { DropdownChangeParams } from 'primereact/dropdown'
 import React, { useEffect } from 'react'
 import SortableList from 'react-easy-sort'
-import ManageListItem from 'src/components/product-manage/dialog/expend-view/ManageListItem'
-import TradeInfoTable from 'src/components/product-manage/dialog/expend-view/StockInfoTable'
-import VendorInfoTable from 'src/components/product-manage/dialog/expend-view/VendorInfoTable'
 import { ContentProductItem, ITrade, IVendor } from 'src/types/product-manage'
+import ManageListItem from './ManageListItem'
+import TradeInfoTable from './StockInfoTable'
+import VendorInfoTable from './VendorInfoTable'
 
 type Props = {
     productItemList: ContentProductItem[]

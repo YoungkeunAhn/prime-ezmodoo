@@ -10,7 +10,7 @@ import { Paginator, PaginatorPageState } from 'primereact/paginator'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
-import ProductDialog from 'src/components/product-manage/dialog/ProductDialog'
+import ProductManageDialog from 'src/components/product/manage/ProductManageDialog'
 import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
 import SearchMarketIdOption from 'src/components/search-box/SearchMarketIdOption'
@@ -551,7 +551,7 @@ function ProductManageList() {
 
                 <Paginator first={basicFirst} rows={basicRows} totalRecords={productsGroupList.length} onPageChange={onBasicPageChange}></Paginator>
             </div>
-            {<ProductDialog open={dialogId === 'CREATE' || dialogId === 'DETAIL'} onClose={onCloseModal} {...detailModalProps} />}
+            {<ProductManageDialog open={dialogId === 'CREATE' || dialogId === 'DETAIL'} onClose={onCloseModal} {...detailModalProps} />}
         </div>
     )
 }

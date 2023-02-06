@@ -15,7 +15,7 @@ function AboxIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 480 480.1"
-            enable-background="new 0 0 480 480.1"
+            enableBackground="new 0 0 480 480.1"
             xmlSpace="preserve"
         >
             <path

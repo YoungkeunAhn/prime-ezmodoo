@@ -8,6 +8,7 @@ import { DropdownChangeParams } from 'primereact/dropdown'
 import { Paginator, PaginatorPageState } from 'primereact/paginator'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
+import ProductContactDialog from 'src/components/product/contact/ProductContactDialog'
 import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
 import { dateBodyTemplate, imageBodyTemplate, numberBodyTemplate, seqBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
@@ -82,6 +83,12 @@ function ProductContactList() {
     const onBasicPageChange = (event: PaginatorPageState) => {
         setBasicFirst(event.first)
         setBasicRows(event.rows)
+    }
+
+    const closeModal = () => {
+        setDialogId(undefined)
+        setDetailmodalProps(undefined)
+        loadList()
     }
 
     const productsNameBodyTemplate = (rowData: any) => {
@@ -399,6 +406,7 @@ function ProductContactList() {
                 <Paginator first={basicFirst} rows={basicRows} totalRecords={productsGroupList.length} onPageChange={onBasicPageChange}></Paginator>
             </div>
             {/* {<ProductDialog open={dialogId === 'CREATE' || dialogId === 'DETAIL'} onClose={onCloseModal} {...detailModalProps} />} */}
+            <ProductContactDialog open={dialogId === 'CREATE' || dialogId === 'DETAIL'} closeModal={closeModal} {...detailModalProps} />
         </div>
     )
 }

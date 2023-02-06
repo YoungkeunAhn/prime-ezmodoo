@@ -3,11 +3,11 @@ import { DropdownChangeParams } from 'primereact/dropdown'
 import { InputNumberChangeParams } from 'primereact/inputnumber'
 import React, { useState } from 'react'
 import OrderTableRow from 'src/components/order-manage/dialog/OrderTableRow'
-import TradeInfoTable from 'src/components/product-manage/dialog/expend-view/StockInfoTable'
-import VendorInfoTable from 'src/components/product-manage/dialog/expend-view/VendorInfoTable'
 import { ITrade, IVendor } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
 import OrderDetailListItem from '../../../../components/order-manage/list-item-box/OrderProductsItem'
+import VendorInfoTable from 'src/components/product/manage/dialog/expend-view/VendorInfoTable'
+import TradeInfoTable from 'src/components/product/manage/dialog/expend-view/StockInfoTable'
 
 type TabId = 'EXPAND' | 'LIST'
 

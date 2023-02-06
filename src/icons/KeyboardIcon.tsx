@@ -15,7 +15,7 @@ function KeyboardIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 539.9 360"
-            enable-background="new 0 0 539.9 360"
+            enableBackground="new 0 0 539.9 360"
             xmlSpace="preserve"
         >
             <path

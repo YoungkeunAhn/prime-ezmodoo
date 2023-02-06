@@ -15,7 +15,7 @@ function UserCheckIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 600.5 479"
-            enable-background="new 0 0 600.5 479"
+            enableBackground="new 0 0 600.5 479"
             xmlSpace="preserve"
         >
             <path

@@ -1,3 +1,4 @@
+import numeral from 'numeral'
 import { InputText } from 'primereact/inputtext'
 import { Tooltip } from 'primereact/tooltip'
 import React from 'react'
@@ -34,7 +35,9 @@ function ContentHeader(props: Props) {
                 ¥ {currencyCost || ''}
             </div>
             <div className="h-[30px] p-2 border-b border-r text-center font-bold bg-[#F8F9FB]">환율 적용가</div>
-            <div className="h-[30px] p-2 border-b text-center bg-[#F8F9FB] text-[#667084]">₩ {applyExchangeRateCost || ''}</div>
+            <div className="h-[30px] p-2 border-b text-center bg-[#F8F9FB] text-[#667084]">
+                ₩ {numeral(applyExchangeRateCost).format('0,0') || ''}
+            </div>
             <div className="h-[30px] p-2 border-b border-r text-center bg-[#0D3157] text-white">상품그룹명</div>
             <div className="h-[30px] p-2 bg-[#0D3157] text-white col-span-7">
                 <InputText

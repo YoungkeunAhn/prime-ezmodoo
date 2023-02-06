@@ -15,7 +15,7 @@ function ChartIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 479.4 359.8"
-            enable-background="new 0 0 479.4 359.8"
+            enableBackground="new 0 0 479.4 359.8"
             xmlSpace="preserve"
         >
             <path

@@ -15,7 +15,7 @@ function BagsIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 540 480"
-            enable-background="new 0 0 540 480"
+            enableBackground="new 0 0 540 480"
             xmlSpace="preserve"
         >
             <path

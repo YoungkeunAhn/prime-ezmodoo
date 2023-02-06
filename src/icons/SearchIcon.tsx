@@ -15,7 +15,7 @@ function SearchIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 479.8 479.7"
-            enable-background="new 0 0 479.8 479.7"
+            enableBackground="new 0 0 479.8 479.7"
             xmlSpace="preserve"
         >
             <path

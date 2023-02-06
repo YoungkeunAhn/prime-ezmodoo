@@ -8,9 +8,9 @@ import { BASE_URL } from 'src/api/ApiConfig'
 import { valiCheckListLength } from 'src/pages/vaildation-test/CheckListValidation'
 import { ContentProductItem, HeaderInfo, ITrade, IVendor } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
-import ProductExpandView from './expend-view/ProductExpandView'
+import ProductExpandView from './dialog/expend-view/ProductExpandView'
 
-import ProductListView from './list-view/ProductListView'
+import ProductListView from './dialog/list-view/ProductListView'
 
 type TabId = 'EXPAND' | 'LIST'
 
@@ -103,7 +103,7 @@ type Image = {
     file: File | string
 }
 
-function ProductDialog(props: Props) {
+function ProductManageDialog(props: Props) {
     const { open, pk, onClose } = props
     const [tabId, setTabId] = useState<TabId>('EXPAND')
     const [productItemList, setProductItemList] = useState<any[]>([initContentProductItem])
@@ -607,4 +607,4 @@ function ProductDialog(props: Props) {
     )
 }
 
-export default ProductDialog
+export default ProductManageDialog

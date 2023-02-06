@@ -15,7 +15,7 @@ function ProductsIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 503.4 504"
-            enable-background="new 0 0 503.4 504"
+            enableBackground="new 0 0 503.4 504"
             xmlSpace="preserve"
         >
             <g>

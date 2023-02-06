@@ -15,7 +15,7 @@ function HomeIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 566.7 440.7"
-            enable-background="new 0 0 566.7 440.7"
+            enableBackground="new 0 0 566.7 440.7"
             xmlSpace="preserve"
         >
             <path

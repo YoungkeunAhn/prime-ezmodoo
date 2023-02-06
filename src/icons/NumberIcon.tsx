@@ -15,7 +15,7 @@ function NumberIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 538.4 287.7"
-            enable-background="new 0 0 538.4 287.7"
+            enableBackground="new 0 0 538.4 287.7"
             xmlSpace="preserve"
         >
             <path

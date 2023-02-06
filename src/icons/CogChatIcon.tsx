@@ -15,7 +15,7 @@ function CogChatIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 539.8 420.1"
-            enable-background="new 0 0 539.8 420.1"
+            enableBackground="new 0 0 539.8 420.1"
             xmlSpace="preserve"
         >
             <path

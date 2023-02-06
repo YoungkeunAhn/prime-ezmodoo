@@ -15,7 +15,7 @@ function LogisTruckIcon(props: IconProps) {
             height={height ?? 20}
             className={className || 'fill-[#BFC3CB]'}
             viewBox="0 0 599.8 479.9"
-            enable-background="new 0 0 599.8 479.9"
+            enableBackground="new 0 0 599.8 479.9"
             xmlSpace="preserve"
         >
             <path
