@@ -124,7 +124,7 @@ function ProductManageList() {
     }
 
     const commissionRateBodyTemplate = (rowData: any) => {
-        return numeral(rowData.products[0].items[0].commissionRate).format('0.0') + '%'
+        return numeral(rowData.products[0].items[0].commissionRate).format('0.00') + '%'
     }
 
     const profitRateBodyTemplate = (rowData: any) => {
@@ -148,7 +148,7 @@ function ProductManageList() {
     const onCloseModal = () => {
         setDialogId(undefined)
         setDetailmodalProps(undefined)
-        loadProductList()
+        loadList()
     }
 
     const onChangeSearchOptionDropdown = (event: DropdownChangeParams) => {
@@ -300,7 +300,7 @@ function ProductManageList() {
         }
     }, [selection])
 
-    const loadProductList = async () => {
+    const loadList = async () => {
         try {
             const { data } = await axios.get(BASE_URL + 'products')
 
@@ -308,12 +308,13 @@ function ProductManageList() {
                 map(data, function (x, i) {
                     const item = x.products[0].items[0]
                     const salePrice = item.salePrice
+                    const couponPrice = item.couponPrice
                     const deliveryCharge = item.deliveryCharge
                     const commissionRate = item.commissionRate
                     const purchasePrice = item.units[0].trade.purchasePrice
 
-                    const settlementPrice = (salePrice / 100) * (100 - commissionRate) - deliveryCharge
-                    const profit = settlementPrice - purchasePrice
+                    const calcPrice = Math.floor(((salePrice - couponPrice) / 100) * (100 - commissionRate) - deliveryCharge)
+                    const profit = calcPrice - purchasePrice
                     const profitRate = profit / salePrice
 
                     const sellerList: string = map(x.products, (product) => product.sellerPk).join(',')
@@ -322,7 +323,7 @@ function ProductManageList() {
                     return {
                         ...x,
                         seq: i + 1,
-                        settlementPrice,
+                        calcPrice,
                         profit,
                         profitRate,
                         sellerList,
@@ -337,7 +338,7 @@ function ProductManageList() {
     }
 
     useEffect(() => {
-        loadProductList()
+        loadList()
     }, [])
 
     return (
@@ -531,7 +532,7 @@ function ProductManageList() {
                     <Column
                         align="center"
                         className="text-[12px]"
-                        field="settlementPrice"
+                        field="calcPrice"
                         header="정산금액"
                         sortable
                         body={(rowData, option) => numberBodyTemplate(rowData[option.field])}
