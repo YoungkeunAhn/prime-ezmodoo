@@ -9,7 +9,7 @@ type Props = {
     onClose: () => void
 }
 
-function ReportInfoModal(props: Props) {
+function ReportInfoDialog(props: Props) {
     const { open, onClose } = props
     const inputFileRef = useRef<HTMLInputElement>(null)
 
@@ -57,4 +57,4 @@ function ReportInfoModal(props: Props) {
     )
 }
 
-export default ReportInfoModal
+export default ReportInfoDialog

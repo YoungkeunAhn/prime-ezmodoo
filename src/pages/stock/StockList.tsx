@@ -9,16 +9,9 @@ import { InputNumber } from 'primereact/inputnumber'
 import { SelectButton, SelectButtonChangeParams } from 'primereact/selectbutton'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
-import MenuButton from 'src/components/custom-buttons/MenuButton'
 import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
-import {
-    arrayCommaBodyTemplate,
-    dateBodyTemplate,
-    imageBodyTemplate,
-    numberBodyTemplate,
-    seqBodyTemplate,
-} from 'src/hooks/data-table-hooks/BodyHooks'
+import { dateBodyTemplate, imageBodyTemplate, numberBodyTemplate, seqBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { lineHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import { ProductItemUnit } from 'src/types/product-manage'
 import StockLogDialog from '../../components/stock/dialog/StockLogDialog'
@@ -360,7 +353,6 @@ function StockList() {
                         </button> */}
                     </div>
                 </div>
-
                 <DataTable
                     value={unitList}
                     removableSort
@@ -376,7 +368,7 @@ function StockList() {
                     // resizableColumns
                     // columnResizeMode="expand"
                 >
-                    <Column align="center" className="max-w-[50px]" selectionMode="multiple" selectionAriaLabel="id" field="id"></Column>
+                    <Column align="center" className="max-w-[50px]" selectionMode="multiple" selectionAriaLabel="pk" field="pk"></Column>
                     <Column align="center" className="text-[12px]" field="seq" header="NO" bodyStyle={seqBodyTemplate} />
                     <Column align="center" className="text-[12px]" field="managerName" header="담당자" />
                     <Column align="center" className="text-[12px]" field="skuId" header="재고코드" />

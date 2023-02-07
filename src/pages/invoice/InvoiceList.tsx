@@ -7,7 +7,7 @@ import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateR
 import { dateBodyTemplate, numberBodyTemplate, seqBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { numberEditor } from 'src/hooks/data-table-hooks/EditorHooks'
 import { lineHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
-import ReportInfoModal from './report-info-modal/ReportInfoModal'
+import ReportInfoDialog from '../../components/invoice/dialog/ReportInfoDialog'
 
 const fakeData = [
     {
@@ -79,14 +79,14 @@ function InvoiceList() {
     }
 
     const invoiceReportBodyTemplate = (rowData: any) => {
-        return <Button icon="pi pi-tag" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
+        return <Button icon="text-black pi pi-tag" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
     }
 
     const gettingCargoBodyTemplate = (rowData: any) => {
-        return <Button icon="pi pi-book" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
+        return <Button icon="text-black pi pi-book" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
     }
     const missingBodyTemplate = (rowData: any) => {
-        return <Button icon="pi pi-exclamation-triangle" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
+        return <Button icon="text-black pi pi-exclamation-triangle" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
     }
 
     return (
@@ -234,7 +234,7 @@ function InvoiceList() {
                     <Column align="center" className="text-[12px]" field="id" header="입고예정상품" body={gettingCargoBodyTemplate} />
                     <Column align="center" className="text-[12px]" field="id" header="누락상품" body={missingBodyTemplate} />
                 </DataTable>
-                <ReportInfoModal open={dialogOpen} onClose={closeDialog} />
+                <ReportInfoDialog open={dialogId === 'REPORT'} onClose={closeDialog} />
             </div>
         </div>
     )

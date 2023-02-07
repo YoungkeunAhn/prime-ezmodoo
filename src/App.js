@@ -28,17 +28,14 @@ import CogsIcon from './icons/CogsIcon'
 import HomeIcon from './icons/HomeIcon'
 import KeyboardIcon from './icons/KeyboardIcon'
 import LogisTruckIcon from './icons/LogisTruckIcon'
-import NumberIcon from './icons/NumberIcon'
 import ProductsIcon from './icons/ProductsIcons'
-import SearchIcon from './icons/SearchIcon'
-import WonIcon from './icons/WonIcon'
 import DesignManageList from './pages/design-manage/DesignManageList'
 import InvoiceList from './pages/invoice/InvoiceList'
 import JetRequestList from './pages/jet-warehousing/JetRequestList'
 import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
 import OrderManage from './pages/order/manage/OrderManage'
-import ValidationTest from './pages/vaildation-test/ValidationTest'
 import ProductContactList from './pages/product/contact/ProductContactList'
+import ValidationTest from './pages/vaildation-test/ValidationTest'
 
 const App = () => {
     const [layoutMode, setLayoutMode] = useState('static')
@@ -173,24 +170,24 @@ const App = () => {
                         { label: '로켓상품통계', to: '/analnysis/rocket' },
                     ],
                 },
-                {
-                    label: '트렌드키워드',
-                    className: 'mt-10',
-                    icon: <SearchIcon />,
-                    to: '/keywords',
-                },
-                {
-                    label: '판매순위관리',
-                    className: 'mt-10',
-                    icon: <NumberIcon />,
-                    to: '/sales-rank',
-                },
-                {
-                    label: '광고금액관리',
-                    className: 'mt-10',
-                    icon: <WonIcon />,
-                    to: '/advertisement',
-                },
+                // {
+                //     label: '트렌드키워드',
+                //     className: 'mt-10',
+                //     icon: <SearchIcon />,
+                //     to: '/keywords',
+                // },
+                // {
+                //     label: '판매순위관리',
+                //     className: 'mt-10',
+                //     icon: <NumberIcon />,
+                //     to: '/sales-rank',
+                // },
+                // {
+                //     label: '광고금액관리',
+                //     className: 'mt-10',
+                //     icon: <WonIcon />,
+                //     to: '/advertisement',
+                // },
                 {
                     label: '물류관리',
                     className: 'mt-10',
