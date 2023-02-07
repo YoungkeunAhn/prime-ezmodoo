@@ -29,6 +29,8 @@ const fakeData = [
     },
 ]
 
+type DialogId = 'REPORT' | 'GETTINGCARGO' | 'MISSING'
+
 type SearchOptions = {
     startDate: Date
     endDate: Date
@@ -44,6 +46,7 @@ const initSearchOptions: SearchOptions = {
 const dateRangeCateOptions: SearchCate[] = [{ label: '등록일', field: 'createdAt' }]
 
 function InvoiceList() {
+    const [dialogId, setDialogId] = useState<DialogId>()
     const [selection, setSelection] = useState([])
     const inputFileRef = useRef<HTMLInputElement>(null)
     const [dialogOpen, setDialgoOpen] = useState<boolean>(false)
@@ -55,6 +58,7 @@ function InvoiceList() {
 
     const closeDialog = () => {
         setDialgoOpen(false)
+        setDialogId(undefined)
     }
 
     const clearSearchOptions = () => {}
@@ -74,8 +78,15 @@ function InvoiceList() {
         }))
     }
 
-    const importReportEditBodyTemplate = (rowData: any) => {
-        return <Button icon="pi pi-pencil" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
+    const invoiceReportBodyTemplate = (rowData: any) => {
+        return <Button icon="pi pi-tag" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
+    }
+
+    const gettingCargoBodyTemplate = (rowData: any) => {
+        return <Button icon="pi pi-book" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
+    }
+    const missingBodyTemplate = (rowData: any) => {
+        return <Button icon="pi pi-exclamation-triangle" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
     }
 
     return (
@@ -187,6 +198,13 @@ function InvoiceList() {
                     <Column
                         align="center"
                         className="text-[12px]"
+                        field="totalCurrencyTax"
+                        header={lineHeader('총과세가격 (WON)')}
+                        body={(rowData, option) => numberBodyTemplate(rowData[option.field])}
+                    />
+                    <Column
+                        align="center"
+                        className="text-[12px]"
                         field="deliveryCharge"
                         header="운임"
                         body={(rowData, option) => numberBodyTemplate(rowData[option.field])}
@@ -212,13 +230,9 @@ function InvoiceList() {
                         header="구매시환율"
                         body={(rowData, option) => numberBodyTemplate(rowData[option.field])}
                     />
-                    <Column
-                        align="center"
-                        className="text-[12px]"
-                        field="id"
-                        header={lineHeader('수입신고서 정보')}
-                        body={importReportEditBodyTemplate}
-                    />
+                    <Column align="center" className="text-[12px]" field="id" header="수입신고서" body={invoiceReportBodyTemplate} />
+                    <Column align="center" className="text-[12px]" field="id" header="입고예정상품" body={gettingCargoBodyTemplate} />
+                    <Column align="center" className="text-[12px]" field="id" header="누락상품" body={missingBodyTemplate} />
                 </DataTable>
                 <ReportInfoModal open={dialogOpen} onClose={closeDialog} />
             </div>

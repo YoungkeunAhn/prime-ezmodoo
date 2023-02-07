@@ -29,7 +29,7 @@ const fakeLogData = [
     },
 ]
 
-function LogViewModal(props: Props) {
+function StockLogDialog(props: Props) {
     const { open, onClose, logId } = props
     const [title, setTitle] = useState<string>('')
 
@@ -103,4 +103,4 @@ function LogViewModal(props: Props) {
     )
 }
 
-export default LogViewModal
+export default StockLogDialog

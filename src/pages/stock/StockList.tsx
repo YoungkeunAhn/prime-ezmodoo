@@ -21,7 +21,7 @@ import {
 } from 'src/hooks/data-table-hooks/BodyHooks'
 import { lineHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import { ProductItemUnit } from 'src/types/product-manage'
-import LogViewModal from './LogViewModal'
+import StockLogDialog from '../../components/stock/dialog/StockLogDialog'
 
 const globalFilterFields = ['skuName', 'managerName', 'skuId', 'barcode']
 
@@ -254,7 +254,7 @@ function StockList() {
 
     return (
         <div>
-            <div className="page-header border rounded-lg flex bg-white mb-5">
+            <div className="page-header card flex mb-5">
                 <div>
                     <div className="flex items-center px-4 pt-4 border-b h-[66px] box-border min-w-[70vw]">
                         <div className="flex flex-col justify-center ">
@@ -341,14 +341,14 @@ function StockList() {
                 <div className="flex items-center justify-between pb-4">
                     <div></div>
                     <div className="flex space-x-2">
-                        <MenuButton
+                        {/* <MenuButton
                             title="EXCEL"
                             position="left"
                             color="#098000"
                             menu={excelBtnMenu}
                             icon={<img src="./assets/icons/excel.png" alt="excel" width={28} className="object-contain" />}
                             onClickMenu={(action: string) => alert(action)}
-                        />
+                        /> */}
                         <button
                             className="font-bold border text-sm border-[#146BCE] rounded text-black p-1 px-2 bg-white h-[32px]"
                             onClick={() => onClickLog(0)}
@@ -422,18 +422,18 @@ function StockList() {
                     />
                     <Column align="center" className="text-[12px]" field="stock.availableQty" header="재고수량" sortable />
                     <Column align="center" className="text-[12px]" field="stock.disusedQty" header="불량수량" sortable />
-                    <Column
+                    {/* <Column
                         align="center"
                         className="text-[12px]"
                         field="stock.locations"
                         header="파렛트위치"
                         body={(rowData) => arrayCommaBodyTemplate(rowData.stock.locations)}
-                    />
+                    /> */}
 
-                    <Column align="center" className="text-[12px]" field="log" header="로그" body={logBodyTemplate} />
+                    {/* <Column align="center" className="text-[12px]" field="log" header="로그" body={logBodyTemplate} /> */}
                 </DataTable>
             </div>
-            <LogViewModal open={logOpen} onClose={closeLogModal} logId={logId} />
+            <StockLogDialog open={logOpen} onClose={closeLogModal} logId={logId} />
         </div>
     )
 }
