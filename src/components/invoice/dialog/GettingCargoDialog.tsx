@@ -51,26 +51,26 @@ function GettingCargoDialog(props: Props) {
 
     const invoiceMessage = () => {}
 
-    const footerGroup = (
-        <ColumnGroup>
-            <Row>
-                <Column footer="전달사항" colSpan={2} />
-                <Column footer="textarea" colSpan={8} />
-                <Column footer="계" />
-                <Column footer="7,000" />
-                <Column footer="25" />
-                <Column footer="91.14" />
-                <Column footer="" />
-                <Column footer="화물적재량" />
-                <Column footer="1,234" />
-            </Row>
-        </ColumnGroup>
-    )
+    // const footerGroup = (
+    //     <ColumnGroup>
+    //         <Row>
+    //             <Column footer="전달사항" colSpan={2} />
+    //             <Column footer="textarea" colSpan={8} />
+    //             <Column footer="계" />
+    //             <Column footer="7,000" />
+    //             <Column footer="25" />
+    //             <Column footer="91.14" />
+    //             <Column footer="" />
+    //             <Column footer="화물적재량" />
+    //             <Column footer="1,234" />
+    //         </Row>
+    //     </ColumnGroup>
+    // )
 
     return (
         <Dialog header={Header} onHide={closeModal} visible={open}>
             <div>
-                <DataTable footerColumnGroup={footerGroup} className="text-[12px]">
+                <DataTable className="text-[12px]">
                     <Column header="NO" />
                     <Column align="center" className="max-w-[50px]" selectionMode="multiple" selectionAriaLabel="pk" field="pk" />
                     <Column header="IMG" />
