@@ -19,8 +19,10 @@ export const urlBodyTemplate = (url: string) => {
     // let returnUrl = url.startsWith('http://') || url.startsWith('https://') ? url : 'http://' + url
     let returnUrl = url
 
-    if (returnUrl && !(url.startsWith('http://') || url.startsWith('https://'))) {
-        returnUrl = 'http://' + returnUrl
+    if (url) {
+        if (!(url.startsWith('http://') || url.startsWith('https://'))) {
+            returnUrl = 'http://' + returnUrl
+        }
     }
 
     return (

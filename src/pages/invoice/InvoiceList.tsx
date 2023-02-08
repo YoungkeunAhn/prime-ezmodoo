@@ -2,7 +2,9 @@ import { Button } from 'primereact/button'
 import { Column, ColumnEditorOptions } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { DropdownChangeParams } from 'primereact/dropdown'
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
+import GettingCargoDialog from 'src/components/invoice/dialog/GettingCargoDialog'
+import MissingDialog from 'src/components/invoice/dialog/MissingDialog'
 import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
 import { dateBodyTemplate, numberBodyTemplate, seqBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { numberEditor } from 'src/hooks/data-table-hooks/EditorHooks'
@@ -49,15 +51,21 @@ function InvoiceList() {
     const [dialogId, setDialogId] = useState<DialogId>()
     const [selection, setSelection] = useState([])
     const inputFileRef = useRef<HTMLInputElement>(null)
-    const [dialogOpen, setDialgoOpen] = useState<boolean>(false)
     const [searchOptions, setSearchOptions] = useState<SearchOptions>(initSearchOptions)
 
-    const openDialog = () => {
-        setDialgoOpen(true)
+    const openReportDialog = () => {
+        setDialogId('REPORT')
+    }
+
+    const openGettingCargoDialog = () => {
+        setDialogId('GETTINGCARGO')
+    }
+
+    const openMissingDialog = () => {
+        setDialogId('MISSING')
     }
 
     const closeDialog = () => {
-        setDialgoOpen(false)
         setDialogId(undefined)
     }
 
@@ -79,15 +87,19 @@ function InvoiceList() {
     }
 
     const invoiceReportBodyTemplate = (rowData: any) => {
-        return <Button icon="text-black pi pi-tag" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
+        return <Button icon="text-black pi pi-tag" className="p-button-rounded p-button-text" onClick={openReportDialog}></Button>
     }
 
     const gettingCargoBodyTemplate = (rowData: any) => {
-        return <Button icon="text-black pi pi-book" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
+        return <Button icon="text-black pi pi-book" className="p-button-rounded p-button-text" onClick={openGettingCargoDialog}></Button>
     }
     const missingBodyTemplate = (rowData: any) => {
-        return <Button icon="text-black pi pi-exclamation-triangle" className="p-button-rounded p-button-text" onClick={openDialog}></Button>
+        return <Button icon="text-black pi pi-exclamation-triangle" className="p-button-rounded p-button-text" onClick={openMissingDialog}></Button>
     }
+
+    useEffect(() => {
+        setDialogId('GETTINGCARGO')
+    }, [])
 
     return (
         <div>
@@ -235,6 +247,8 @@ function InvoiceList() {
                     <Column align="center" className="text-[12px]" field="id" header="누락상품" body={missingBodyTemplate} />
                 </DataTable>
                 <ReportInfoDialog open={dialogId === 'REPORT'} onClose={closeDialog} />
+                <GettingCargoDialog open={dialogId === 'GETTINGCARGO'} closeModal={closeDialog} />
+                <MissingDialog open={dialogId === 'MISSING'} closeModal={closeDialog} />
             </div>
         </div>
     )
