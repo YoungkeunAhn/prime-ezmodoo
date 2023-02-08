@@ -18,7 +18,6 @@ export const imageBodyTemplate = (rowData: any, option?: any) => {
 export const urlBodyTemplate = (url: string) => {
     // let returnUrl = url.startsWith('http://') || url.startsWith('https://') ? url : 'http://' + url
     let returnUrl = url
-
     if (url) {
         if (!(url.startsWith('http://') || url.startsWith('https://'))) {
             returnUrl = 'http://' + returnUrl

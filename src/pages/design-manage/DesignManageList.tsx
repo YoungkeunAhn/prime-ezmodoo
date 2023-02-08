@@ -1,7 +1,6 @@
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
-import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
-import { InputText } from 'primereact/inputtext'
+import { DropdownChangeParams } from 'primereact/dropdown'
 import React, { useState } from 'react'
 import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
@@ -199,7 +198,7 @@ function DesignManageList() {
                     <Column align="center" field="requestDate" header="디자인접수일" />
                     <Column align="center" field="manager" header="상품담당자" />
                     <Column align="center" field="image" header="이미지" body={imageBodyTemplate} />
-                    <Column align="center" field="url" header="URL" body={urlBodyTemplate} />
+                    <Column align="center" field="url" header="URL" body={(rowData) => urlBodyTemplate(rowData.url)} />
                     <Column align="center" field="productName" header="상품명" />
                     <Column align="center" field="Instruction" header="전달내용" />
                     <Column align="center" field="designer" header="디자인 담당자" />

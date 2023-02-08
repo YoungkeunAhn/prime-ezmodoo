@@ -3,7 +3,7 @@ import { debounce } from 'lodash'
 import numeral from 'numeral'
 import { Checkbox } from 'primereact/checkbox'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
-import { InputNumber } from 'primereact/inputnumber'
+import { InputNumber, InputNumberChangeParams } from 'primereact/inputnumber'
 import { InputText } from 'primereact/inputtext'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { SortableItem, SortableKnob } from 'react-easy-sort'
@@ -17,6 +17,7 @@ type Props = {
     productItem: ContentProductItem
     idx: number
     checkList: string[]
+    orderList: any
     onToggleCheckbox: (pk: string) => void
     onChangeText: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void
     onChangePurchasePrice: (value: number | null, index: number) => void
@@ -24,6 +25,7 @@ type Props = {
     onChangeSalePrice: (value: number | null, index: number) => void
     onChangeCouponPrice: (value: number | null, index: number) => void
     onChangeCommissionRate: (value: number | null, index: number) => void
+    onChangeOrderQty: (event: InputNumberChangeParams) => void
     onChangeDropdown: (event: DropdownChangeParams, index: number) => void
     onChangeImage: (file: File | string, index: number) => void
     onChangeOptionsInput: (event: React.ChangeEvent<HTMLInputElement>, index: number, optionIndex: number) => void
@@ -47,6 +49,7 @@ function ManageListItem(props: Props) {
         productItem,
         idx,
         checkList,
+        orderList,
         onToggleCheckbox,
         onChangeText,
         onChangePurchasePrice,
@@ -56,6 +59,7 @@ function ManageListItem(props: Props) {
         onChangeCommissionRate,
         onChangeDropdown,
         onChangeImage,
+        onChangeOrderQty,
         onChangeOptionsInput,
         itemIsVisibleTrue,
     } = props
@@ -88,6 +92,7 @@ function ManageListItem(props: Props) {
         cnItemName,
         isVisible,
         memo,
+        orderQty,
     } = productItem
     const [urlChecked, setUrlChecked] = useState<boolean>(false)
     const [itemPk, setItemPk] = useState<string>(pk)
@@ -452,7 +457,14 @@ function ManageListItem(props: Props) {
 
                     <ItemLabel label="발주(매입)수량" noBorderBottom />
                     <div className="col-span-2 border-r">
-                        <InputNumber className="text-center p-1 w-full" inputClassName="border-none w-full px-2 py-1" />
+                        <InputNumber
+                            className="text-center p-1 w-full"
+                            inputClassName="border-none w-full px-2 py-1"
+                            name={pk}
+                            value={orderList[pk]}
+                            format={true}
+                            onChange={onChangeOrderQty}
+                        />
                     </div>
 
                     <ItemLabel label="리오더 소요일" noBorderBottom />

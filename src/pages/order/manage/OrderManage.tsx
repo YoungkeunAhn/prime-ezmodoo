@@ -1,8 +1,11 @@
+import axios from 'axios'
+import { map } from 'lodash'
 import numeral from 'numeral'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
+import { BASE_URL } from 'src/api/ApiConfig'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
 import SearchDateOption from 'src/components/search-box/SearchDateOption'
 import { dateBodyTemplate, imageBodyTemplate, printBodyTemplate, seqBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
@@ -130,6 +133,7 @@ function OrderManage() {
     const [dialogId, setDialogId] = useState<DialogId>()
     const [searchOptions, setSearchOptions] = useState<SearchOptions>(initSearchOptions)
     const [selection, setSelection] = useState([])
+    const [orderList, setOrderList] = useState<any[]>(fakeData)
 
     const openDetailDialog = () => {
         setDialogId('DETAIL')
@@ -163,7 +167,11 @@ function OrderManage() {
         )
     }
     const longTextBodyTemplate = (rowData: any, option: any) => {
-        return rowData[option.field].length > 100 ? rowData[option.field].slice(0, 100) + '...' : rowData[option.field]
+        return (
+            <span className="text-[11px]">
+                {rowData[option.field].length > 100 ? rowData[option.field].slice(0, 100) + '...' : rowData[option.field]}
+            </span>
+        )
     }
 
     const priorityBodyTemplate = (rowData: any, option: any) => {
@@ -204,6 +212,28 @@ function OrderManage() {
             endDate,
         }))
     }
+
+    const getOrderList = async () => {
+        try {
+            const { data } = await axios.get(BASE_URL + 'orders')
+            // const stockList = map(data, (order, idx) => {
+            //     return {
+            //         ...order,
+            //         seq: idx + 1,
+            //         createdAt: new Date(order.createdAt),
+            //     }
+            // })
+            // setOrderList(stockList)
+
+            console.log(data)
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    useEffect(() => {
+        getOrderList()
+    }, [])
 
     return (
         <div>
@@ -287,7 +317,7 @@ function OrderManage() {
                     </button>
                 </div>
                 <DataTable
-                    value={fakeData}
+                    value={orderList}
                     resizableColumns
                     removableSort
                     sortMode="multiple"
@@ -301,11 +331,10 @@ function OrderManage() {
                     <Column align="center" selectionMode="multiple" selectionAriaLabel="id" field="id"></Column>
                     <Column align="center" field="seq" header="NO" body={seqBodyTemplate} />
                     <Column align="center" field="id" header="발주번호" />
-                    <Column align="center" field="priority" header="작업순번" sortable body={priorityBodyTemplate} />
                     <Column align="center" field="orderDate" header="발주일자" sortable body={(rowData) => dateBodyTemplate(rowData.orderDate)} />
                     <Column align="center" field="manager" header="담당자" />
                     <Column align="center" field="image" header="이미지" body={imageBodyTemplate} />
-                    <Column align="center" field="url" header="URL" body={urlBodyTemplate} />
+                    <Column align="center" field="url" header="URL" body={(rowData) => urlBodyTemplate(rowData.url)} />
                     <Column
                         align="center"
                         field="productName"
@@ -323,7 +352,7 @@ function OrderManage() {
                     <Column align="center" field="paymentDate" header="결제일" sortable />
                     <Column align="center" field="factoryReleaseDate" header="공장출고 예정일" sortable />
                     <Column align="center" field="arrivalReleaseDate" header="본사도착 예정일" sortable />
-                    <Column align="center" field="chinaTransitInfo" header="중국 운송장정보" />
+                    <Column align="center" field="chinaTransitInfo" header="중국운송장정보" />
                     <Column align="center" field="productDistribution" header="상품물류정보" body={longTextBodyTemplate} />
                     <Column align="center" field="mdMemo" header="MD메모" body={longTextBodyTemplate} headerStyle={{ minWidth: '200px' }} />
                     <Column align="center" field="traderMemo" header="무역메모" body={longTextBodyTemplate} />

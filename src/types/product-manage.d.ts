@@ -211,4 +211,6 @@ export declare interface ContentProductItem extends ProductItem {
     hasCarton: boolean | null
 
     isVisible: boolean
+
+    orderQty?: number
 }

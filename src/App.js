@@ -265,12 +265,12 @@ const App = () => {
                     <Route path="/" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
 
                     <Route path="/table" component={TableDemo} />
-                    <Route path="/products/design" component={DesignManageList} />
                     <Route path="/order/list" component={OrderManage} />
                     <Route path="/order/china-wear" component={ChinaWearOrder} />
                     <Route path="/stock" component={StockList} />
                     <Route path="/products/contact" component={ProductContactList} />
                     <Route path="/products/manage" component={ProductManageList} />
+                    <Route path="/products/design" component={DesignManageList} />
                     <Route path="/invoice" component={InvoiceList} />
                     <Route path="/jet-wearhousing/requests" component={JetRequestList} />
                     <Route path="/test/validation" component={ValidationTest} />

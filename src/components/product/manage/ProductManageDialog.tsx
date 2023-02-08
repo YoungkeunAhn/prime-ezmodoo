@@ -3,6 +3,7 @@ import { cloneDeep, find, findIndex, flatten, map, set, xor } from 'lodash'
 import { DataTableRowReorderParams } from 'primereact/datatable'
 import { Dialog } from 'primereact/dialog'
 import { DropdownChangeParams } from 'primereact/dropdown'
+import { InputNumberChangeParams } from 'primereact/inputnumber'
 import React, { useCallback, useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import { valiCheckListLength } from 'src/pages/vaildation-test/CheckListValidation'
@@ -112,6 +113,7 @@ function ProductManageDialog(props: Props) {
     const [headerInfo, setHeaderInfo] = useState<HeaderInfo>(initHeaderInfo)
     const [imageList, setImageList] = useState<Image[]>([])
     const [checkList, setCheckList] = useState<string[]>([])
+    const [orderList, setOrderList] = useState<any>({})
     const [hideView, setHideView] = useState<boolean>(false)
 
     const closeModal = useCallback(() => {
@@ -258,6 +260,19 @@ function ProductManageDialog(props: Props) {
         }
     }
 
+    const onChangeOrderQty = (event: InputNumberChangeParams) => {
+        const targetName = event.originalEvent.currentTarget.name
+        if (!checkList.includes(targetName)) {
+            setCheckList((prev) => prev.concat(targetName))
+        }
+
+        if (event.value === null) {
+            setCheckList((prev) => prev.filter((it) => it !== targetName))
+        }
+
+        setOrderList((prev: any) => ({ ...prev, [targetName]: event.value }))
+    }
+
     const onChangeImage = (file: File | string, index: number) => {
         const foundIndex = findIndex(imageList, { index })
         if (foundIndex > -1) {
@@ -336,6 +351,26 @@ function ProductManageDialog(props: Props) {
 
     const onClickHideViwerBtn = () => {
         setHideView(!hideView)
+    }
+
+    const postOrder = async () => {
+        try {
+            if (window.confirm('발주 요청 하시겠습니까?')) {
+                const order = Object.entries(orderList)
+                    .map((it) => {
+                        if (checkList.includes(it[0])) {
+                            return { [it[0]]: it[1] }
+                        } else {
+                            return null
+                        }
+                    })
+                    .filter((it) => it)
+                axios.post(BASE_URL + 'products/items/order', order)
+                alert('발주되었습니다.')
+            }
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     const saveProductGroup = useCallback(async () => {
@@ -428,6 +463,7 @@ function ProductManageDialog(props: Props) {
                                 purchasePrice,
                                 hasBarcode,
                                 hasCarton,
+                                orderQty: null,
                             }
                         })
                     })
@@ -470,7 +506,9 @@ function ProductManageDialog(props: Props) {
                 <span></span>
                 <div className="flex items-center space-x-2">
                     <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">제트입고요청</button>
-                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">발주요청</button>
+                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={postOrder}>
+                        발주요청
+                    </button>
                     <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={saveProductGroup}>
                         저장
                     </button>
@@ -574,6 +612,7 @@ function ProductManageDialog(props: Props) {
                         productItemList={productItemList}
                         vendorInfo={vendorInfo}
                         tradeInfo={tradeInfo}
+                        orderList={orderList}
                         onChangeVendor={onChangeVendor}
                         onChangeTrade={onChangeTrade}
                         onChangeCommissionRate={onChangeCommissionRate}
@@ -587,6 +626,7 @@ function ProductManageDialog(props: Props) {
                         onToggleCheckbox={onToggleCheckbox}
                         onChangeOptionsInput={onChangeOptionsInput}
                         itemIsVisibleTrue={itemIsVisibleTrue}
+                        onChangeOrderQty={onChangeOrderQty}
                     />
                 )}
                 {tabId === 'LIST' && (
