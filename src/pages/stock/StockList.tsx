@@ -247,7 +247,7 @@ function StockList() {
 
     return (
         <div>
-            <div className="page-header card flex mb-5">
+            <div className="page-header bg-white border rounded-[10px] flex mb-5">
                 <div>
                     <div className="flex items-center px-4 pt-4 border-b h-[66px] box-border min-w-[70vw]">
                         <div className="flex flex-col justify-center ">
@@ -368,7 +368,7 @@ function StockList() {
                     // resizableColumns
                     // columnResizeMode="expand"
                 >
-                    <Column align="center" className="max-w-[50px]" selectionMode="multiple" selectionAriaLabel="pk" field="pk"></Column>
+                    <Column align="center" className="max-w-[50px]" selectionMode="multiple" selectionAriaLabel="pk" field="pk" />
                     <Column align="center" className="text-[12px]" field="seq" header="NO" bodyStyle={seqBodyTemplate} />
                     <Column align="center" className="text-[12px]" field="managerName" header="담당자" />
                     <Column align="center" className="text-[12px]" field="skuId" header="재고코드" />
@@ -382,6 +382,8 @@ function StockList() {
                         filterField="skuName"
                         header="상품명"
                     />
+                    <Column align="center" field="options.0" header="옵션1" className="text-[12px]" />
+                    <Column align="center" field="options.1" header="옵션2" className="text-[12px]" />
                     <Column
                         align="center"
                         className="text-[12px]"
