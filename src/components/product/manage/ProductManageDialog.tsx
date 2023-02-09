@@ -359,7 +359,7 @@ function ProductManageDialog(props: Props) {
                 const order = Object.entries(orderList)
                     .map((it) => {
                         if (checkList.includes(it[0])) {
-                            return { [it[0]]: it[1] }
+                            return { pk: [it[0]], qty: it[1] }
                         } else {
                             return null
                         }
@@ -367,6 +367,8 @@ function ProductManageDialog(props: Props) {
                     .filter((it) => it)
                 axios.post(BASE_URL + 'products/items/order', order)
                 alert('발주되었습니다.')
+                setOrderList({})
+                setCheckList([])
             }
         } catch (err) {
             console.error(err)
@@ -463,7 +465,6 @@ function ProductManageDialog(props: Props) {
                                 purchasePrice,
                                 hasBarcode,
                                 hasCarton,
-                                orderQty: null,
                             }
                         })
                     })
