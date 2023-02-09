@@ -360,15 +360,12 @@ function StockList() {
                     scrollHeight="82vh"
                     sortMode="multiple"
                     responsiveLayout="scroll"
-                    selection={selection}
-                    onSelectionChange={(e) => setSelection(e.value)}
                     filters={filter}
                     globalFilterFields={globalFilterFields}
                     onValueChange={(e) => console.log('onValueChange : ', e)}
                     // resizableColumns
                     // columnResizeMode="expand"
                 >
-                    <Column align="center" className="max-w-[50px]" selectionMode="multiple" selectionAriaLabel="pk" field="pk" />
                     <Column align="center" className="text-[12px]" field="seq" header="NO" bodyStyle={seqBodyTemplate} />
                     <Column align="center" className="text-[12px]" field="managerName" header="담당자" />
                     <Column align="center" className="text-[12px]" field="skuId" header="재고코드" />
@@ -424,7 +421,7 @@ function StockList() {
                         body={(rowData) => arrayCommaBodyTemplate(rowData.stock.locations)}
                     /> */}
 
-                    {/* <Column align="center" className="text-[12px]" field="log" header="로그" body={logBodyTemplate} /> */}
+                    <Column align="center" className="text-[12px]" field="log" header="로그" body={logBodyTemplate} />
                 </DataTable>
             </div>
             <StockLogDialog open={logOpen} onClose={closeLogModal} logId={logId} />
