@@ -18,6 +18,7 @@ type Props = {
     idx: number
     checkList: string[]
     orderList: any
+    jetRequestList: any
     onToggleCheckbox: (pk: string) => void
     onChangeText: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void
     onChangePurchasePrice: (value: number | null, index: number) => void
@@ -26,6 +27,7 @@ type Props = {
     onChangeCouponPrice: (value: number | null, index: number) => void
     onChangeCommissionRate: (value: number | null, index: number) => void
     onChangeOrderQty: (event: InputNumberChangeParams) => void
+    onChangeJetRequestQty: (event: InputNumberChangeParams) => void
     onChangeDropdown: (event: DropdownChangeParams, index: number) => void
     onChangeImage: (file: File | string, index: number) => void
     onChangeOptionsInput: (event: React.ChangeEvent<HTMLInputElement>, index: number, optionIndex: number) => void
@@ -50,6 +52,7 @@ function ManageListItem(props: Props) {
         idx,
         checkList,
         orderList,
+        jetRequestList,
         onToggleCheckbox,
         onChangeText,
         onChangePurchasePrice,
@@ -60,6 +63,7 @@ function ManageListItem(props: Props) {
         onChangeDropdown,
         onChangeImage,
         onChangeOrderQty,
+        onChangeJetRequestQty,
         onChangeOptionsInput,
         itemIsVisibleTrue,
     } = props
@@ -452,7 +456,13 @@ function ManageListItem(props: Props) {
 
                     <ItemLabel label="제트배송-입고요청수량" noBorderBottom />
                     <div className="col-span-2 border-r">
-                        <InputNumber className="text-center p-1 w-full" inputClassName="border-none w-full px-2 py-1" />
+                        <InputNumber
+                            className="text-center p-1 w-full"
+                            inputClassName="border-none w-full px-2 py-1"
+                            name={pk}
+                            value={jetRequestList[pk]}
+                            onChange={onChangeJetRequestQty}
+                        />
                     </div>
 
                     <ItemLabel label="발주(매입)수량" noBorderBottom />

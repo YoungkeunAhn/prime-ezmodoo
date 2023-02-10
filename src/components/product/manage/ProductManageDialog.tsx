@@ -114,6 +114,7 @@ function ProductManageDialog(props: Props) {
     const [imageList, setImageList] = useState<Image[]>([])
     const [checkList, setCheckList] = useState<string[]>([])
     const [orderList, setOrderList] = useState<any>({})
+    const [jetRequestList, setJetRequestList] = useState<any>({})
     const [hideView, setHideView] = useState<boolean>(false)
 
     const closeModal = useCallback(() => {
@@ -273,6 +274,19 @@ function ProductManageDialog(props: Props) {
         setOrderList((prev: any) => ({ ...prev, [targetName]: event.value }))
     }
 
+    const onChangeJetRequestQty = (event: InputNumberChangeParams) => {
+        const targetName = event.originalEvent.currentTarget.name
+        if (!checkList.includes(targetName)) {
+            setCheckList((prev) => prev.concat(targetName))
+        }
+
+        if (event.value === null) {
+            setCheckList((prev) => prev.filter((it) => it !== targetName))
+        }
+
+        setJetRequestList((prev: any) => ({ ...prev, [targetName]: event.value }))
+    }
+
     const onChangeImage = (file: File | string, index: number) => {
         const foundIndex = findIndex(imageList, { index })
         if (foundIndex > -1) {
@@ -368,6 +382,28 @@ function ProductManageDialog(props: Props) {
                 axios.post(BASE_URL + 'products/items/order', order)
                 alert('발주되었습니다.')
                 setOrderList({})
+                setCheckList([])
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
+    const postJetRequest = async () => {
+        try {
+            if (window.confirm('제트 입고요청 하시겠습니까?')) {
+                const jetRequest = Object.entries(jetRequestList)
+                    .map((it) => {
+                        if (checkList.includes(it[0])) {
+                            return { pk: [it[0]], qty: it[1] }
+                        } else {
+                            return null
+                        }
+                    })
+                    .filter((it) => it)
+                axios.post(BASE_URL + 'products/items/rfm-request', jetRequest)
+                alert('발주되었습니다.')
+                setJetRequestList({})
                 setCheckList([])
             }
         } catch (err) {
@@ -506,7 +542,9 @@ function ProductManageDialog(props: Props) {
             <div className="flex justify-between items-center p-0">
                 <span></span>
                 <div className="flex items-center space-x-2">
-                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">제트입고요청</button>
+                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={postJetRequest}>
+                        제트입고요청
+                    </button>
                     <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={postOrder}>
                         발주요청
                     </button>
@@ -614,6 +652,7 @@ function ProductManageDialog(props: Props) {
                         vendorInfo={vendorInfo}
                         tradeInfo={tradeInfo}
                         orderList={orderList}
+                        jetRequestList={jetRequestList}
                         onChangeVendor={onChangeVendor}
                         onChangeTrade={onChangeTrade}
                         onChangeCommissionRate={onChangeCommissionRate}
@@ -628,6 +667,7 @@ function ProductManageDialog(props: Props) {
                         onChangeOptionsInput={onChangeOptionsInput}
                         itemIsVisibleTrue={itemIsVisibleTrue}
                         onChangeOrderQty={onChangeOrderQty}
+                        onChangeJetRequestQty={onChangeJetRequestQty}
                     />
                 )}
                 {tabId === 'LIST' && (

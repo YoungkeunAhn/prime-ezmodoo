@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { JSONRPCClient } from 'json-rpc-2.0/dist/client'
 
 export const BASE_URL = 'http://api.ezmodoo.com/'

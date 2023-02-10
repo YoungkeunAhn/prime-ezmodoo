@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { map } from 'lodash'
 import numeral from 'numeral'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'

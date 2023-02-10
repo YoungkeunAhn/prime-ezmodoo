@@ -14,6 +14,7 @@ type Props = {
     tradeInfo: ITrade
     hideView: boolean
     orderList: any
+    jetRequestList: any
     onChangeVendor: (event: React.ChangeEvent<HTMLInputElement>) => void
     onChangeTrade: (event: React.ChangeEvent<HTMLInputElement>) => void
     onChangeProductItemText: (event: React.ChangeEvent<HTMLInputElement>, index: number) => void
@@ -26,6 +27,7 @@ type Props = {
     onChangeDeliveryCharge: (value: number | null, index: number) => void
     onChangeCommissionRate: (value: number | null, index: number) => void
     onChangeOrderQty: (event: InputNumberChangeParams) => void
+    onChangeJetRequestQty: (event: InputNumberChangeParams) => void
     onChangeOptionsInput: (event: React.ChangeEvent<HTMLInputElement>, index: number, optionIndex: number) => void
     itemIsVisibleTrue: (pk: string) => void
 }
@@ -38,6 +40,7 @@ function ProductExpandView(props: Props) {
         tradeInfo,
         hideView,
         orderList,
+        jetRequestList,
         onChangeVendor,
         onChangeTrade,
         onChangeProductItemText,
@@ -50,6 +53,7 @@ function ProductExpandView(props: Props) {
         onChangeCouponPrice,
         onToggleCheckbox,
         onChangeOrderQty,
+        onChangeJetRequestQty,
         onChangeOptionsInput,
         itemIsVisibleTrue,
     } = props
@@ -70,6 +74,7 @@ function ProductExpandView(props: Props) {
                                   checkList={checkList}
                                   productItem={productItem}
                                   orderList={orderList}
+                                  jetRequestList={jetRequestList}
                                   onChangeImage={onChangeImage}
                                   onChangeDropdown={onChangeDropdown}
                                   onToggleCheckbox={onToggleCheckbox}
@@ -82,6 +87,7 @@ function ProductExpandView(props: Props) {
                                   onChangeOptionsInput={onChangeOptionsInput}
                                   itemIsVisibleTrue={itemIsVisibleTrue}
                                   onChangeOrderQty={onChangeOrderQty}
+                                  onChangeJetRequestQty={onChangeJetRequestQty}
                               />
                           ))
                         : productItemList
@@ -93,6 +99,7 @@ function ProductExpandView(props: Props) {
                                       checkList={checkList}
                                       productItem={productItem}
                                       orderList={orderList}
+                                      jetRequestList={jetRequestList}
                                       onChangeImage={onChangeImage}
                                       onChangeDropdown={onChangeDropdown}
                                       onToggleCheckbox={onToggleCheckbox}
@@ -105,6 +112,7 @@ function ProductExpandView(props: Props) {
                                       onChangeOptionsInput={onChangeOptionsInput}
                                       itemIsVisibleTrue={itemIsVisibleTrue}
                                       onChangeOrderQty={onChangeOrderQty}
+                                      onChangeJetRequestQty={onChangeJetRequestQty}
                                   />
                               ))}
                 </SortableList>
