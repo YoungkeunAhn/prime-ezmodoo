@@ -33,7 +33,7 @@ import DesignManageList from './pages/design-manage/DesignManageList'
 import InvoiceList from './pages/invoice/InvoiceList'
 import JetRequestList from './pages/jet-warehousing/JetRequestList'
 import ChinaWearOrder from './pages/order/china-wear/ChinaWearOrder'
-import OrderManage from './pages/order/manage/OrderManage'
+import OrderManageList from './pages/order/manage/OrderManageList'
 import ProductContactList from './pages/product/contact/ProductContactList'
 import ValidationTest from './pages/vaildation-test/ValidationTest'
 
@@ -265,7 +265,7 @@ const App = () => {
                     <Route path="/" exact render={() => <Dashboard colorMode={layoutColorMode} location={location} />} />
 
                     <Route path="/table" component={TableDemo} />
-                    <Route path="/order/list" component={OrderManage} />
+                    <Route path="/order/list" component={OrderManageList} />
                     <Route path="/order/china-wear" component={ChinaWearOrder} />
                     <Route path="/stock" component={StockList} />
                     <Route path="/products/contact" component={ProductContactList} />

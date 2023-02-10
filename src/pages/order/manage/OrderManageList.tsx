@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { map } from 'lodash'
 import numeral from 'numeral'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
@@ -127,7 +128,7 @@ const searchCateTextOptions = [
     { label: '발주번호', field: 'orderNum' },
 ]
 
-function OrderManage() {
+function OrderManageList() {
     const [paymentOpen, setPaymentOpen] = useState<boolean>(false)
     const [dialogId, setDialogId] = useState<DialogId>()
     const [searchOptions, setSearchOptions] = useState<SearchOptions>(initSearchOptions)
@@ -166,11 +167,9 @@ function OrderManage() {
         )
     }
     const longTextBodyTemplate = (rowData: any, option: any) => {
-        return (
-            <span className="text-[11px]">
-                {rowData[option.field].length > 100 ? rowData[option.field].slice(0, 100) + '...' : rowData[option.field]}
-            </span>
-        )
+        const text = rowData[option.field]
+
+        return <span className="text-[11px]">{text.length > 100 ? text.slice(0, 100) + '...' : text}</span>
     }
 
     const priorityBodyTemplate = (rowData: any, option: any) => {
@@ -215,16 +214,16 @@ function OrderManage() {
     const getOrderList = async () => {
         try {
             const { data } = await axios.get(BASE_URL + 'orders')
-            // const stockList = map(data, (order, idx) => {
-            //     return {
-            //         ...order,
-            //         seq: idx + 1,
-            //         createdAt: new Date(order.createdAt),
-            //     }
-            // })
-            // setOrderList(stockList)
 
-            console.log(data)
+            setOrderList(
+                map(data, (order) => {
+                    const { cost, orderQty, transitPee } = order
+                    const totalCost = cost * orderQty + transitPee
+                    const exchangRate = 190
+
+                    return { ...order, totalCost, exchangeTotalCost: totalCost * exchangRate }
+                })
+            )
         } catch (err) {
             console.error(err)
         }
@@ -364,4 +363,4 @@ function OrderManage() {
     )
 }
 
-export default OrderManage
+export default OrderManageList

@@ -18,11 +18,19 @@ function TradeInfoBox(props: Props) {
     }
     return (
         <div className="mt-2">
-            <button className="mb-2 bg-[#305496] text-white flex justify-left items-center h-[32px] w-[245px] rounded-r-[40px] pl-6 space-x-3" onClick={onToogleOpen}>
+            <button
+                className="mb-2 bg-[#305496] text-white flex justify-left items-center h-[32px] w-[245px] rounded-r-[40px] pl-6 space-x-3"
+                onClick={onToogleOpen}
+            >
                 {open ? <i className="fa-solid fa-minus"></i> : <i className="fa-solid fa-plus"></i>}
                 <span className="font-bold text-sm">상품 물류정보</span>
             </button>
-            <div className={`grid overflow-hidden grid-cols-6 grid-rows-none border text-sm ${open ? 'h-[128px]' : 'h-[0px] overflow-hidden border-none'}`} style={{ transition: 'height 0.5s' }}>
+            <div
+                className={`grid overflow-hidden grid-cols-6 grid-rows-none border text-sm ${
+                    open ? 'h-[128px]' : 'h-[0px] overflow-hidden border-none'
+                }`}
+                style={{ transition: 'height 0.5s' }}
+            >
                 <div className="col-span-6 bg-[#EFF2F6] font-bold text-center border-b h-[32px] flex items-center justify-center">상품물류 정보</div>
                 <TradeGridBoxItem title="상품 영문명" name="enSkuName" value={enSkuName} onChange={onChange} />
                 <TradeGridBoxItem title="재질 영문명" name="enSkuMaterial" value={enSkuMaterial} onChange={onChange} />
@@ -30,11 +38,29 @@ function TradeInfoBox(props: Props) {
                 <div className="flex items-center border-b">
                     <div className="p-inputgroup border-none">
                         <div className="w-full flex items-center">
-                            <InputText className="border-none w-full px-2 py-1 text-center" name="lwh.width" value={lwh.width || ''} onChange={onChange} placeholder="가로" />
+                            <InputText
+                                className="border-none w-full px-2 py-1 text-center"
+                                name="lwh.width"
+                                value={lwh.width || ''}
+                                onChange={onChange}
+                                placeholder="가로"
+                            />
                             *
-                            <InputText className="border-none w-full px-2 py-1 text-center" name="lwh.length" value={lwh.length || ''} onChange={onChange} placeholder="세로" />
+                            <InputText
+                                className="border-none w-full px-2 py-1 text-center"
+                                name="lwh.length"
+                                value={lwh.length || ''}
+                                onChange={onChange}
+                                placeholder="세로"
+                            />
                             *
-                            <InputText className="border-none w-full px-2 py-1 text-center" name="lwh.height" value={lwh.height || ''} onChange={onChange} placeholder="높이" />
+                            <InputText
+                                className="border-none w-full px-2 py-1 text-center"
+                                name="lwh.height"
+                                value={lwh.height || ''}
+                                onChange={onChange}
+                                placeholder="높이"
+                            />
                         </div>
                         <span className="p-inputgroup-addon h-[32px] bg-[#F8F9FB] border-none ml-1">cm</span>
                     </div>
