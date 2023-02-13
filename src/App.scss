@@ -92,8 +92,8 @@ html {
     font-size: 12px;
 }
 
-.p-datatable-table td + td,
-.p-datatable-table th + th {
+.p-datatable-table td + td:not(.border-l-0),
+.p-datatable-table th + th:not(.border-l-0) {
     border-left: 1px solid #eee !important;
 }
 
@@ -166,4 +166,8 @@ html {
     position: sticky;
     top: 0;
     z-index: 10;
+}
+
+.p-datatable .p-datatable-thead .p-column-title {
+    width: 100%;
 }
