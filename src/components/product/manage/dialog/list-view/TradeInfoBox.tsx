@@ -10,7 +10,7 @@ type Props = {
 
 function TradeInfoBox(props: Props) {
     const { tradeInfo, onChange } = props
-    const { cbm, enSkuMaterial, enSkuName, gwt, lwh, nwt, qtyPerBox, receiptPeriod, tariffRate } = tradeInfo
+    const { cbm, enSkuMaterial, enSkuName, gwt, lwh, nwt, qtyPerBox, boxPerPalette, tariffRate } = tradeInfo
     const [open, setOpen] = useState<boolean>(true)
 
     const onToogleOpen = () => {
@@ -66,7 +66,7 @@ function TradeInfoBox(props: Props) {
                     </div>
                 </div>
                 <TradeGridBoxItem title="박스당 CBM" name="cbm" value={cbm} onChange={onChange} mark="cbm" />
-                <TradeGridBoxItem title="발주 후 입고기간" name="receiptPeriod" value={receiptPeriod} onChange={onChange} mark="일" />
+                <TradeGridBoxItem title="파레트 당 박스수량" name="boxPerPalette" value={boxPerPalette} onChange={onChange} mark="ea" />
                 <TradeGridBoxItem title="박스 입수량" name="qtyPerBox" value={qtyPerBox} onChange={onChange} mark="ea" last />
                 <TradeGridBoxItem title="Net W/T (개당 상품순중량)" name="nwt" value={nwt} onChange={onChange} mark="kg" />
                 <TradeGridBoxItem title="상품 총중량" name="gwt" value={gwt} onChange={onChange} mark="kg" />

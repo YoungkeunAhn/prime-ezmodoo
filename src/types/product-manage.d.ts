@@ -166,7 +166,7 @@ export declare type ITrade = {
         height: number
     }
     cbm: number
-    receiptPeriod: number
+    boxPerPalette: number
     qtyPerBox: number
     nwt: number
     gwt: number

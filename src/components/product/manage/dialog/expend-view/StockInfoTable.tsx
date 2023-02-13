@@ -11,7 +11,7 @@ type Props = {
 
 function TradeInfoTable(props: Props) {
     const { info, onChange } = props
-    const { cbm, enSkuMaterial, enSkuName, gwt, lwh, nwt, qtyPerBox, receiptPeriod, tariffRate } = info
+    const { cbm, enSkuMaterial, enSkuName, gwt, lwh, nwt, qtyPerBox, boxPerPalette, tariffRate } = info
 
     return (
         <table className="text-[12px] w-full border-t-0 table-fixed border">
@@ -57,7 +57,7 @@ function TradeInfoTable(props: Props) {
                 </td>
             </tr>
             <WithMarkCommonTableRow title="박스당 CBM" name="cbm" value={cbm} onChange={onChange} mark="cbm" />
-            <WithMarkCommonTableRow title="발주 후 입고기간" name="receiptPeriod" value={receiptPeriod} onChange={onChange} mark="일" />
+            <WithMarkCommonTableRow title="파레트 당 박스수량" name="boxPerPalette" value={boxPerPalette} onChange={onChange} mark="ea" />
             <WithMarkCommonTableRow title="박스 입수량" name="qtyPerBox" value={qtyPerBox} onChange={onChange} mark="ea" />
             <WithMarkCommonTableRow title="Net W/T (개당 상품순중량)" name="nwt" value={nwt} onChange={onChange} mark="kg" />
             <WithMarkCommonTableRow title="상품총중량" name="gwt" value={gwt} onChange={onChange} mark="kg" />

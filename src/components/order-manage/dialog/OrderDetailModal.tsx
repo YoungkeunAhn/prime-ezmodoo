@@ -1,21 +1,17 @@
 import { Dialog } from 'primereact/dialog'
 import { DropdownChangeParams } from 'primereact/dropdown'
 import { InputNumberChangeParams } from 'primereact/inputnumber'
-import React, { useState } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import OrderTableRow from 'src/components/order-manage/dialog/OrderTableRow'
 import { ITrade, IVendor } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
-import OrderDetailListItem from '../../../../components/order-manage/list-item-box/OrderProductsItem'
+import OrderDetailListItem from '../list-item-box/OrderProductsItem'
 import VendorInfoTable from 'src/components/product/manage/dialog/expend-view/VendorInfoTable'
 import TradeInfoTable from 'src/components/product/manage/dialog/expend-view/StockInfoTable'
+import axios from 'axios'
+import { BASE_URL } from 'src/api/ApiConfig'
 
 type TabId = 'EXPAND' | 'LIST'
-
-type Props = {
-    open: boolean
-    onClose: () => void
-    data: any
-}
 
 const creditInfoOptions = [
     {
@@ -137,15 +133,15 @@ const pakingStateOptions = [
     },
     {
         label: '파렛트',
-        value: '1',
+        value: 'palette',
     },
     {
         label: '박스',
-        value: '2',
+        value: 'box',
     },
 ]
 
-const fakeVendorInfo: IVendor = {
+const initVendor: IVendor = {
     company: {
         address: '',
         bizId: '',
@@ -159,7 +155,7 @@ const fakeVendorInfo: IVendor = {
         name: '',
     },
 }
-const fakeTradeInfo: ITrade = {
+const initTrade: ITrade = {
     cbm: 0,
     enSkuMaterial: '',
     enSkuName: '',
@@ -171,19 +167,19 @@ const fakeTradeInfo: ITrade = {
     },
     nwt: 0,
     qtyPerBox: 0,
-    receiptPeriod: 0,
+    boxPerPalette: 10,
     tariffRate: 0,
 }
 
-const fakeOrderInfo = {
-    orderDate: '2022-11-22',
-    orderQty: null,
-    creditDate: '2022-11-22',
+const initOrder = {
+    orderDate: '',
+    orderQty: 0,
+    creditDate: '',
     totalCost: null,
     creditInfo: '',
     deliverInfo: '',
-    arrivalDate: '2022-11-22',
-    postDate: '2022-11-22',
+    arrivalDate: '',
+    postDate: '',
 
     comePlace: '',
     deliveryCharge: null,
@@ -195,9 +191,18 @@ const fakeOrderInfo = {
     tradeMemo: '',
 }
 
+type Props = {
+    pk: string
+    open: boolean
+    onClose: () => void
+    data?: any
+}
+
 function OrderProductItem(props: Props) {
-    const { open, onClose } = props
-    const [orderInfo, setOrderInfo] = useState(fakeOrderInfo)
+    const { pk, open, onClose } = props
+    const [orderInfo, setOrderInfo] = useState(initOrder)
+    const [tradeInfo, setTradeInfo] = useState<ITrade>(initTrade)
+    const [vendorInfo, setVendorInfo] = useState<IVendor>(initVendor)
 
     const fakeHeaderInfo = {
         manager: '안영근',
@@ -220,6 +225,8 @@ function OrderProductItem(props: Props) {
     }
 
     const onChangeOrderNumber = (event: InputNumberChangeParams) => {
+        if (event.originalEvent.target.name === 'orderQty') {
+        }
         setOrderInfo((prev) => ({
             ...prev,
             [event.originalEvent.target.name]: event.value,
@@ -242,6 +249,24 @@ function OrderProductItem(props: Props) {
         )
     }
 
+    const getOrder = useCallback(async () => {
+        try {
+            const { data } = await axios.get(BASE_URL + 'orders/' + pk)
+
+            if (data) {
+                setOrderInfo(data.order)
+                setTradeInfo(data.trade)
+                setVendorInfo(data.vendor)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }, [pk])
+
+    useEffect(() => {
+        getOrder()
+    }, [getOrder])
+
     return (
         <Dialog header={ModalHeader} visible={open} onHide={onClose} className="max-w-[1500px] w-full min-w-[500px]" closable={false}>
             <div className="flex space-x-2">
@@ -256,8 +281,8 @@ function OrderProductItem(props: Props) {
                                 <OrderDetailListItem />
                             </ul>
                             <div className="grid grid-cols-2 mt-2 w-full gap-1">
-                                <VendorInfoTable info={fakeVendorInfo} onChange={() => {}} />
-                                <TradeInfoTable info={fakeTradeInfo} onChange={() => {}} />
+                                <VendorInfoTable info={vendorInfo} onChange={() => {}} />
+                                <TradeInfoTable info={tradeInfo} onChange={() => {}} />
                             </div>
                         </div>
 
@@ -279,6 +304,21 @@ function OrderProductItem(props: Props) {
                                     name="orderQty"
                                     numberValue={orderInfo.orderQty}
                                     onChange={onChangeOrderNumber}
+                                    mark="ea"
+                                />
+                                <OrderTableRow
+                                    title={orderInfo.pakingState === 'palette' ? '파레트수량(총수량)' : '박스수량(총수량)'}
+                                    type="text"
+                                    name=""
+                                    value={
+                                        orderInfo.pakingState === 'palette'
+                                            ? `${orderInfo.orderQty ?? 0 / tradeInfo.boxPerPalette / tradeInfo.qtyPerBox} (${
+                                                  orderInfo.orderQty ?? ''
+                                              })`
+                                            : `${orderInfo.orderQty / tradeInfo.qtyPerBox} (${orderInfo.orderQty ?? ''})`
+                                    }
+                                    onChange={() => {}}
+                                    disabled
                                     mark="ea"
                                 />
                                 <OrderTableRow

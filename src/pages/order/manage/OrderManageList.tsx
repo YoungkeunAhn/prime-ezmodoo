@@ -9,100 +9,7 @@ import { BASE_URL } from 'src/api/ApiConfig'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
 import SearchDateOption from 'src/components/search-box/SearchDateOption'
 import { dateBodyTemplate, imageBodyTemplate, printBodyTemplate, seqBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
-import OrderProductItem from './detail-modal/OrderDetailModal'
-
-const fakeData = [
-    {
-        id: '1234',
-        priority: '1',
-        orderDate: '2022-10-21 10:10:10',
-        manager: '안영근',
-        image: 'http://im.imama.kr/imama/imgs/19090352_20221019_090120.jpg',
-        url: 'http://im.imama.kr/imama/',
-        productName: '로지 샤프트 펄 실내화 슬리퍼 2P',
-        orderNum: '2963422620261524134',
-        orderQty: 600,
-        cost: 45.0,
-        transitPee: 0,
-        paymentDate: '2022-10-21',
-        factoryReleaseDate: '2022-10-21',
-        arrivalReleaseDate: '2022-10-21',
-        chinaTransitInfo: '安能 3005-1600-6972',
-        productDistribution: [
-            '카톤사이즈: 60*45*40',
-            'Net W/T(Kg): 201.4',
-            'Gross W/T (Kg): 205',
-            '박스입수량(EA): 130',
-            '박스수량: 8.1538461538462',
-            'Measurement (CBM): 0.88061538461538',
-        ],
-        mdMemo: '바코드 전달 완료- 추가요금 50원 합의 완료-(단가+0.1) 交通银行 622262 016000 2492 946 李采蔚 /추가배송비 15위안은 다음발주시 계산',
-        traderMemo: '금액수정완료/ 업체가 속해 있는 지역 코로나 봉쇄로 인해 출고 미정',
-        packingState: '파렛트',
-    },
-    {
-        id: '1233',
-        priority: '2',
-        orderDate: '2022-10-21 10:10:10',
-        manager: '안영근',
-        image: 'http://im.imama.kr/imama/imgs/19090352_20221019_090120.jpg',
-        url: 'http://im.imama.kr/imama/',
-        productName: '로지 샤프트 펄 실내화 슬리퍼 2P',
-        orderNum: '2963422620261524134',
-        orderQty: 200,
-        cost: 30.1,
-        transitPee: 200,
-        paymentDate: '2022-10-21',
-        factoryReleaseDate: '2022-10-21',
-        arrivalReleaseDate: '2022-10-21',
-        chinaTransitInfo: '安能 3005-1600-6972',
-        productDistribution: [
-            '카톤사이즈: 60*45*40',
-            'Net W/T(Kg): 201.4',
-            'Gross W/T (Kg): 205',
-            '박스입수량(EA): 130',
-            '박스수량: 8.1538461538462',
-            'Measurement (CBM): 0.88061538461538',
-        ],
-        mdMemo: '바코드 전달 완료- 추가요금 50원 합의 완료-(단가+0.1) 交通银行 622262 016000 2492 946 李采蔚 /추가배송비 15위안은 다음발주시 계산',
-        traderMemo: '금액수정완료/ 업체가 속해 있는 지역 코로나 봉쇄로 인해 출고 미정',
-        packingState: '파렛트',
-    },
-    {
-        id: '1232',
-        priority: '1',
-        orderDate: '2022-10-21 10:10:10',
-        manager: '안영근',
-        image: 'http://im.imama.kr/imama/imgs/19090352_20221019_090120.jpg',
-        url: 'http://im.imama.kr/imama/',
-        productName: '로지 샤프트 펄  2P',
-        orderNum: '2963422620261524134',
-        orderQty: 480,
-        cost: 13,
-        transitPee: 1040,
-        paymentDate: '2022-10-21',
-        factoryReleaseDate: '2022-10-21',
-        arrivalReleaseDate: '2022-10-21',
-        chinaTransitInfo: '安能 3005-1600-6972',
-        productDistribution: [
-            '카톤사이즈: 60*45*40',
-            'Net W/T(Kg): 201.4',
-            'Gross W/T (Kg): 205',
-            '박스입수량(EA): 130',
-            '박스수량: 8.1538461538462',
-            'Measurement (CBM): 0.88061538461538',
-        ],
-        mdMemo: '바코드 전달 완료- 추가요금 50원 합의 완료-(단가+0.1) 交通银行 622262 016000 2492 946 李采蔚 /추가배송비 15위안은 다음발주시 계산',
-        traderMemo: '금액수정완료/ 업체가 속해 있는 지역 코로나 봉쇄로 인해 출고 미정',
-        packingState: '파렛트',
-    },
-].map((data) => {
-    const { cost, orderQty, transitPee } = data
-    const totalCost = cost * orderQty + transitPee
-    const exchangRate = 190
-
-    return { ...data, totalCost, exchangeTotalCost: totalCost * exchangRate }
-})
+import OrderProductItem from '../../../components/order-manage/dialog/OrderDetailModal'
 
 type DialogId = 'DETAIL'
 
@@ -128,15 +35,21 @@ const searchCateTextOptions = [
     { label: '발주번호', field: 'orderNum' },
 ]
 
+type DetailDialogProps = {
+    pk: string
+}
+
 function OrderManageList() {
     const [paymentOpen, setPaymentOpen] = useState<boolean>(false)
     const [dialogId, setDialogId] = useState<DialogId>()
+    const [detailDialogProps, setDetailDialogProps] = useState<DetailDialogProps>({ pk: '' })
     const [searchOptions, setSearchOptions] = useState<SearchOptions>(initSearchOptions)
     const [selection, setSelection] = useState([])
-    const [orderList, setOrderList] = useState<any[]>(fakeData)
+    const [orderList, setOrderList] = useState<any[]>([])
 
-    const openDetailDialog = () => {
+    const openDetailDialog = (pk: string) => {
         setDialogId('DETAIL')
+        setDetailDialogProps({ pk })
     }
 
     const closeModal = () => {
@@ -161,7 +74,7 @@ function OrderManageList() {
 
     const productNameBodyTemplate = (rowData: any) => {
         return (
-            <span className="flex-1 p-1" onClick={openDetailDialog}>
+            <span className="flex-1 p-1" onClick={() => openDetailDialog(rowData.pk)}>
                 {rowData.productName}
             </span>
         )
@@ -358,7 +271,7 @@ function OrderManageList() {
                     <Column align="center" field="print" header="인쇄" body={printBodyTemplate} />
                 </DataTable>
             </div>
-            <OrderProductItem open={dialogId === 'DETAIL'} onClose={closeModal} data={fakeData} />
+            <OrderProductItem open={dialogId === 'DETAIL'} onClose={closeModal} {...detailDialogProps} />
         </div>
     )
 }

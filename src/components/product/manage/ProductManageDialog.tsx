@@ -44,7 +44,7 @@ const initTradeInfo: ITrade = {
         height: 0,
     },
     cbm: 0,
-    receiptPeriod: 0,
+    boxPerPalette: 0,
     gwt: 0,
     nwt: 0,
     qtyPerBox: 0,
@@ -515,7 +515,7 @@ function ProductManageDialog(props: Props) {
                     nwt,
                     qtyPerBox,
                     tariffRate,
-                    receiptPeriod,
+                    boxPerPalette,
                     vendors: [vendor],
                 } = trade
                 const {
@@ -526,7 +526,7 @@ function ProductManageDialog(props: Props) {
                 } = vendor
 
                 setVendorInfo({ memo, company, officer, linkUrls: linkUrls?.length > 0 ? linkUrls : ['', ''] })
-                setTradeInfo({ enSkuMaterial, enSkuName, cbm, lwh, gwt, nwt, qtyPerBox, tariffRate, receiptPeriod })
+                setTradeInfo({ enSkuMaterial, enSkuName, cbm, lwh, gwt, nwt, qtyPerBox, tariffRate, boxPerPalette })
             }
         } catch (err) {
             console.error(err)

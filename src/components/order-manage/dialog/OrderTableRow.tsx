@@ -22,12 +22,12 @@ type Props = {
 }
 
 function OrderTableRow(props: Props) {
-    const { title, type, name, value = '', disabled, mark, currencySymbol, digitLength, numberValue, options = [], onChange } = props
+    const { title, type, name, value, disabled, mark, currencySymbol, digitLength, numberValue, options = [], onChange } = props
 
     return (
         <>
             <div className="border-b border-r p-2 font-bold bg-[#F8F9FB] flex items-center">{title}</div>
-            <div className={`col-span-2 border-b ${type === 'textarea' ? 'h-[134px] overflow-y-auto' : ''}`}>
+            <div className={`col-span-2 border-b ${type === 'textarea' ? 'h-[113px] overflow-y-hidden' : ''}`}>
                 {(type === 'text' || type === 'date') && (
                     <InputText
                         className="w-full border-none h-[32px]"
@@ -51,8 +51,8 @@ function OrderTableRow(props: Props) {
                 )}
                 {type === 'textarea' && (
                     <InputTextarea
-                        className="w-full border-none h-full"
-                        rows={4}
+                        className="w-full border-none mt-1"
+                        rows={5}
                         autoResize
                         name={name}
                         value={value}
