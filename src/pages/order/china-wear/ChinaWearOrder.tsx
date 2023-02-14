@@ -170,7 +170,7 @@ function ChinaWearOrder() {
                     <Column align="center" field="productName" header="상품명" body={productNameBodyTemplate} headerStyle={{ minWidth: '200px' }} />
                     <Column align="center" field="options.0" header="옵션1" />
                     <Column align="center" field="options.1" header="옵션2" />
-                    <Column align="center" field="url" header="URL" body={urlBodyTemplate} />
+                    <Column align="center" field="url" header="URL" body={(rowData) => urlBodyTemplate(rowData.url)} />
                     <Column align="center" field="cost" header="수입단가" />
                     <Column align="center" field="stock.coopang" header="창고재고" />
                     <Column align="center" field="stock.warehouse" header="쿠팡재고" />

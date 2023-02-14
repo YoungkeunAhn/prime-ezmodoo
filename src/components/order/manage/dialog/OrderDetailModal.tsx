@@ -2,7 +2,7 @@ import { Dialog } from 'primereact/dialog'
 import { DropdownChangeParams } from 'primereact/dropdown'
 import { InputNumberChangeParams } from 'primereact/inputnumber'
 import React, { useState, useEffect, useCallback } from 'react'
-import OrderTableRow from 'src/components/order-manage/dialog/OrderTableRow'
+import OrderTableRow from 'src/components/order/manage/dialog/OrderTableRow'
 import { ITrade, IVendor } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
 import OrderDetailListItem from '../list-item-box/OrderProductsItem'
@@ -141,6 +141,12 @@ const pakingStateOptions = [
     },
 ]
 
+const fakeHeaderInfo = {
+    manager: '안영근',
+    createAt: '2021-12-06 16:08:50',
+    title: '로지 토끼 슬리퍼',
+}
+
 const initVendor: IVendor = {
     company: {
         address: '',
@@ -203,12 +209,6 @@ function OrderProductItem(props: Props) {
     const [orderInfo, setOrderInfo] = useState(initOrder)
     const [tradeInfo, setTradeInfo] = useState<ITrade>(initTrade)
     const [vendorInfo, setVendorInfo] = useState<IVendor>(initVendor)
-
-    const fakeHeaderInfo = {
-        manager: '안영근',
-        createAt: '2021-12-06 16:08:50',
-        title: '로지 토끼 슬리퍼',
-    }
 
     const onChangeOrderText = (event: React.ChangeEvent<HTMLInputElement>) => {
         setOrderInfo((prev) => ({
@@ -343,7 +343,7 @@ function OrderProductItem(props: Props) {
                                     type="dropdown"
                                     name="creditInfo"
                                     value={orderInfo.creditInfo}
-                                    onChange={onChangeOrderText}
+                                    onChange={onChangeOrderDropdown}
                                     options={creditInfoOptions}
                                 />
                                 <OrderTableRow
@@ -375,7 +375,7 @@ function OrderProductItem(props: Props) {
                                     type="dropdown"
                                     name="comePlace"
                                     value={orderInfo.comePlace}
-                                    onChange={onChangeOrderText}
+                                    onChange={onChangeOrderDropdown}
                                     options={comePlaceOptions}
                                 />
                                 <OrderTableRow

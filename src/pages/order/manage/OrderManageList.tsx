@@ -9,7 +9,7 @@ import { BASE_URL } from 'src/api/ApiConfig'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
 import SearchDateOption from 'src/components/search-box/SearchDateOption'
 import { dateBodyTemplate, imageBodyTemplate, printBodyTemplate, seqBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
-import OrderProductItem from '../../../components/order-manage/dialog/OrderDetailModal'
+import OrderProductItem from '../../../components/order/manage/dialog/OrderDetailModal'
 
 type DialogId = 'DETAIL'
 
@@ -83,14 +83,6 @@ function OrderManageList() {
         const text = rowData[option.field]
 
         return <span className="text-[11px]">{text.length > 100 ? text.slice(0, 100) + '...' : text}</span>
-    }
-
-    const priorityBodyTemplate = (rowData: any, option: any) => {
-        const options = [
-            { label: '담당자확인', value: '1' },
-            { label: '발주확정', value: '2' },
-        ]
-        return <Dropdown className="w-full border-none" options={options} optionLabel="label" optionValue="value" value={rowData[option.field]} />
     }
 
     const orderNumBodyTemplate = (rowData: any, option: any) => {

@@ -3,7 +3,7 @@ import { Dropdown } from 'primereact/dropdown'
 import { InputText } from 'primereact/inputtext'
 import { InputTextarea } from 'primereact/inputtextarea'
 import React, { useState } from 'react'
-import CommonInfoTable from '../../../../components/order-manage/dialog/CommonInfoTable'
+import CommonInfoTable from '../../../../components/order/manage/dialog/CommonInfoTable'
 import ContentHeader from './ContentHeader'
 import OrderDetailListItem from './OrderDetailListItem'
 
