@@ -42,7 +42,7 @@ export declare type UnitTrade = {
     cbm: number
     lwh: {
         length: number
-        weight: number
+        width: number
         height: number
     }
     gwt: number
@@ -52,6 +52,9 @@ export declare type UnitTrade = {
     tariffRate: number
     receiptPeriod: number
     vendors: UnitTradeVendor[]
+
+    hasBarcode?: string | null
+    hasCarton?: string | null
 }
 
 export declare type ProductItemUnit = {
@@ -81,14 +84,23 @@ export declare type ProductItemUnit = {
 
 export declare type ProductItem = {
     pk: string
+
+    isDeleted: boolean
+    isVisible: boolean
+
     itemId: string
     itemName: string
-    itemAttr?: { [key: string]: string }
+    itemAttr?: any
     itemImageUrls: string[]
     itemOptions: string[]
+    itemDetails: any[]
+
     marketSkuId: string
     marketQrcode: string
     marketBarcode: string
+
+    cnItemName: string
+
     sellPrice: number
     salePrice: number
     couponPrice: number
@@ -108,12 +120,21 @@ export declare type Product = {
     sellerName: string
     marketId: string
     marketName: string
-    memo: string
+    memo?: string //없어진듯
     attrs: any[] //나중에 사용
     items: ProductItem[]
 }
 
 export declare type ProductsGruop = {
+    createdAt: string
+    deletedAt: string
+    isDeleted: boolean
+    isSales: boolean
+    isVisible: boolean
+    managerId: string
+    managerName: string
+    managerPk: string
+
     pk: string
     productsId: string
     productsCode: string
@@ -121,11 +142,6 @@ export declare type ProductsGruop = {
     productImageUrl: string
     productsLinkUrls: string[]
     products: Product[]
-
-    sellerList: string
-    marketList: string
-
-    isSales: boolean
 }
 
 export declare type CommonTableContent = {

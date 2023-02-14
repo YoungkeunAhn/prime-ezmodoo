@@ -3,7 +3,7 @@ import { DropdownChangeParams } from 'primereact/dropdown'
 import { InputNumberChangeParams } from 'primereact/inputnumber'
 import React, { useState, useEffect, useCallback } from 'react'
 import OrderTableRow from 'src/components/order/manage/dialog/OrderTableRow'
-import { ITrade, IVendor } from 'src/types/product-manage'
+import { ITrade, IVendor, ProductsGruop } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
 import OrderDetailListItem from '../list-item-box/OrderProductsItem'
 import VendorInfoTable from 'src/components/product/manage/dialog/expend-view/VendorInfoTable'
@@ -197,6 +197,104 @@ const initOrder = {
     tradeMemo: '',
 }
 
+const productsGroup: ProductsGruop[] = [
+    {
+        pk: '1234',
+        createdAt: '2023-02-14',
+        deletedAt: '',
+        isDeleted: false,
+        isVisible: true,
+        isSales: true,
+
+        managerName: '테스트',
+        managerId: '',
+        managerPk: '',
+        productsCode: '',
+        productsId: '',
+        productsLinkUrls: ['', ''],
+        productImageUrl: '',
+        productsName: '로지토끼슬리퍼',
+        products: [
+            {
+                pk: 'p1234',
+                productId: '',
+                productName: '로지토끼슬리퍼',
+                sellerPk: '',
+                sellerName: '아이마마',
+                marketId: '',
+                marketName: '쿠팡-로켓',
+                attrs: [],
+                items: [
+                    {
+                        cnItemName: '',
+                        commissionRate: 10,
+                        couponPrice: 1000,
+                        deliveryCharge: 0,
+                        isDeleted: false,
+                        isVisible: true,
+                        itemDetails: [],
+                        itemId: '24234',
+                        itemImageUrls: ['http://api.ezmodoo.com/files/63d8a7702c85d_d6a32f9149ba68b7_1617bbfc4af261cb31de93e76a5f7b1dc93f9c5c_jpg'],
+                        itemName: '',
+                        itemOptions: ['노랑', '라지'],
+                        marketBarcode: '23423423423',
+                        marketQrcode: '',
+                        marketSkuId: '234234234',
+                        memo: '',
+                        optionalCharge: 0,
+                        pk: '63e9d511649513298e0bd4b9',
+                        salePrice: 10000,
+                        sellPrice: 0,
+                        stockQty: 0,
+                        units: [
+                            {
+                                barcode: '',
+                                enSkuMaterial: '',
+                                enSkuName: '',
+                                hscode: '',
+                                memo: '',
+                                pk: '63e9e86c649513298e0bd4bf',
+                                qrcode: '',
+                                skuAttr: {},
+                                skuId: '',
+                                skuName: '33333333333',
+                                stock: { totalQty: 0, disusedQty: 0, availableQty: 0, locations: ['x-1-1', 'y-1-1', 'z-1-1'] },
+                                createdAt: '2023-02-14',
+                                image: '',
+                                order: {
+                                    lastReceiptDate: '',
+                                    lastReceiptPrice: 0,
+                                    lastReceiptQty: 0,
+                                    totalReceiptPrice: 0,
+                                },
+                                skuCode: '',
+                                trade: {
+                                    cbm: 0,
+                                    costPrice: 0,
+                                    currencyCost: 12,
+                                    currencyUnit: 'CNY',
+                                    gwt: 0,
+                                    hasBarcode: '',
+                                    hasCarton: null,
+                                    lwh: { width: 0, height: 0, length: 0 },
+                                    nwt: 0,
+                                    purchasePrice: 0,
+                                    qtyPerBox: 0,
+                                    receiptPeriod: 0,
+
+                                    tariffCode: 'NFA1',
+                                    tariffRate: 0,
+                                    vendors: [],
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+        ],
+    },
+]
+
 type Props = {
     pk: string
     open: boolean
@@ -305,6 +403,7 @@ function OrderProductItem(props: Props) {
                                     numberValue={orderInfo.orderQty}
                                     onChange={onChangeOrderNumber}
                                     mark="ea"
+                                    disabled
                                 />
                                 <OrderTableRow
                                     title={orderInfo.pakingState === 'palette' ? '파레트수량(총수량)' : '박스수량(총수량)'}
@@ -337,6 +436,7 @@ function OrderProductItem(props: Props) {
                                     onChange={onChangeOrderNumber}
                                     currencySymbol="￥"
                                     digitLength={2}
+                                    disabled
                                 />
                                 <OrderTableRow
                                     title="결제정보"

@@ -63,12 +63,16 @@ const initHeaderInfo: HeaderInfo = {
 
 const initContentProductItem: ContentProductItem = {
     pk: '',
+
     marketBarcode: '',
     marketSkuId: '',
     marketQrcode: '',
+
     itemId: '',
     itemImageUrls: [''],
     itemOptions: ['', ''],
+    itemDetails: [],
+    itemAttr: [],
     itemName: '',
     marketId: '',
     productName: '',
@@ -93,7 +97,10 @@ const initContentProductItem: ContentProductItem = {
     disusedQty: 0,
     reorderPeriod: 0,
     purchasePrice: 0,
+
     isVisible: true,
+    isDeleted: false,
+
     hasBarcode: null,
     hasCarton: null,
     units: [],
