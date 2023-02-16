@@ -5,7 +5,7 @@ import React, { useState, useEffect, useCallback } from 'react'
 import OrderTableRow from 'src/components/order/manage/dialog/OrderTableRow'
 import { ITrade, IVendor, ProductsGruop } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
-import OrderDetailListItem from '../list-item-box/OrderProductsItem'
+import OrderDetailListItem from './list-item-box/OrderProductsItem'
 import VendorInfoTable from 'src/components/product/manage/dialog/expend-view/VendorInfoTable'
 import TradeInfoTable from 'src/components/product/manage/dialog/expend-view/StockInfoTable'
 import axios from 'axios'
@@ -336,8 +336,8 @@ function OrderProductItem(props: Props) {
             <div className="flex justify-between items-center p-0">
                 <span></span>
                 <div className="flex items-center space-x-2">
-                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">제트입고요청</button>
-                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">발주요청</button>
+                    {/* <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">제트입고요청</button>
+                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">발주요청</button> */}
                     <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">저장</button>
                     <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={onClose}>
                         닫기
@@ -420,14 +420,15 @@ function OrderProductItem(props: Props) {
                                     disabled
                                     mark="ea"
                                 />
-                                <OrderTableRow
-                                    title="결제일"
-                                    type="date"
-                                    name="creditDate"
-                                    value={orderInfo.creditDate}
-                                    onChange={onChangeOrderText}
-                                />
 
+                                <OrderTableRow
+                                    title="중국내륙운송비"
+                                    type="number"
+                                    name="deliveryCharge"
+                                    numberValue={orderInfo.deliveryCharge}
+                                    onChange={onChangeOrderNumber}
+                                    currencySymbol="￥"
+                                />
                                 <OrderTableRow
                                     title="구매총금액"
                                     type="number"
@@ -437,6 +438,13 @@ function OrderProductItem(props: Props) {
                                     currencySymbol="￥"
                                     digitLength={2}
                                     disabled
+                                />
+                                <OrderTableRow
+                                    title="결제일"
+                                    type="date"
+                                    name="creditDate"
+                                    value={orderInfo.creditDate}
+                                    onChange={onChangeOrderText}
                                 />
                                 <OrderTableRow
                                     title="결제정보"
@@ -478,16 +486,9 @@ function OrderProductItem(props: Props) {
                                     onChange={onChangeOrderDropdown}
                                     options={comePlaceOptions}
                                 />
+
                                 <OrderTableRow
-                                    title="중국내륙운송비"
-                                    type="number"
-                                    name="deliveryCharge"
-                                    numberValue={orderInfo.deliveryCharge}
-                                    onChange={onChangeOrderNumber}
-                                    currencySymbol="￥"
-                                />
-                                <OrderTableRow
-                                    title="운송장정보"
+                                    title="운송장번호"
                                     type="text"
                                     name="deleveryNumberInfo"
                                     value={orderInfo.deleveryNumberInfo}

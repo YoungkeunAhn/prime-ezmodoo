@@ -8,7 +8,14 @@ import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
 import SearchDateOption from 'src/components/search-box/SearchDateOption'
-import { dateBodyTemplate, imageBodyTemplate, printBodyTemplate, seqBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
+import {
+    dateBodyTemplate,
+    imageBodyTemplate,
+    numberBodyTemplate,
+    printBodyTemplate,
+    seqBodyTemplate,
+    urlBodyTemplate,
+} from 'src/hooks/data-table-hooks/BodyHooks'
 import OrderProductItem from '../../../components/order/manage/dialog/OrderDetailModal'
 
 type DialogId = 'DETAIL'
@@ -247,7 +254,7 @@ function OrderManageList() {
                         className="cursor-pointer"
                     />
                     <Column align="center" field="orderNum" header="주문번호" body={orderNumBodyTemplate} />
-                    <Column align="center" field="orderQty" header="발주수량" sortable />
+                    <Column align="center" field="orderQty" header="발주수량" sortable body={(rowData) => numberBodyTemplate(rowData.orderQty)} />
                     <Column align="center" field="cost" header="구매단가" sortable body={cnySymbolBodyTemplate} />
                     <Column align="center" field="transitPee" header="중국운송비" sortable body={cnySymbolBodyTemplate} />
                     <Column align="center" field="totalCost" header="구매총액" sortable body={cnySymbolBodyTemplate} />
