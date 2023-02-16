@@ -4,13 +4,12 @@ import { FilterMatchMode, FilterOperator } from 'primereact/api'
 import { Button } from 'primereact/button'
 import { Column } from 'primereact/column'
 import { DataTable, DataTableFilterMeta } from 'primereact/datatable'
-import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
-import { InputNumber } from 'primereact/inputnumber'
-import { SelectButton, SelectButtonChangeParams } from 'primereact/selectbutton'
+import { DropdownChangeParams } from 'primereact/dropdown'
+import { InputNumberChangeParams } from 'primereact/inputnumber'
+import { SelectButtonChangeParams } from 'primereact/selectbutton'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
-import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
-import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
+import PageHeader from 'src/common/page-header/PageHeader'
 import { dateBodyTemplate, imageBodyTemplate, numberBodyTemplate, seqBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { lineHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 import { ProductItemUnit } from 'src/types/product-manage'
@@ -23,16 +22,16 @@ type SearchOptions = {
     year: string
     month: string
 
-    dateRangeCate: 'order.lastReceiptDate'
+    rangeDateCate: 'order.lastReceiptDate'
     startDate: Date
     endDate: Date
 
     searchCate: 'global' | 'skuName' | 'managerName' | 'skuId' | 'barcode'
     searchText: string
 
-    searchRangeCate: 'stock.availableQty' | 'order.totalReceiptPrice' | 'order.lastReceiptPrice' | 'order.lastReceiptQty'
-    searchNumberStart: number | null
-    searchNumberEnd: number | null
+    rangeNumberCate: 'stock.availableQty' | 'order.totalReceiptPrice' | 'order.lastReceiptPrice' | 'order.lastReceiptQty'
+    startNumber: number | null
+    endNumber: number | null
 
     serachIsStockQty: string[]
 }
@@ -44,13 +43,13 @@ const initSearhOptions: SearchOptions = {
     year: '',
     month: '',
 
-    dateRangeCate: 'order.lastReceiptDate',
+    rangeDateCate: 'order.lastReceiptDate',
     startDate: new Date(),
     endDate: new Date(),
 
-    searchRangeCate: 'stock.availableQty',
-    searchNumberStart: null,
-    searchNumberEnd: null,
+    rangeNumberCate: 'stock.availableQty',
+    startNumber: null,
+    endNumber: null,
 
     serachIsStockQty: ['hasStock', 'emptyStock'],
 }
@@ -63,19 +62,19 @@ const searchCateTextOptions = [
     { label: '재고바코드', field: 'barcode' },
 ]
 
-const searchRangeCateOptions: SearchCate[] = [
+const rangeNumberCateOptions: SearchCate[] = [
     { label: '재고수량', field: 'stock.availableQty' },
     { label: '재고금액', field: 'order.totalReceiptPrice' },
     { label: '최근입고가', field: 'order.lastReceiptPrice' },
     { label: '최근입고수량', field: 'order.lastReceiptQty' },
 ]
 
-const selectBtnOptions = [
+const multipleSelectOptions = [
     { name: '재고있음', value: 'hasStock' },
     { name: '재고없음', value: 'emptyStock' },
 ]
 
-const dateRangeCateOptions = [{ label: '최근입고일', field: 'order.lastReceiptDate' }]
+const rangeDateCateOptions = [{ label: '최근입고일', field: 'order.lastReceiptDate' }]
 
 const initFileter: DataTableFilterMeta = {
     global: { value: '', matchMode: FilterMatchMode.CONTAINS },
@@ -140,18 +139,22 @@ function StockList() {
         )
     }
 
-    const onChangeSearchOptionDropdown = (event: DropdownChangeParams) => {
+    const onChangeCateDropdown = (event: DropdownChangeParams) => {
         setSearchOptions((prev) => ({
             ...prev,
             [event.target.name]: event.value,
         }))
     }
 
-    const onChangeSearchOptionInput = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const onChangeText = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchOptions((prev) => ({
             ...prev,
             [event.target.name]: event.target.value,
         }))
+    }
+
+    const onChangeNumbers = (event: InputNumberChangeParams) => {
+        setSearchOptions((prev) => ({ ...prev, [event.originalEvent.target.name]: event.value }))
     }
 
     const onChangeSelectBtn = (event: SelectButtonChangeParams) => {
@@ -175,7 +178,7 @@ function StockList() {
     }
 
     const onSearch = () => {
-        const { searchCate, searchText, searchRangeCate, searchNumberStart, searchNumberEnd, startDate, endDate } = searchOptions
+        const { searchCate, searchText, rangeNumberCate, startNumber, endNumber, startDate, endDate } = searchOptions
 
         const searchCateFilter = { value: searchText, matchMode: FilterMatchMode.CONTAINS }
         const skuNameFilter = {
@@ -185,8 +188,8 @@ function StockList() {
         const rangeNumberFilter = {
             operator: FilterOperator.AND,
             constraints: [
-                { value: searchNumberStart || 0, matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO },
-                { value: searchNumberEnd, matchMode: FilterMatchMode.LESS_THAN_OR_EQUAL_TO },
+                { value: startNumber || 0, matchMode: FilterMatchMode.GREATER_THAN_OR_EQUAL_TO },
+                { value: endNumber, matchMode: FilterMatchMode.LESS_THAN_OR_EQUAL_TO },
             ],
         }
         const rangeCreatedAtFilter = {
@@ -201,7 +204,7 @@ function StockList() {
             setFilter((prev) => ({
                 ...prev,
                 skuName: skuNameFilter,
-                [searchRangeCate]: rangeNumberFilter,
+                [rangeNumberCate]: rangeNumberFilter,
                 createdAt: rangeCreatedAtFilter,
 
                 // marketId: marketIdFilter,
@@ -210,7 +213,7 @@ function StockList() {
             setFilter((prev) => ({
                 ...prev,
                 [searchCate]: searchCateFilter,
-                [searchRangeCate]: rangeNumberFilter,
+                [rangeNumberCate]: rangeNumberFilter,
                 createdAt: rangeCreatedAtFilter,
 
                 // marketId: marketIdFilter,
@@ -247,7 +250,7 @@ function StockList() {
 
     return (
         <div>
-            <div className="page-header bg-white border rounded-[10px] flex mb-5">
+            {/* <div className="page-header bg-white border rounded-[10px] flex mb-5">
                 <div>
                     <div className="flex items-center px-4 pt-4 border-b h-[66px] box-border min-w-[70vw]">
                         <div className="flex flex-col justify-center ">
@@ -257,27 +260,20 @@ function StockList() {
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : {unitList.length}</span>
                     </div>
                     <div className="flex space-x-4 px-4 pt-4">
-                        {/* <SearchMarketIdOption value={searchOptions.marketId} onChange={onChangeSearchOptionDropdown} /> */}
                         <SearchCateTextOption
-                            cate={searchOptions.searchCate}
+                            currentCate={searchOptions.searchCate}
                             text={searchOptions.searchText}
                             options={searchCateTextOptions}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                             onChangeText={onChangeSearchOptionInput}
                         />
-                        {/* <SearchDateOption
-                            title="등록일"
-                            startDate={searchOptions.startDate}
-                            endDate={searchOptions.endDate}
-                            onChangeDates={onChangeDates}
-                            onChangeInput={onChangeSearchOptionInput}
-                        /> */}
+
                         <SearchCateDateRangeOption
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}
                             options={dateRangeCateOptions}
-                            cate={searchOptions.dateRangeCate}
+                            currentCate={searchOptions.dateRangeCate}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                         />
                     </div>
@@ -285,7 +281,7 @@ function StockList() {
                         <div className="flex space-x-2 items-center">
                             <Dropdown
                                 className="min-w-[100px]"
-                                name="searchRangeCate"
+                                name="rangeNumberCate"
                                 optionLabel="label"
                                 optionValue="field"
                                 options={searchRangeCateOptions}
@@ -294,15 +290,15 @@ function StockList() {
                             />
                             <div className="flex space-x-2 items-center">
                                 <InputNumber
-                                    name="searchNumberStart"
-                                    value={searchOptions.searchNumberStart}
-                                    onChange={(e) => setSearchOptions((prev) => ({ ...prev, searchNumberStart: e.value }))}
+                                    name="startNumber"
+                                    value={searchOptions.startNumber}
+                                    onChange={(e) => setSearchOptions((prev) => ({ ...prev, startNumber: e.value }))}
                                 />
                                 <span>~</span>
                                 <InputNumber
-                                    name="searchNumberEnd"
-                                    value={searchOptions.searchNumberEnd}
-                                    onChange={(e) => setSearchOptions((prev) => ({ ...prev, searchNumberEnd: e.value }))}
+                                    name="endNumber"
+                                    value={searchOptions.endNumber}
+                                    onChange={(e) => setSearchOptions((prev) => ({ ...prev, endNumber: e.value }))}
                                 />
                             </div>
                         </div>
@@ -329,7 +325,37 @@ function StockList() {
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> */}
+            <PageHeader
+                title="재고관리"
+                total={unitList.length}
+                commonSearch={{ clearSearchOptions, onChangeCateDropdown, onSearch }}
+                textSearch={{
+                    currentCate: searchOptions.searchCate,
+                    searchCate: searchCateTextOptions,
+                    text: searchOptions.searchText,
+                    onChangeText,
+                }}
+                rangeDateSearch={{
+                    currentCate: searchOptions.rangeDateCate,
+                    searchCate: rangeDateCateOptions,
+                    startDate: searchOptions.startDate,
+                    endDate: searchOptions.endDate,
+                    onChangeDates,
+                }}
+                rangeNumberSearch={{
+                    currentCate: searchOptions.rangeNumberCate,
+                    searchCate: rangeNumberCateOptions,
+                    startNumber: searchOptions.startNumber,
+                    endNumber: searchOptions.endNumber,
+                    onChangeNumbers,
+                }}
+                mutipleSelectSearch={{
+                    value: searchOptions.serachIsStockQty,
+                    options: multipleSelectOptions,
+                    onChangeValue: onChangeSelectBtn,
+                }}
+            />
             <div className="card">
                 <div className="flex items-center justify-between pb-4">
                     <div></div>

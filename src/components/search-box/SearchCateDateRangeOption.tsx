@@ -14,12 +14,12 @@ type Props = {
     onChangeDates: (range: { startDate: Date; endDate: Date }) => void
 
     options: SearchCate[]
-    cate: string
+    currentCate: string
     onChangeDropdown: (event: DropdownChangeParams) => void
 }
 
 function SearchCateDateRangeOption(props: Props) {
-    const { startDate, endDate, onChangeDates, options, cate, onChangeDropdown } = props
+    const { startDate, endDate, onChangeDates, options, currentCate, onChangeDropdown } = props
     const [pickerOpen, setPickerOpen] = useState<boolean>(false)
 
     const [innerDates, setInnerDates] = useState({ startDate, endDate })
@@ -62,7 +62,7 @@ function SearchCateDateRangeOption(props: Props) {
     return (
         <div className="relative">
             <div className="flex items-center space-x-2">
-                <Dropdown options={options} optionLabel="label" optionValue="field" value={cate} onChange={onChangeDropdown} />
+                <Dropdown options={options} optionLabel="label" optionValue="field" value={currentCate} onChange={onChangeDropdown} />
                 <div
                     onClick={openPicker}
                     className="text-xs cursor-pointer space-x-2 box-border flex items-center px-3 rounded h-[30px] border border-gray-300"

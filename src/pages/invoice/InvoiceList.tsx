@@ -2,10 +2,10 @@ import { Button } from 'primereact/button'
 import { Column, ColumnEditorOptions } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { DropdownChangeParams } from 'primereact/dropdown'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useRef, useState } from 'react'
+import PageHeader from 'src/common/page-header/PageHeader'
 import GettingCargoDialog from 'src/components/invoice/dialog/GettingCargoDialog'
 import MissingDialog from 'src/components/invoice/dialog/MissingDialog'
-import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
 import { dateBodyTemplate, numberBodyTemplate, seqBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { numberEditor } from 'src/hooks/data-table-hooks/EditorHooks'
 import { lineHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
@@ -79,7 +79,7 @@ function InvoiceList() {
         setSearchOptions((prev) => ({ ...prev, startDate: startDate, endDate: endDate }))
     }
 
-    const onChangeSearchOptionDropdown = (event: DropdownChangeParams) => {
+    const onChangeCateDropdown = (event: DropdownChangeParams) => {
         setSearchOptions((prev) => ({
             ...prev,
             [event.target.name]: event.value,
@@ -97,44 +97,20 @@ function InvoiceList() {
         return <Button icon="text-black pi pi-exclamation-triangle" className="p-button-rounded p-button-text" onClick={openMissingDialog}></Button>
     }
 
-    useEffect(() => {
-        setDialogId('GETTINGCARGO')
-    }, [])
-
     return (
         <div>
-            <div className="page-header border rounded-lg flex bg-white mb-5">
-                <div>
-                    <div className="flex items-center px-4 pt-4 border-b h-[66px] box-border min-w-[70vw]">
-                        <div className="flex flex-col justify-center ">
-                            <span className="font-bold text-lg relative">물류정보</span>
-                            <div className="border-2 w-full border-blue-500 relative -bottom-[14px]"></div>
-                        </div>
-                        <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : 123</span>
-                    </div>
-                    <div className="flex space-x-4 px-4 pt-4">
-                        <SearchCateDateRangeOption
-                            startDate={searchOptions.startDate}
-                            endDate={searchOptions.endDate}
-                            onChangeDates={onChangeDates}
-                            options={dateRangeCateOptions}
-                            cate={searchOptions.dateRangeCate}
-                            onChangeDropdown={onChangeSearchOptionDropdown}
-                        />
-                    </div>
-                </div>
-                <div className="border-l flex flex-col">
-                    <div className="h-[65px]"></div>
-                    <div className="flex items-end space-x-2 p-4">
-                        <button className="btn default-btn" onClick={clearSearchOptions}>
-                            초기화
-                        </button>
-                        <button className="btn primary-btn" onClick={onSearch}>
-                            검색
-                        </button>
-                    </div>
-                </div>
-            </div>
+            <PageHeader
+                title="물류정보"
+                total={fakeData.length}
+                commonSearch={{ clearSearchOptions, onChangeCateDropdown, onSearch }}
+                rangeDateSearch={{
+                    currentCate: searchOptions.dateRangeCate,
+                    startDate: searchOptions.startDate,
+                    endDate: searchOptions.endDate,
+                    searchCate: dateRangeCateOptions,
+                    onChangeDates,
+                }}
+            />
             <div className="card">
                 <div className="flex items-center justify-between pb-4">{/* <div></div> */}</div>
 

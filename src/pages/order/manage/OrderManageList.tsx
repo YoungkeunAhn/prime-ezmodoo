@@ -200,7 +200,7 @@ function OrderManageList() {
                         />
                         <SearchCateTextOption
                             options={searchCateTextOptions}
-                            cate={searchOptions.searchCate}
+                            currentCate={searchOptions.searchCate}
                             text={searchOptions.searchText}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                             onChangeText={onChangeSearchOptionInput}

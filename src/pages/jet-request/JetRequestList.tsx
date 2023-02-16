@@ -421,7 +421,7 @@ function JetRequestList() {
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}
                             options={dateRangeCateOptions}
-                            cate={searchOptions.dateRangeCate}
+                            currentCate={searchOptions.dateRangeCate}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                         />
                     </div>

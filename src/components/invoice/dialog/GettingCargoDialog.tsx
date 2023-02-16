@@ -20,6 +20,7 @@ type Props = {
 }
 
 const fakeData = {
+    pk: '12321321',
     eta: '2023-02-13', //입고예정일
     ata: '', //실제입고일
     forwardCompany: '마린',
@@ -118,18 +119,19 @@ const fakeData = {
 function GettingCargoDialog(props: Props) {
     const { open, closeModal } = props
     const [checkList, setCheckList] = useState<string[]>([])
-    const [memoPk, setMemoPk] = useState<string>('')
+
     const [cargoList, setCargoList] = useState<any[]>(fakeData.cargoList)
+    const [currentMemo, setCurrentMemo] = useState<string>('')
     const [cargoMessage, setCargoMessage] = useState<string>(fakeData.message)
 
     const closeMemo = (pk: string, value: string) => {
         saveMemo(pk, value)
-        setMemoPk('')
+        setCurrentMemo('')
     }
 
     const openMemo = (pk: string) => {
         console.log(pk)
-        setMemoPk(pk)
+        setCurrentMemo(pk)
     }
 
     const onChangeMemo = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -171,7 +173,7 @@ function GettingCargoDialog(props: Props) {
 
                 <div
                     className={`absolute ${rowIndex === cargoList.length - 1 ? 'top-[-66px] left-[-166px]' : 'bottom-[-66px] left-[-166px]'} z-10 ${
-                        pk === memoPk ? 'block' : 'hidden'
+                        pk === currentMemo ? 'block' : 'hidden'
                     }`}
                 >
                     <div className="relative">
@@ -263,7 +265,9 @@ function GettingCargoDialog(props: Props) {
     const Header = () => {
         return (
             <div className="flex justify-end space-x-4">
-                <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">선택분할</button>
+                <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={divideCargo}>
+                    선택분할
+                </button>
                 <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">인쇄</button>
                 <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={closeModal}>
                     닫기
@@ -272,13 +276,32 @@ function GettingCargoDialog(props: Props) {
         )
     }
 
+    const divideCargo = async () => {
+        try {
+            if (window.confirm('해당 상품을 분할하시겠습니까?')) {
+                if (checkList.length < 1) {
+                    alert('체크된 항목이 없습니다')
+                    return false
+                }
+
+                alert('분할처리 되었습니다.')
+
+                console.log(checkList)
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     const onChangeCargoMessage = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setCargoMessage(event.target.value)
     }
 
-    const saveCargoMessage = async (pk: string) => {
+    const saveCargoMessage = async () => {
         try {
-            await axios.post(BASE_URL + '', { pk, message: cargoMessage })
+            await axios.post(BASE_URL + '', { pk: fakeData.pk, message: cargoMessage })
+
+            alert('저장되었습니다.')
         } catch (err) {
             console.error(err)
         }
@@ -288,7 +311,9 @@ function GettingCargoDialog(props: Props) {
         return (
             <div className="flex items-center space-x-2">
                 <InputTextarea className="flex-1" rows={2} style={{ resize: 'none' }} value={cargoMessage} onChange={onChangeCargoMessage} />
-                <button className="border p-2 min-w-[50px] h-[30px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">저장</button>
+                <button className="border p-2 min-w-[50px] h-[30px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={saveCargoMessage}>
+                    저장
+                </button>
             </div>
         )
     }

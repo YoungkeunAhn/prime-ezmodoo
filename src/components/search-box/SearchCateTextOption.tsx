@@ -3,15 +3,15 @@ import { InputText } from 'primereact/inputtext'
 import React from 'react'
 
 type Props = {
-    options: { label: string; field: string }[]
-    cate: string
+    options: SearchCate[]
+    currentCate: string
     text: string
     onChangeDropdown: (event: DropdownChangeParams) => void
     onChangeText: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
 function SearchCateTextOption(props: Props) {
-    const { options, cate, text, onChangeDropdown, onChangeText } = props
+    const { options, currentCate, text, onChangeDropdown, onChangeText } = props
 
     return (
         <div className="flex space-x-2 items-center">
@@ -21,7 +21,7 @@ function SearchCateTextOption(props: Props) {
                 optionLabel="label"
                 optionValue="field"
                 options={options}
-                value={cate}
+                value={currentCate}
                 onChange={onChangeDropdown}
             />
 

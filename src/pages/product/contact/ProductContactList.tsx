@@ -234,7 +234,7 @@ function ProductContactList() {
                     <div className="flex space-x-4 p-4 min-w-[70vw]">
                         <SearchCateTextOption
                             options={searchCateTextOptions}
-                            cate={searchOptions.searchCate}
+                            currentCate={searchOptions.searchCate}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                             text={searchOptions.searchText}
                             onChangeText={onChangeSearchOptionInput}
@@ -245,7 +245,7 @@ function ProductContactList() {
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}
                             options={searchCateDateRangeOptions}
-                            cate={searchOptions.dateRangeCate}
+                            currentCate={searchOptions.dateRangeCate}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                         />
                     </div>

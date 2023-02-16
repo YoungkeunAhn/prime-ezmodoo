@@ -4,7 +4,7 @@ import React from 'react'
 
 type Props = {
     options: SearchCate[]
-    cate: string
+    currentCate: string
     startNumber: number | null
     endNumber: number | null
 
@@ -13,23 +13,23 @@ type Props = {
 }
 
 function SearchNumberCateOption(props: Props) {
-    const { options, cate, startNumber, endNumber, onChangeDropdown, onChangeNumbers } = props
+    const { options, currentCate, startNumber, endNumber, onChangeDropdown, onChangeNumbers } = props
 
     return (
         <div className="flex space-x-2 items-center">
             <Dropdown
                 className="min-w-[100px]"
-                name="searchNumberCate"
+                name="searchNumberRangeCate"
                 optionLabel="label"
                 optionValue="field"
                 options={options}
-                value={cate}
+                value={currentCate}
                 onChange={onChangeDropdown}
             />
             <div className="flex space-x-2 items-center">
-                <InputNumber value={startNumber} onChange={onChangeNumbers} />
+                <InputNumber name="startNumber" value={startNumber} onChange={onChangeNumbers} />
                 <span>~</span>
-                <InputNumber value={endNumber} onChange={onChangeNumbers} />
+                <InputNumber name="endNumber" value={endNumber} onChange={onChangeNumbers} />
             </div>
         </div>
     )

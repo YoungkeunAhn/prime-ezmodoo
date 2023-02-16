@@ -158,12 +158,12 @@ function DesignManageList() {
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}
-                            cate={searchOptions.dataRangeCate}
+                            currentCate={searchOptions.dataRangeCate}
                             options={searchDateRangeCateOptions}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                         />
                         <SearchCateTextOption
-                            cate={searchOptions.searchCate}
+                            currentCate={searchOptions.searchCate}
                             options={searchCateOptions}
                             text={searchOptions.searchText}
                             onChangeDropdown={onChangeSearchOptionDropdown}

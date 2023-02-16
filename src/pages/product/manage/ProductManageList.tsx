@@ -359,7 +359,7 @@ function ProductManageList() {
 
                         <SearchCateTextOption
                             options={searchCateTextOptions}
-                            cate={searchOptions.searchCate}
+                            currentCate={searchOptions.searchCate}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                             text={searchOptions.searchText}
                             onChangeText={onChangeSearchOptionInput}
@@ -370,7 +370,7 @@ function ProductManageList() {
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}
                             options={searchCateDateRangeOptions}
-                            cate={searchOptions.dateRangeCate}
+                            currentCate={searchOptions.dateRangeCate}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                         />
                     </div>
