@@ -138,6 +138,15 @@ function GettingCargoDialog(props: Props) {
         setCargoList(map(cargoList, (item) => (item.pk === name ? { ...item, invoice: { ...item.invoice, memo: value } } : item)))
     }
 
+    const addStock = async () => {
+        try {
+            if (window.confirm('재고에 반영하시겠습니까?')) {
+            }
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     const saveMemo = async (pk: string, value: string) => {
         try {
             console.log(pk, value)
@@ -188,7 +197,19 @@ function GettingCargoDialog(props: Props) {
     }
 
     const onChangeDropDown = (event: DropdownChangeParams) => {
-        // setCheckList((cargoList.map(())))
+        const { value, target } = event
+        const { name, id } = target
+
+        setCargoList(
+            cargoList.map((item) => {
+                if (item.pk === id) {
+                    console.log('match : ', name, id, value)
+                    return { ...item, invoice: { ...item.invoice, [name]: value } }
+                } else {
+                    return item
+                }
+            })
+        )
     }
 
     const packingBodyTemplate = (rowData: any) => {
@@ -198,11 +219,13 @@ function GettingCargoDialog(props: Props) {
         ]
         return (
             <Dropdown
+                id={rowData.pk}
                 options={options}
                 optionLabel="label"
                 optionValue="value"
                 name="packing"
                 value={rowData.invoice.packing}
+                onChange={onChangeDropDown}
                 className="border-none w-[100px] text-left"
             />
         )
@@ -215,11 +238,14 @@ function GettingCargoDialog(props: Props) {
         ]
         return (
             <Dropdown
+                id={rowData.pk}
                 options={options}
                 optionLabel="label"
                 optionValue="value"
+                name="isBarcode"
                 value={rowData.invoice.isBarcode}
                 className="border-none w-[100px] text-left"
+                onChange={onChangeDropDown}
             />
         )
     }
@@ -270,7 +296,9 @@ function GettingCargoDialog(props: Props) {
     const footerCheckQty = (
         <div className="flex flex-col items-center justify-center space-y-1">
             <span>{numeral(sumBy(cargoList, (item) => item.invoice.qty)).format('0,0')}</span>
-            {!fakeData.ata && <Button label="입고확인" className="p-button-info p-button-outlined text-[12px] w-[70px] h-[30px] p-0" />}
+            {!fakeData.ata && (
+                <Button label="입고확인" className="p-button-info p-button-outlined text-[12px] w-[70px] h-[30px] p-0" onClick={addStock} />
+            )}
         </div>
     )
 
