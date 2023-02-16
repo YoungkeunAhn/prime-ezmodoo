@@ -212,7 +212,7 @@ export declare interface ContentProductItem extends ProductItem {
     sellerName: string
     marketId: string
 
-    stockUnitId: string
+    skuId: string
     totalQty: number //창고재고량
     availableQty: number //가용재고량
     disusedQty: number //불량수량

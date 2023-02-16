@@ -48,7 +48,7 @@ const initContentProductItem: ContentProductItem = {
     calcPrice: 0,
     profit: 0,
     profitRate: 0,
-    stockUnitId: '',
+    skuId: '',
     stockQty: 0,
     totalQty: 0,
     availableQty: 0,

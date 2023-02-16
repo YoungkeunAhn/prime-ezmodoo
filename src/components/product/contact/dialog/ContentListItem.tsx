@@ -64,7 +64,7 @@ function ContentListItem(props: Props) {
         sellerName,
         itemOptions,
         marketId,
-        stockUnitId,
+        skuId,
         itemId,
         marketBarcode,
         marketSkuId,
@@ -267,8 +267,8 @@ function ContentListItem(props: Props) {
                     <div className="col-span-2 border-b border-r h-[32px]">
                         <InputText
                             className="w-full p-1 border-none h-full pl-3"
-                            name="stockUnitId"
-                            value={stockUnitId}
+                            name="skuId"
+                            value={skuId}
                             // onChange={onChangeTextInputs}
                         />
                     </div>

@@ -136,6 +136,12 @@ const App = () => {
                     to: '/',
                 },
                 {
+                    label: '재고관리',
+                    className: 'mt-10',
+                    icon: <BagsIcon />,
+                    to: '/stock',
+                },
+                {
                     label: '상품',
                     className: 'mt-10',
                     icon: <ProductsIcon />,
@@ -146,12 +152,6 @@ const App = () => {
                     ],
                 },
                 {
-                    label: '재고관리',
-                    className: 'mt-10',
-                    icon: <BagsIcon />,
-                    to: '/stock',
-                },
-                {
                     label: '발주관리',
                     className: 'mt-10',
                     icon: <KeyboardIcon />,
@@ -159,6 +159,17 @@ const App = () => {
                         { label: '리오더', to: '/order/reorder' },
                         { label: '일반발주관리', to: '/order/list' },
                         { label: '의류발주관리', to: '/order/china-wear' },
+                    ],
+                },
+                {
+                    label: '물류관리',
+                    className: 'mt-10',
+                    icon: <LogisTruckIcon />,
+                    items: [
+                        { label: '물류', to: '/invoice' },
+                        { label: '파렛트', to: '/palette' },
+                        { label: '로켓그로스입고요청', to: '/jet-request' },
+                        { label: '로켓발주리스트', to: '/rocket-invoice' },
                     ],
                 },
                 {
@@ -188,17 +199,7 @@ const App = () => {
                 //     icon: <WonIcon />,
                 //     to: '/advertisement',
                 // },
-                {
-                    label: '물류관리',
-                    className: 'mt-10',
-                    icon: <LogisTruckIcon />,
-                    items: [
-                        { label: '물류', to: '/invoice' },
-                        { label: '파렛트', to: '/palette' },
-                        { label: '로켓그로스입고요청', to: '/jet-request' },
-                        { label: '로켓발주리스트', to: '/rocket-invoice' },
-                    ],
-                },
+
                 {
                     label: '고객센터',
                     className: 'mt-10',

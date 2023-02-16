@@ -74,7 +74,7 @@ function ManageListItem(props: Props) {
         sellerName,
         itemOptions,
         marketId,
-        stockUnitId,
+        skuId,
         itemId,
         marketBarcode,
         marketSkuId,
@@ -96,7 +96,6 @@ function ManageListItem(props: Props) {
         cnItemName,
         isVisible,
         memo,
-        orderQty,
     } = productItem
     const [urlChecked, setUrlChecked] = useState<boolean>(false)
     const [itemPk, setItemPk] = useState<string>(pk)
@@ -286,8 +285,8 @@ function ManageListItem(props: Props) {
                     <div className="col-span-2 border-b border-r h-[32px]">
                         <InputText
                             className="w-full p-1 border-none h-full pl-3"
-                            name="stockUnitId"
-                            value={stockUnitId}
+                            name="skuId"
+                            value={skuId}
                             // onChange={onChangeTextInputs}
                         />
                     </div>

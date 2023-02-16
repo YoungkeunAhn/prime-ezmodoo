@@ -90,7 +90,7 @@ const initContentProductItem: ContentProductItem = {
     calcPrice: 0,
     profit: 0,
     profitRate: 0,
-    stockUnitId: '',
+    skuId: '',
     stockQty: 0,
     totalQty: 0,
     availableQty: 0,
@@ -377,6 +377,18 @@ function ProductManageDialog(props: Props) {
     const postOrder = async () => {
         try {
             if (window.confirm('발주 요청 하시겠습니까?')) {
+                console.log('checkList : ', checkList)
+                console.log('orderList values : ', Object.keys(orderList))
+                if (checkList.length === 0) {
+                    alert('체크된 항목이 없습니다.')
+                    return false
+                }
+
+                if (Object.values<number>(orderList).filter((v) => v < 1).length > 0) {
+                    alert('발주 수량을 1개 이상 입력해주세요')
+                    return false
+                }
+
                 const order = Object.entries(orderList)
                     .map((it) => {
                         if (checkList.includes(it[0])) {
@@ -386,6 +398,12 @@ function ProductManageDialog(props: Props) {
                         }
                     })
                     .filter((it) => it)
+
+                if (order.length < 1) {
+                    alert('잘못된 발주요청입니다.')
+                    return false
+                }
+
                 axios.post(BASE_URL + 'products/items/order', order)
                 alert('발주되었습니다.')
                 setOrderList({})
@@ -440,13 +458,11 @@ function ProductManageDialog(props: Props) {
             }
 
             alert('저장이 완료되었습니다.')
-
-            closeModal()
         } catch (err) {
             console.error(err)
             alert('저장실패')
         }
-    }, [closeModal, headerInfo, tradeInfo, vendorInfo, imageList, pk, productItemList])
+    }, [headerInfo, tradeInfo, vendorInfo, imageList, pk, productItemList])
 
     const deleteProduct = useCallback(async () => {
         try {
@@ -481,8 +497,8 @@ function ProductManageDialog(props: Props) {
                         return map(product.items, function (item) {
                             const { pk, productName, sellerName, marketId } = product
                             const { skuId, trade, stock } = item.units[0]
-                            const { totalQty, availableQty, disusedQty } = item.units[0].stock
-                            const { reorderPeriod, purchasePrice, hasBarcode, hasCarton } = item.units[0].trade
+                            const { totalQty, availableQty, disusedQty } = stock
+                            const { reorderPeriod, purchasePrice, hasBarcode, hasCarton } = trade
 
                             const calcPrice = Math.floor(
                                 ((item.salePrice - item.couponPrice) / 100) * (100 - item.commissionRate) - item.deliveryCharge
@@ -497,7 +513,7 @@ function ProductManageDialog(props: Props) {
                                 productName,
                                 sellerName,
                                 marketId,
-                                stockUnitId: skuId,
+                                skuId,
                                 totalQty,
                                 availableQty,
                                 disusedQty,

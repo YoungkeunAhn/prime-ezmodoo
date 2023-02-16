@@ -11,7 +11,7 @@ function OrderDetailListItem() {
                         <img src="http://im.imama.kr/imama/imgs/tokki.jpg" alt="test" className="h-[159px] max-w-[150px] object-contain m-auto" />
                     </div>
                     <div className="flex justify-evenly items-center border-t pt-1 w-full h-[32px]">
-                        <InputText className="w-full p-1 border-none h-full pl-3 text-center" placeholder="옵션명" disabled />
+                        <InputText className="w-full p-1 border-none h-full pl-3 text-center" placeholder="중국옵션명" disabled />
                     </div>
                 </div>
                 <OrderProductsColumn title="상품명" value="" rowSpan />
