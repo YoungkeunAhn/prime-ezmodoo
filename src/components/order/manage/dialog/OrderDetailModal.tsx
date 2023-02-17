@@ -245,6 +245,15 @@ function OrderProductItem(props: Props) {
         }))
     }
 
+    const onChangeOrderNumber = (event: InputNumberChangeParams) => {
+        console.log(event.value)
+
+        setOrderInfo((prev) => ({
+            ...prev,
+            [event.originalEvent.target.name]: event.value,
+        }))
+    }
+
     const onChangeOrderQty = (event: InputNumberChangeParams) => {
         const { value, originalEvent } = event
         const { name } = originalEvent.target
@@ -316,7 +325,6 @@ function OrderProductItem(props: Props) {
                         const { hasBarcode, hasCarton } = trade
 
                         return {
-                            ...product,
                             pk,
                             image: productImageUrls[0],
                             productName,
@@ -379,7 +387,7 @@ function OrderProductItem(props: Props) {
                                     type="number"
                                     name="orderTotalQty"
                                     numberValue={sumBy(orderProducts, (product) => product.orderQty)}
-                                    onChange={onChangeOrderQty}
+                                    onChange={onChangeOrderNumber}
                                     mark="ea"
                                     disabled
                                 />
@@ -404,7 +412,7 @@ function OrderProductItem(props: Props) {
                                     type="number"
                                     name="deliveryCharge"
                                     numberValue={orderInfo.deliveryCharge}
-                                    onChange={onChangeOrderQty}
+                                    onChange={onChangeOrderNumber}
                                     currencySymbol="￥"
                                 />
                                 <OrderTableRow
@@ -412,7 +420,7 @@ function OrderProductItem(props: Props) {
                                     type="number"
                                     name="totalCost"
                                     numberValue={orderInfo.totalCost}
-                                    onChange={onChangeOrderQty}
+                                    onChange={onChangeOrderNumber}
                                     currencySymbol="￥"
                                     digitLength={2}
                                     disabled

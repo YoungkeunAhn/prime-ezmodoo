@@ -481,7 +481,7 @@ function ProductManageDialog(props: Props) {
         }
     }, [pk, checkList])
 
-    const loadProduct = useCallback(async () => {
+    const getProducts = useCallback(async () => {
         try {
             if (pk && pk !== '') {
                 const { data } = await axios.get(BASE_URL + 'products/' + pk)
@@ -557,8 +557,8 @@ function ProductManageDialog(props: Props) {
     }, [pk])
 
     useEffect(() => {
-        loadProduct()
-    }, [loadProduct])
+        getProducts()
+    }, [getProducts])
 
     const ModalHeader = () => {
         return (
