@@ -9,8 +9,8 @@ import { Paginator, PaginatorPageState } from 'primereact/paginator'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import ProductContactDialog from 'src/components/product/contact/ProductContactDialog'
-import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
-import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
+import RangeDateSearch from 'src/components/search-box/RangeDateSearch'
+import TextSearch from 'src/components/search-box/TextSearch'
 import { dateBodyTemplate, imageBodyTemplate, numberBodyTemplate, seqBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { ProductsGruop } from 'src/types/product-manage'
 
@@ -232,7 +232,7 @@ function ProductContactList() {
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : {productsGroupList.length}</span>
                     </div>
                     <div className="flex space-x-4 p-4 min-w-[70vw]">
-                        <SearchCateTextOption
+                        <TextSearch
                             options={searchCateTextOptions}
                             currentCate={searchOptions.searchCate}
                             onChangeDropdown={onChangeSearchOptionDropdown}
@@ -240,7 +240,7 @@ function ProductContactList() {
                             onChangeText={onChangeSearchOptionInput}
                         />
 
-                        <SearchCateDateRangeOption
+                        <RangeDateSearch
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}

@@ -2,8 +2,8 @@ import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
 import { DropdownChangeParams } from 'primereact/dropdown'
 import React, { useState } from 'react'
-import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
-import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
+import RangeDateSearch from 'src/components/search-box/RangeDateSearch'
+import TextSearch from 'src/components/search-box/TextSearch'
 import { imageBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import DegsignManageDetailModal from './detail-modal/DegsignManageDetailModal'
 
@@ -154,7 +154,7 @@ function DesignManageList() {
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : 3862</span>
                     </div>
                     <div className="flex space-x-4 p-4">
-                        <SearchCateDateRangeOption
+                        <RangeDateSearch
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}
@@ -162,7 +162,7 @@ function DesignManageList() {
                             options={searchDateRangeCateOptions}
                             onChangeDropdown={onChangeSearchOptionDropdown}
                         />
-                        <SearchCateTextOption
+                        <TextSearch
                             currentCate={searchOptions.searchCate}
                             options={searchCateOptions}
                             text={searchOptions.searchText}

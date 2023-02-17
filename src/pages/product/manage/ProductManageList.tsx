@@ -11,10 +11,10 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
 import MenuButton from 'src/components/custom-buttons/MenuButton'
 import ProductManageDialog from 'src/components/product/manage/ProductManageDialog'
-import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
-import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
-import SearchMarketIdOption from 'src/components/search-box/SearchMarketIdOption'
-import SellerOption from 'src/components/search-box/SearchSellerOption'
+import RangeDateSearch from 'src/components/search-box/RangeDateSearch'
+import TextSearch from 'src/components/search-box/TextSearch'
+import MarketIdSearch from 'src/components/search-box/MarketIdSearch'
+import SellerIdSearch from 'src/components/search-box/SellerIdSearch'
 import { dateBodyTemplate, imageBodyTemplate, numberBodyTemplate, seqBodyTemplate, urlBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { ProductsGruop } from 'src/types/product-manage'
 import * as XLSX from 'xlsx'
@@ -353,11 +353,11 @@ function ProductManageList() {
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : {productsGroupList.length}</span>
                     </div>
                     <div className="flex space-x-4 p-4 min-w-[70vw]">
-                        <SellerOption value={searchOptions.seller} onChange={onChangeSearchOptionDropdown} />
+                        <SellerIdSearch value={searchOptions.seller} onChange={onChangeSearchOptionDropdown} />
 
-                        <SearchMarketIdOption value={searchOptions.marketId} onChange={onChangeSearchOptionDropdown} />
+                        <MarketIdSearch value={searchOptions.marketId} onChange={onChangeSearchOptionDropdown} />
 
-                        <SearchCateTextOption
+                        <TextSearch
                             options={searchCateTextOptions}
                             currentCate={searchOptions.searchCate}
                             onChangeDropdown={onChangeSearchOptionDropdown}
@@ -365,7 +365,7 @@ function ProductManageList() {
                             onChangeText={onChangeSearchOptionInput}
                         />
 
-                        <SearchCateDateRangeOption
+                        <RangeDateSearch
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}

@@ -1,34 +1,31 @@
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import React from 'react'
 import { fakeConfig } from 'src/common/fake-data/config'
-import { marketTemplate } from 'src/hooks/dropdown/ValueTemplate'
 
-export const marketIdOptions = [{ id: '', name: '전체' }].concat(fakeConfig.markets)
+export const sellerOptions = [{ pk: '', name: '전체' }].concat(fakeConfig.sellers)
 
 type Props = {
     value: string
     onChange: (event: DropdownChangeParams) => void
 }
 
-function SearchMarketIdOption(props: Props) {
+function SellerIdSearch(props: Props) {
     const { value, onChange } = props
 
     return (
         <div className="flex space-x-2 items-center">
-            <span className="font-bold text-[13px]">판매처</span>
+            <span className="font-bold text-[13px]">판매사</span>
             <Dropdown
                 className="min-w-[100px]"
-                name="marketId"
+                name="seller"
                 optionLabel="name"
-                optionValue="id"
-                options={marketIdOptions}
+                optionValue="pk"
+                options={sellerOptions}
                 value={value}
                 onChange={onChange}
-                valueTemplate={marketTemplate(value)}
-                itemTemplate={(option) => marketTemplate(option.id)}
             />
         </div>
     )
 }
 
-export default SearchMarketIdOption
+export default SellerIdSearch

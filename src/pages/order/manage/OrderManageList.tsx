@@ -6,8 +6,8 @@ import { DataTable } from 'primereact/datatable'
 import { Dropdown, DropdownChangeParams } from 'primereact/dropdown'
 import React, { useEffect, useState } from 'react'
 import { BASE_URL } from 'src/api/ApiConfig'
-import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
-import SearchDateOption from 'src/components/search-box/SearchDateOption'
+import TextSearch from 'src/components/search-box/TextSearch'
+import YearMonthDateSearch from 'src/components/search-box/YearMonthDateSearch'
 import {
     dateBodyTemplate,
     imageBodyTemplate,
@@ -191,14 +191,14 @@ function OrderManageList() {
                         </div>
                     </div>
                     <div className="flex space-x-4 p-4">
-                        <SearchDateOption
+                        <YearMonthDateSearch
                             title="발주일"
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}
                             onChangeInput={onChangeSearchOptionInput}
                         />
-                        <SearchCateTextOption
+                        <TextSearch
                             options={searchCateTextOptions}
                             currentCate={searchOptions.searchCate}
                             text={searchOptions.searchText}

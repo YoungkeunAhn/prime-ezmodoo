@@ -18,7 +18,7 @@ type Props = {
     onChangeDropdown: (event: DropdownChangeParams) => void
 }
 
-function SearchCateDateRangeOption(props: Props) {
+function RangeDateSearch(props: Props) {
     const { startDate, endDate, onChangeDates, options, currentCate, onChangeDropdown } = props
     const [pickerOpen, setPickerOpen] = useState<boolean>(false)
 
@@ -113,4 +113,4 @@ function SearchCateDateRangeOption(props: Props) {
     )
 }
 
-export default SearchCateDateRangeOption
+export default RangeDateSearch

@@ -23,7 +23,7 @@ const monthList = [
     },
 ].concat(new Array(12).fill(0).map((x, idx) => ({ label: idx + 1 + '월', value: idx + 1 + '' })))
 
-function SearchDateOption(props: Props) {
+function YearMonthDateSearch(props: Props) {
     const { title, startDate, endDate, onChangeDates, onChangeInput } = props
     const [year, setYear] = useState<string>('')
     const [month, setMonth] = useState<string>('')
@@ -68,4 +68,4 @@ function SearchDateOption(props: Props) {
     )
 }
 
-export default SearchDateOption
+export default YearMonthDateSearch

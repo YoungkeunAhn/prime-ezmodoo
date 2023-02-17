@@ -9,7 +9,7 @@ import { InputText } from 'primereact/inputtext'
 import React, { useEffect, useState } from 'react'
 import PaletteManageDialog from 'src/components/jet-request/palette-manage-dialog/PaletteManageDialog'
 import ReqeustInfoDialog from 'src/components/jet-request/request-info-dialog/ReqeustInfoDialog'
-import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
+import RangeDateSearch from 'src/components/search-box/RangeDateSearch'
 import { dateBodyTemplate, seqBodyTemplate } from 'src/hooks/data-table-hooks/BodyHooks'
 import { lineHeader } from 'src/hooks/data-table-hooks/HeaderHooks'
 
@@ -416,7 +416,7 @@ function JetRequestList() {
                         <span className="border rounded bg-white p-1 text-[11px] ml-4">Total : 123</span>
                     </div>
                     <div className="flex space-x-4 px-4 pt-4">
-                        <SearchCateDateRangeOption
+                        <RangeDateSearch
                             startDate={searchOptions.startDate}
                             endDate={searchOptions.endDate}
                             onChangeDates={onChangeDates}

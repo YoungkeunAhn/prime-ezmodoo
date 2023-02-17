@@ -12,7 +12,7 @@ type Props = {
     onChangeNumbers: (event: InputNumberChangeParams) => void
 }
 
-function SearchNumberCateOption(props: Props) {
+function RangeNumberSearch(props: Props) {
     const { options, currentCate, startNumber, endNumber, onChangeDropdown, onChangeNumbers } = props
 
     return (
@@ -35,4 +35,4 @@ function SearchNumberCateOption(props: Props) {
     )
 }
 
-export default SearchNumberCateOption
+export default RangeNumberSearch

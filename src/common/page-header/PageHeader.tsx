@@ -1,8 +1,8 @@
 import { SelectButton } from 'primereact/selectbutton'
 import React from 'react'
-import SearchCateDateRangeOption from 'src/components/search-box/SearchCateDateRangeOption'
-import SearchCateTextOption from 'src/components/search-box/SearchCateTextOption'
-import SearchNumberCateOption from 'src/components/search-box/SearchNumberCateOption'
+import RangeDateSearch from 'src/components/search-box/RangeDateSearch'
+import TextSearch from 'src/components/search-box/TextSearch'
+import RangeNumberSearch from 'src/components/search-box/RangeNumberSearch'
 
 type Props = {
     title: string
@@ -31,7 +31,7 @@ function PageHeader(props: Props) {
 
                 <div className="flex space-x-4 px-4 pt-4">
                     {textSearch && (
-                        <SearchCateTextOption
+                        <TextSearch
                             currentCate={textSearch.currentCate}
                             options={textSearch.searchCate}
                             text={textSearch.text}
@@ -40,7 +40,7 @@ function PageHeader(props: Props) {
                         />
                     )}
                     {rangeDateSearch && (
-                        <SearchCateDateRangeOption
+                        <RangeDateSearch
                             currentCate={rangeDateSearch.currentCate}
                             options={rangeDateSearch.searchCate}
                             startDate={rangeDateSearch.startDate}
@@ -51,7 +51,7 @@ function PageHeader(props: Props) {
                     )}
 
                     {rangeNumberSearch && (
-                        <SearchNumberCateOption
+                        <RangeNumberSearch
                             currentCate={rangeNumberSearch.currentCate}
                             options={rangeNumberSearch.searchCate}
                             endNumber={rangeNumberSearch.endNumber}

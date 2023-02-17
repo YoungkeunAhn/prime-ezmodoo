@@ -10,7 +10,7 @@ type Props = {
     onChangeText: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
 
-function SearchCateTextOption(props: Props) {
+function TextSearch(props: Props) {
     const { options, currentCate, text, onChangeDropdown, onChangeText } = props
 
     return (
@@ -30,4 +30,4 @@ function SearchCateTextOption(props: Props) {
     )
 }
 
-export default SearchCateTextOption
+export default TextSearch
