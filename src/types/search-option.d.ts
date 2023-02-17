@@ -35,3 +35,10 @@ declare interface MultipleSelectSearch {
     value: string[]
     onChangeValue: (event: SelectButtonChangeParams) => void
 }
+
+declare interface YearMonthDateSearch {
+    title: string
+    startDate: string
+    endDate: string
+    onChangeDates: (range: { startDate: Date; endDate: Date }) => void
+}

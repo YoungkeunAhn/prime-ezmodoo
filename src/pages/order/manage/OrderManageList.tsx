@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { map } from 'lodash'
+import { map, sumBy } from 'lodash'
 import numeral from 'numeral'
 import { Column } from 'primereact/column'
 import { DataTable } from 'primereact/datatable'
@@ -21,15 +21,15 @@ import OrderProductItem from '../../../components/order/manage/dialog/OrderDetai
 type DialogId = 'DETAIL'
 
 type SearchOptions = {
-    startDate: string
-    endDate: string
+    startDate: Date
+    endDate: Date
     searchCate: string
     searchText: string
 }
 
 const initSearchOptions: SearchOptions = {
-    startDate: '',
-    endDate: '',
+    startDate: new Date(),
+    endDate: new Date(),
     searchCate: 'global',
     searchText: '',
 }
@@ -115,7 +115,9 @@ function OrderManageList() {
         }))
     }
 
-    const onChangeDates = (startDate: string, endDate: string) => {
+    const onChangeDates = (range: { startDate: Date; endDate: Date }) => {
+        const { startDate, endDate } = range
+
         setSearchOptions((prev) => ({
             ...prev,
             startDate,
@@ -131,9 +133,10 @@ function OrderManageList() {
                 map(data, (order) => {
                     const { cost, orderQty, transitPee } = order
                     const totalCost = cost * orderQty + transitPee
+                    const totalOrderQty = sumBy(order.products, (product: any) => product.items[0].orderQty)
                     const exchangRate = 190
 
-                    return { ...order, totalCost, exchangeTotalCost: totalCost * exchangRate }
+                    return { ...order, totalCost, totalOrderQty, exchangeTotalCost: totalCost * exchangRate }
                 })
             )
         } catch (err) {
@@ -254,7 +257,13 @@ function OrderManageList() {
                         className="cursor-pointer"
                     />
                     <Column align="center" field="orderNum" header="주문번호" body={orderNumBodyTemplate} />
-                    <Column align="center" field="orderQty" header="발주수량" sortable body={(rowData) => numberBodyTemplate(rowData.orderQty)} />
+                    <Column
+                        align="center"
+                        field="totalOrderQty"
+                        header="발주총수량"
+                        sortable
+                        body={(rowData) => numberBodyTemplate(rowData.totalOrderQty)}
+                    />
                     <Column align="center" field="cost" header="구매단가" sortable body={cnySymbolBodyTemplate} />
                     <Column align="center" field="transitPee" header="중국운송비" sortable body={cnySymbolBodyTemplate} />
                     <Column align="center" field="totalCost" header="구매총액" sortable body={cnySymbolBodyTemplate} />

@@ -5,11 +5,12 @@ import React, { useState, useEffect, useCallback } from 'react'
 import OrderTableRow from 'src/components/order/manage/dialog/OrderTableRow'
 import { ITrade, IVendor, ProductsGruop } from 'src/types/product-manage'
 import ContentHeader from './ContentHeader'
-import OrderDetailListItem from './list-item-box/OrderProductsItem'
+import OrderDetailListItem, { OrderProduct } from './list-item-box/OrderProductsItem'
 import VendorInfoTable from 'src/components/product/manage/dialog/expend-view/VendorInfoTable'
 import TradeInfoTable from 'src/components/product/manage/dialog/expend-view/StockInfoTable'
 import axios from 'axios'
 import { BASE_URL } from 'src/api/ApiConfig'
+import { map, sumBy } from 'lodash'
 
 type TabId = 'EXPAND' | 'LIST'
 
@@ -197,103 +198,23 @@ const initOrder = {
     tradeMemo: '',
 }
 
-const productsGroup: ProductsGruop[] = [
-    {
-        pk: '1234',
-        createdAt: '2023-02-14',
-        deletedAt: '',
-        isDeleted: false,
-        isVisible: true,
-        isSales: true,
+export type HeaderInfo = {
+    manager: string
+    createdAt: string
+    cost: number | null
+    latestCost: number | null
+    exchangeRate: number
+    productName: string
+}
 
-        managerName: '테스트',
-        managerId: '',
-        managerPk: '',
-        productsCode: '',
-        productsId: '',
-        productsLinkUrls: ['', ''],
-        productImageUrl: '',
-        productsName: '로지토끼슬리퍼',
-        products: [
-            {
-                pk: 'p1234',
-                productId: '',
-                productName: '로지토끼슬리퍼',
-                sellerPk: '',
-                sellerName: '아이마마',
-                marketId: '',
-                marketName: '쿠팡-로켓',
-                attrs: [],
-                items: [
-                    {
-                        cnItemName: '',
-                        commissionRate: 10,
-                        couponPrice: 1000,
-                        deliveryCharge: 0,
-                        isDeleted: false,
-                        isVisible: true,
-                        itemDetails: [],
-                        itemId: '24234',
-                        itemImageUrls: ['http://api.ezmodoo.com/files/63d8a7702c85d_d6a32f9149ba68b7_1617bbfc4af261cb31de93e76a5f7b1dc93f9c5c_jpg'],
-                        itemName: '',
-                        itemOptions: ['노랑', '라지'],
-                        marketBarcode: '23423423423',
-                        marketQrcode: '',
-                        marketSkuId: '234234234',
-                        memo: '',
-                        optionalCharge: 0,
-                        pk: '63e9d511649513298e0bd4b9',
-                        salePrice: 10000,
-                        sellPrice: 0,
-                        stockQty: 0,
-                        units: [
-                            {
-                                barcode: '',
-                                enSkuMaterial: '',
-                                enSkuName: '',
-                                hscode: '',
-                                memo: '',
-                                pk: '63e9e86c649513298e0bd4bf',
-                                qrcode: '',
-                                skuAttr: {},
-                                skuId: '',
-                                skuName: '33333333333',
-                                stock: { totalQty: 0, disusedQty: 0, availableQty: 0, locations: ['x-1-1', 'y-1-1', 'z-1-1'] },
-                                createdAt: '2023-02-14',
-                                image: '',
-                                order: {
-                                    lastReceiptDate: '',
-                                    lastReceiptPrice: 0,
-                                    lastReceiptQty: 0,
-                                    totalReceiptPrice: 0,
-                                },
-                                skuCode: '',
-                                trade: {
-                                    cbm: 0,
-                                    costPrice: 0,
-                                    currencyCost: 12,
-                                    currencyUnit: 'CNY',
-                                    gwt: 0,
-                                    hasBarcode: '',
-                                    hasCarton: null,
-                                    lwh: { width: 0, height: 0, length: 0 },
-                                    nwt: 0,
-                                    purchasePrice: 0,
-                                    qtyPerBox: 0,
-                                    receiptPeriod: 0,
-
-                                    tariffCode: 'NFA1',
-                                    tariffRate: 0,
-                                    vendors: [],
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
-    },
-]
+const initHeaderInfo: HeaderInfo = {
+    manager: '',
+    createdAt: '',
+    cost: null,
+    latestCost: null,
+    exchangeRate: 190,
+    productName: '',
+}
 
 type Props = {
     pk: string
@@ -304,9 +225,11 @@ type Props = {
 
 function OrderProductItem(props: Props) {
     const { pk, open, onClose } = props
+    const [headerInfo, setHeaderInfo] = useState<HeaderInfo>(initHeaderInfo)
     const [orderInfo, setOrderInfo] = useState(initOrder)
     const [tradeInfo, setTradeInfo] = useState<ITrade>(initTrade)
     const [vendorInfo, setVendorInfo] = useState<IVendor>(initVendor)
+    const [orderProducts, setOrderProducts] = useState<OrderProduct[]>([])
 
     const onChangeOrderText = (event: React.ChangeEvent<HTMLInputElement>) => {
         setOrderInfo((prev) => ({
@@ -322,13 +245,12 @@ function OrderProductItem(props: Props) {
         }))
     }
 
-    const onChangeOrderNumber = (event: InputNumberChangeParams) => {
-        if (event.originalEvent.target.name === 'orderQty') {
-        }
-        setOrderInfo((prev) => ({
-            ...prev,
-            [event.originalEvent.target.name]: event.value,
-        }))
+    const onChangeOrderQty = (event: InputNumberChangeParams) => {
+        const { value, originalEvent } = event
+        const { name } = originalEvent.target
+
+        setOrderProducts(orderProducts.map((product) => (product.pk === name ? { ...product, orderQty: value || 0 } : product)))
+        setOrderInfo((prev) => ({ ...prev, orderQty: sumBy(orderProducts, (product) => product.orderQty) }))
     }
 
     const ModalHeader = () => {
@@ -336,9 +258,9 @@ function OrderProductItem(props: Props) {
             <div className="flex justify-between items-center p-0">
                 <span></span>
                 <div className="flex items-center space-x-2">
-                    {/* <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">제트입고요청</button>
-                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">발주요청</button> */}
-                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]">저장</button>
+                    <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={saveOrder}>
+                        저장
+                    </button>
                     <button className="border p-2 min-w-[50px] font-bold bg-[#E4F1FF] rounded text-black text-[12px]" onClick={onClose}>
                         닫기
                     </button>
@@ -347,14 +269,69 @@ function OrderProductItem(props: Props) {
         )
     }
 
+    const saveOrder = async () => {
+        try {
+            const formData = new FormData()
+
+            const data = {
+                headerInfo,
+                orderInfo,
+                vendorInfo,
+                tradeInfo,
+                orderProducts,
+            }
+
+            formData.append('pk', pk)
+            formData.append('data', JSON.stringify(data))
+            axios.post(BASE_URL + '/orders?_method=PATCH', formData)
+
+            alert('저장되었습니다')
+        } catch (err) {
+            console.error(err)
+        }
+    }
+
     const getOrder = useCallback(async () => {
         try {
             const { data } = await axios.get(BASE_URL + 'orders/' + pk)
 
             if (data) {
+                setHeaderInfo({
+                    manager: data.manager,
+                    createdAt: data.createdAt,
+                    cost: data.cost,
+                    latestCost: null,
+                    exchangeRate: 190,
+                    productName: data.productName,
+                })
                 setOrderInfo(data.order)
                 setTradeInfo(data.trade)
                 setVendorInfo(data.vendor)
+
+                setOrderProducts(
+                    map(data.products, (product) => {
+                        const { pk, items, productName, sellerName, marketName, productImageUrls } = product
+                        const { cnItemName, itemId, itemOptions, units, orderQty } = items[0]
+                        const { skuId, barcode, trade } = units[0]
+                        const { hasBarcode, hasCarton } = trade
+
+                        return {
+                            pk,
+                            image: productImageUrls[0],
+                            productName,
+                            cnItemName,
+                            sellerName,
+                            marketName,
+                            itemId,
+                            itemOptions,
+                            skuId,
+                            barcode,
+                            hasBarcode,
+                            hasCarton,
+                            orderQty,
+                        }
+                    })
+                )
             }
         } catch (err) {
             console.error(err)
@@ -369,14 +346,14 @@ function OrderProductItem(props: Props) {
         <Dialog header={ModalHeader} visible={open} onHide={onClose} className="max-w-[1500px] w-full min-w-[500px]" closable={false}>
             <div className="flex space-x-2">
                 <div className="">
-                    <ContentHeader manager={fakeHeaderInfo.manager} createdAt={fakeHeaderInfo.createAt} title={fakeHeaderInfo.title} />
+                    <ContentHeader headerInfo={headerInfo} />
 
                     <div className="flex space-x-2">
                         <div className="flex flex-col">
-                            <ul className="text-[12px] max-h-[42vh] overflow-y-auto manage-list border mt-2 py-2 p-1">
-                                <OrderDetailListItem />
-                                <OrderDetailListItem />
-                                <OrderDetailListItem />
+                            <ul className="text-[12px] h-[42vh] overflow-y-auto manage-list border mt-2 py-2 p-1">
+                                {orderProducts.map((item, idx) => {
+                                    return <OrderDetailListItem product={item} key={idx} onChangeOrderQty={onChangeOrderQty} />
+                                })}
                             </ul>
                             <div className="grid grid-cols-2 mt-2 w-full gap-1">
                                 <VendorInfoTable info={vendorInfo} onChange={() => {}} />
@@ -397,11 +374,11 @@ function OrderProductItem(props: Props) {
                                     onChange={onChangeOrderText}
                                 />
                                 <OrderTableRow
-                                    title="발주수량"
+                                    title="발주총수량"
                                     type="number"
-                                    name="orderQty"
-                                    numberValue={orderInfo.orderQty}
-                                    onChange={onChangeOrderNumber}
+                                    name="orderTotalQty"
+                                    numberValue={sumBy(orderProducts, (product) => product.orderQty)}
+                                    onChange={onChangeOrderQty}
                                     mark="ea"
                                     disabled
                                 />
@@ -426,7 +403,7 @@ function OrderProductItem(props: Props) {
                                     type="number"
                                     name="deliveryCharge"
                                     numberValue={orderInfo.deliveryCharge}
-                                    onChange={onChangeOrderNumber}
+                                    onChange={onChangeOrderQty}
                                     currencySymbol="￥"
                                 />
                                 <OrderTableRow
@@ -434,7 +411,7 @@ function OrderProductItem(props: Props) {
                                     type="number"
                                     name="totalCost"
                                     numberValue={orderInfo.totalCost}
-                                    onChange={onChangeOrderNumber}
+                                    onChange={onChangeOrderQty}
                                     currencySymbol="￥"
                                     digitLength={2}
                                     disabled

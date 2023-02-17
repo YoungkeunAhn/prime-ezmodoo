@@ -1,8 +1,8 @@
 import { SelectButton } from 'primereact/selectbutton'
 import React from 'react'
 import RangeDateSearch from 'src/components/search-box/RangeDateSearch'
-import TextSearch from 'src/components/search-box/TextSearch'
 import RangeNumberSearch from 'src/components/search-box/RangeNumberSearch'
+import TextSearch from 'src/components/search-box/TextSearch'
 
 type Props = {
     title: string
