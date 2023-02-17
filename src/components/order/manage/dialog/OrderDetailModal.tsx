@@ -283,11 +283,52 @@ function OrderProductItem(props: Props) {
             const formData = new FormData()
 
             const data = {
-                headerInfo,
+                ...headerInfo,
                 orderInfo,
-                vendorInfo,
-                tradeInfo,
-                orderProducts,
+                vendor: vendorInfo,
+                trade: tradeInfo,
+                products: orderProducts.map((order) => {
+                    const {
+                        pk,
+                        productName,
+                        sellerName,
+                        marketName,
+                        image,
+                        cnItemName,
+                        itemId,
+                        itemOptions,
+                        orderQty,
+                        skuId,
+                        barcode,
+                        hasBarcode,
+                        hasCarton,
+                    } = order
+                    return {
+                        pk,
+                        productName,
+                        sellerName,
+                        marketName,
+                        productImageUrls: [image],
+                        items: [
+                            {
+                                cnItemName,
+                                itemId,
+                                itemOptions,
+                                orderQty,
+                                units: [
+                                    {
+                                        skuId,
+                                        barcode,
+                                        trade: {
+                                            hasBarcode,
+                                            hasCarton,
+                                        },
+                                    },
+                                ],
+                            },
+                        ],
+                    }
+                }),
             }
 
             formData.append('pk', pk)
