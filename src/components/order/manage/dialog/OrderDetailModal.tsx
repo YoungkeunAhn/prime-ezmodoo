@@ -316,6 +316,7 @@ function OrderProductItem(props: Props) {
                         const { hasBarcode, hasCarton } = trade
 
                         return {
+                            ...product,
                             pk,
                             image: productImageUrls[0],
                             productName,
